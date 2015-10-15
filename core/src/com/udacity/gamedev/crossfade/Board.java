@@ -12,12 +12,12 @@ public class Board {
         tiles = new boolean[WIDTH][WIDTH];
     }
 
-    public Board(byte[][] level) {
+    public Board(boolean[][] level) {
         tiles = new boolean[WIDTH][WIDTH];
         if (WIDTH == level.length) {
             for (int i = 0; i < WIDTH; i++) {
                 for (int j = 0; j < WIDTH; j++) {
-                    tiles[i][j] = level[i][j] == (byte) 1;
+                    tiles[i][j] = level[i][j];
                 }
             }
         }

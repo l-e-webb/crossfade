@@ -22,15 +22,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class MainScreen extends ScreenAdapter {
 
     private BoardRenderer boardRenderer;
+    private UIRenderer uiRenderer;
     private float time;
     private static final float WORLD_WIDTH = 400f;
     private static final float WORLD_HEIGHT = 640f;
     private ShapeRenderer renderer;
     private FitViewport viewport;
-    private SpriteBatch batch;
-    private BitmapFont font;
-    private static final Color TEXT_COLOR = new Color(0,1,0,1);
-    private static final float TEXT_OFFSET = 30f;
 
     @Override
     public void show() {
@@ -38,11 +35,8 @@ public class MainScreen extends ScreenAdapter {
         renderer = new ShapeRenderer();
         viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT);
         boardRenderer = new BoardRenderer(WORLD_WIDTH, WORLD_HEIGHT, viewport);
+        uiRenderer = new UIRenderer(viewport);
         Gdx.input.setInputProcessor(boardRenderer);
-        batch = new SpriteBatch();
-        font = new BitmapFont();
-        font.getData().setScale(1);
-        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     @Override
@@ -52,9 +46,8 @@ public class MainScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         viewport.apply();
         renderer.setProjectionMatrix(viewport.getCamera().combined);
-        batch.setProjectionMatrix(viewport.getCamera().combined);
         boardRenderer.render(renderer);
-        renderText();
+        uiRenderer.render();
     }
 
     @Override
@@ -64,14 +57,7 @@ public class MainScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        batch.dispose();
         renderer.dispose();
     }
 
-    private void renderText() {
-        batch.begin();
-        font.setColor(TEXT_COLOR);
-        font.draw(batch, "CrossFade", 0 + TEXT_OFFSET, 640 - TEXT_OFFSET);
-        batch.end();
-    }
 }

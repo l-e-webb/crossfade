@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class BoardRenderer extends InputAdapter {
 
     private Board board;
-    private static Levels LEVELS;
     public int moves;
 
     Viewport viewport;
@@ -26,8 +25,7 @@ public class BoardRenderer extends InputAdapter {
 
     public BoardRenderer(float worldWidth, float worldHeight, Viewport viewport) {
         moves = 0;
-        LEVELS = new Levels();
-        board = new Board(LEVELS.LEVELS[0]);
+        board = new Board(Levels.LEVELS[0]);
         this.viewport = viewport;
         TILE_WIDTH = worldWidth / board.WIDTH;
         OFFSET = TILE_WIDTH * OFFSET_FACTOR;
