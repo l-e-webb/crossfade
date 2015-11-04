@@ -24,8 +24,8 @@ public class MainScreen extends ScreenAdapter {
     private BoardRenderer boardRenderer;
     private UIRenderer uiRenderer;
     private float time;
-    private static final float WORLD_WIDTH = 400f;
-    private static final float WORLD_HEIGHT = 640f;
+    private static final float WORLD_WIDTH = 600f;
+    private static final float WORLD_HEIGHT = 960f;
     private ShapeRenderer renderer;
     private FitViewport viewport;
 
