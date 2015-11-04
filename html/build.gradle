@@ -7,8 +7,8 @@ gwt {
     minHeapSize="1G"
 
     src = files(file("src/")) // Needs to be in front of "modules" below.
-    modules 'com.udacity.gamedev.crossfade.GdxDefinition'
-    devModules 'com.udacity.gamedev.crossfade.GdxDefinitionSuperdev'
+    modules 'com.louiswebb.crossfade.GdxDefinition'
+    devModules 'com.louiswebb.crossfade.GdxDefinitionSuperdev'
     project.webAppDirName = 'webapp'
 
     compiler {
