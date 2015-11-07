@@ -5,19 +5,21 @@ package com.louiswebb.crossfade;
  */
 public class Board {
 
-    public static final int WIDTH = 6;
+    public static final int WIDTH = 5;
     private boolean[][] tiles;
+    public int moves;
 
     public Board() {
         tiles = new boolean[WIDTH][WIDTH];
+        moves = 0;
     }
 
-    public Board(boolean[][] level) {
+    public Board(int[][] level) {
         tiles = new boolean[WIDTH][WIDTH];
         if (WIDTH == level.length) {
             for (int i = 0; i < WIDTH; i++) {
                 for (int j = 0; j < WIDTH; j++) {
-                    tiles[i][j] = level[i][j];
+                    tiles[i][j] = level[i][j] == 1;
                 }
             }
         }
@@ -55,4 +57,5 @@ public class Board {
         }
         return true;
     }
+
 }

@@ -5,20 +5,20 @@ package com.louiswebb.crossfade;
  */
 public class Levels {
     
-    public static boolean[][][] LEVELS = new boolean[][][] {
+    public static int[][][] LEVELS = new int[][][] {
         {
-            {false, false, false, false, false},
-            {false, false, false, false, false},
-            {false, false, false, false, false},
-            {false, false, false, false, false},
-            {false, false, false, false, false}
+            {0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0}
         },
         {
-            {false, false, true, false, false},
-            {false, false, true, false, false},
-            {true, true, true, true, true},
-            {false, false, true, false, false},
-            {false, false, true, false, false}
+            {0, 0, 1, 0, 0},
+            {0, 0, 1, 0, 0},
+            {1, 1, 1, 1, 1},
+            {0, 0, 1, 0, 0},
+            {0, 0, 1, 0, 0}
         }
     };
 }

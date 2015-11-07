@@ -11,23 +11,21 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * Created by louiswebb on 10/12/15.
  */
-public class BoardRenderer extends InputAdapter {
+public class BoardRenderer {
 
     private Board board;
-    public int moves;
 
     Viewport viewport;
     private static float TILE_WIDTH;
     private static float OFFSET;
-    private static float OFFSET_FACTOR = 0.05f;
-    private static Color TILE_ON_COLOR = new Color(0,1,0,1);
-    private static Color TILE_OFF_COLOR = new Color(0.1f, 0.1f, 0.1f, 1f);
+    private static float OFFSET_FACTOR = 0.04f;
+    private static final Color TILE_ON_COLOR = new Color(0,1,0,1);
+    private static final Color TILE_OFF_COLOR = new Color(0.1f, 0.1f, 0.1f, 1f);
 
-    public BoardRenderer(float worldWidth, float worldHeight, Viewport viewport) {
-        moves = 0;
+    public BoardRenderer(Viewport viewport) {
         board = new Board(Levels.LEVELS[0]);
         this.viewport = viewport;
-        TILE_WIDTH = worldWidth / board.WIDTH;
+        TILE_WIDTH = MainScreen.WORLD_WIDTH / board.WIDTH;
         OFFSET = TILE_WIDTH * OFFSET_FACTOR;
     }
 
@@ -47,13 +45,13 @@ public class BoardRenderer extends InputAdapter {
         } else {
             renderer.setColor(TILE_OFF_COLOR);
         }
-        float leftEdge = TILE_WIDTH * row;
-        float topEdge = TILE_WIDTH * (column);
-        renderer.rect(leftEdge + OFFSET, topEdge - OFFSET, TILE_WIDTH - 2 * OFFSET, TILE_WIDTH - 2 * OFFSET);
+        float leftEdge = TILE_WIDTH * column;
+        float botEdge = TILE_WIDTH * row;
+        renderer.rect(leftEdge + OFFSET, botEdge + OFFSET, TILE_WIDTH - 2 * OFFSET, TILE_WIDTH - 2 * OFFSET);
     }
 
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+    public boolean handleTouch(int screenX, int screenY) {
         int[] rowAndCol = getTileFromClick(screenX, screenY);
         if (rowAndCol[0] >= 0 && rowAndCol[0] < board.WIDTH && rowAndCol[1] >= 0 && rowAndCol[1] < board.WIDTH) {
             return makeMove(rowAndCol[0], rowAndCol[1]);
@@ -64,13 +62,16 @@ public class BoardRenderer extends InputAdapter {
     public int[] getTileFromClick(int screenX, int screenY) {
         Vector2 worldClick = viewport.unproject(new Vector2(screenX, screenY));
         Gdx.app.log("CLICK_TEST", "Click at " + worldClick.x + ", " + worldClick.y);
-        int row = (int) (worldClick.x / TILE_WIDTH);
-        int col = (int) (worldClick.y / TILE_WIDTH);
+        int col = (int) (worldClick.x / TILE_WIDTH);
+        int row = (int) (worldClick.y / TILE_WIDTH);
         return new int[]{row, col};
     }
 
     public boolean makeMove(int row, int column) {
-        moves++;
         return board.selectTile(row, column);
+    }
+
+    public int getMoves() {
+        return board.moves;
     }
 }

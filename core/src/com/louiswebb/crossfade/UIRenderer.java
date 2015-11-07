@@ -1,10 +1,12 @@
 package com.louiswebb.crossfade;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
@@ -14,54 +16,37 @@ public class UIRenderer {
 
     private Viewport viewport;
     private SpriteBatch batch;
-    private BitmapFont font;
-    private static final Color TEXT_COLOR = new Color(0,1,0,1);
-    private static final float TEXT_OFFSET = 30f;
+    private BitmapFont titleFont;
+    private BitmapFont uiFont;
+    private static final Color TEXT_COLOR = new Color(0, 1, 0, 1);
+    private static final float TEXT_OFFSET = 20f;
+
+    private static final String TITLE = "CrossFade";
+    private static final String MOVES = "Moves";
+    private static final String TIME = "Time";
+    private static final String LEVEL = "Level";
+    private static final String NEXT = "Next";
+    private static final String PREVIOUS = "Previous";
+    private static final String WIN_MSG = "You Win!";
 
     public UIRenderer(Viewport viewport) {
         this.viewport = viewport;
         batch = new SpriteBatch();
-        font = new BitmapFont();
-        font.getData().setScale(1);
-        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        titleFont = new BitmapFont(Gdx.files.internal("font.fnt"), false);
+        titleFont.getData().setScale(0.55f);
+        titleFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        uiFont = new BitmapFont(Gdx.files.internal("font.fnt"), false);
+        uiFont.getData().setScale(0.1f);
+        uiFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
     }
 
-    public void render() {
+    public void render(float time, int moves) {
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
-        font.setColor(TEXT_COLOR);
-        font.draw(batch, "CrossFade", 0 + TEXT_OFFSET, 640 - TEXT_OFFSET);
+        titleFont.setColor(TEXT_COLOR);
+        titleFont.draw(batch, TITLE, 0 + TEXT_OFFSET, MainScreen.WORLD_HEIGHT - TEXT_OFFSET);
         batch.end();
     }
 
-    private static class TextArrays {
-
-        public static final boolean[][] C = {
-                {true, true, true, true},
-                {true, false, false, false},
-                {true, false, false, false},
-                {true, true, true, true}
-        };
-
-        public static final boolean[][] R = {
-                {true, true, true, false},
-                {true, false, false, true},
-                {true, true, true, false},
-                {true, false, false, true}
-        };
-
-        public static final boolean[][] O = {
-                {true, true, true, true},
-                {true, false, false, true},
-                {true, false, false, true},
-                {true, true, true, true}
-        };
-
-        public static final boolean[][] S = {
-                {true, true, true, true},
-                {false, true, false, true},
-                {false, false, true, false},
-                {true, true, true, true}
-        };
-    }
 }
