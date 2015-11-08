@@ -1,11 +1,8 @@
 package com.louiswebb.crossfade;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
@@ -25,14 +22,19 @@ public class BoardRenderer {
     public BoardRenderer(Viewport viewport) {
         board = new Board(Levels.LEVELS[0]);
         this.viewport = viewport;
-        TILE_WIDTH = MainScreen.WORLD_WIDTH / board.WIDTH;
+        TILE_WIDTH = MainScreen.WORLD_WIDTH / Board.WIDTH;
         OFFSET = TILE_WIDTH * OFFSET_FACTOR;
+    }
+
+    public void newLevel(int level) {
+        board = new Board(Levels.LEVELS[level]);
+        board.moves = 0;
     }
 
     public void render(ShapeRenderer renderer) {
         renderer.begin(ShapeRenderer.ShapeType.Filled);
-        for (int i = 0; i < board.WIDTH; i++) {
-            for (int j = 0; j < board.WIDTH; j++) {
+        for (int i = 0; i < Board.WIDTH; i++) {
+            for (int j = 0; j < Board.WIDTH; j++) {
                 renderTile(i, j, renderer);
             }
         }
@@ -53,7 +55,7 @@ public class BoardRenderer {
 
     public boolean handleTouch(int screenX, int screenY) {
         int[] rowAndCol = getTileFromClick(screenX, screenY);
-        if (rowAndCol[0] >= 0 && rowAndCol[0] < board.WIDTH && rowAndCol[1] >= 0 && rowAndCol[1] < board.WIDTH) {
+        if (rowAndCol[0] >= 0 && rowAndCol[0] < Board.WIDTH && rowAndCol[1] >= 0 && rowAndCol[1] < board.WIDTH) {
             return makeMove(rowAndCol[0], rowAndCol[1]);
         }
         return false;
@@ -61,7 +63,6 @@ public class BoardRenderer {
 
     public int[] getTileFromClick(int screenX, int screenY) {
         Vector2 worldClick = viewport.unproject(new Vector2(screenX, screenY));
-        Gdx.app.log("CLICK_TEST", "Click at " + worldClick.x + ", " + worldClick.y);
         int col = (int) (worldClick.x / TILE_WIDTH);
         int row = (int) (worldClick.y / TILE_WIDTH);
         return new int[]{row, col};

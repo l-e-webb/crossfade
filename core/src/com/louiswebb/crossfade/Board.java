@@ -19,7 +19,7 @@ public class Board {
         if (WIDTH == level.length) {
             for (int i = 0; i < WIDTH; i++) {
                 for (int j = 0; j < WIDTH; j++) {
-                    tiles[i][j] = level[i][j] == 1;
+                    tiles[i][j] = level[WIDTH - i - 1][j] == 1;
                 }
             }
         }
@@ -46,6 +46,7 @@ public class Board {
                 flipTile(i, column);
             }
         }
+        moves++;
         return isWinningState();
     }
 
