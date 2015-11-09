@@ -1,5 +1,6 @@
 package com.louiswebb.crossfade;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -101,6 +102,16 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
         if (!paused && boardRenderer.handleTouch(screenX, screenY)) {
             paused = true;
             win = true;
+            return true;
+        }
+        else if (paused && Gdx.app.getType() == Application.ApplicationType.Android) {
+            if (win) {
+                goToLevel(level + 1);
+                paused = false;
+                win = false;
+            } else {
+                pause();
+            }
             return true;
         }
         return false;

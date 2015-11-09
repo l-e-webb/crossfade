@@ -1,5 +1,6 @@
 package com.louiswebb.crossfade;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -153,7 +154,8 @@ public class UIRenderer implements Disposable {
         winLevel = new Label("", skin, "default", UIText.PAUSE_TEXT_COLOR);
         winTime = new Label("", skin, "default", UIText.PAUSE_TEXT_COLOR);
         winMoves = new Label("", skin, "default", UIText.PAUSE_TEXT_COLOR);
-        Label contMsg = new Label(UIText.CONT_MSG, skin, "default", UIText.PAUSE_TEXT_COLOR);
+        String contMsgStr = (Gdx.app.getType() == Application.ApplicationType.Android) ? UIText.CONT_MSG_AND : UIText.CONT_MSG;
+        Label contMsg = new Label(contMsgStr, skin, "default", UIText.PAUSE_TEXT_COLOR);
         winTable.add(winMsg);
         winTable.row();
         winTable.add(winLevel);
