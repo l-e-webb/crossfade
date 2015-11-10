@@ -104,11 +104,15 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
             win = true;
             return true;
         }
-        else if (paused && Gdx.app.getType() == Application.ApplicationType.Android) {
+        else if (paused) {
             if (win) {
-                goToLevel(level + 1);
-                paused = false;
-                win = false;
+                if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                    goToLevel(level + 1);
+                    paused = false;
+                    win = false;
+                } else {
+                    return false;
+                }
             } else {
                 pause();
             }
