@@ -4,7 +4,7 @@ canvas {
 }
 
 body {
-    background-color: #222222;
+    background-color: #222;
 }
 
 .superdev {
@@ -40,4 +40,31 @@ body {
 
 .superdev:hover {
     background-color: rgb(100,100,100);
+}
+
+#license {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+#attr-link {
+    text-decoration: none;
+}
+
+#attr-link:link {
+    color: #fff;
+}
+
+#attr-link:visited {
+    color: #ccc;
+}
+
+#attr-link:hover {
+    text-decoration: underline;
+    color: #fff;
+}
+
+#license > a > img {
+    float: right;
 }
