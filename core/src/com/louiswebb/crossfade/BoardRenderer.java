@@ -11,19 +11,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class BoardRenderer {
 
     private Board board;
+    private Viewport viewport;
 
-    Viewport viewport;
-    private static float TILE_WIDTH;
-    private static float OFFSET;
+    private static float TILE_WIDTH = MainScreen.WORLD_WIDTH / Board.WIDTH;
     private static float OFFSET_FACTOR = 0.04f;
+    private static float OFFSET = TILE_WIDTH * OFFSET_FACTOR;
     private static final Color TILE_ON_COLOR = new Color(0,1,0,1);
     private static final Color TILE_OFF_COLOR = new Color(0.1f, 0.1f, 0.1f, 1f);
 
     public BoardRenderer(Viewport viewport) {
         board = new Board(Levels.LEVELS[0]);
         this.viewport = viewport;
-        TILE_WIDTH = MainScreen.WORLD_WIDTH / Board.WIDTH;
-        OFFSET = TILE_WIDTH * OFFSET_FACTOR;
     }
 
     public void newLevel(int level) {
@@ -55,7 +53,7 @@ public class BoardRenderer {
 
     public boolean handleTouch(int screenX, int screenY) {
         int[] rowAndCol = getTileFromClick(screenX, screenY);
-        if (rowAndCol[0] >= 0 && rowAndCol[0] < Board.WIDTH && rowAndCol[1] >= 0 && rowAndCol[1] < board.WIDTH) {
+        if (rowAndCol[0] >= 0 && rowAndCol[0] < Board.WIDTH && rowAndCol[1] >= 0 && rowAndCol[1] < Board.WIDTH) {
             return makeMove(rowAndCol[0], rowAndCol[1]);
         }
         return false;

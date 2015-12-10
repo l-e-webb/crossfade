@@ -16,8 +16,10 @@ public class UIText {
     public static final String PAUSED = "Paused";
     public static final String WIN_MSG = "You Win!";
     public static final String CONT_MSG = "Press enter to continue";
+    public static final String CONT_MSG_PAUSE = "Press escape to continue";
     public static final String CONT_MSG_AND = "Tap to continue";
     public static final Color TEXT_COLOR = Color.GREEN;
+    public static final Color INVERTED_TEXT_COLOR = Color.BLACK;
     public static final Color PAUSE_TEXT_COLOR = Color.WHITE;
     public static final float TEXT_OFFSET = 10f;
     public static final float TITLE_SCALE = 0.55f;
