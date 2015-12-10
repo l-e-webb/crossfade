@@ -1,5 +1,8 @@
 d:assets:0:application/unknown
 i:badlogic.jpg:68465:image/jpeg
+i:base_label_9patch.png:354:image/png
+i:button_empty_9patch.png:744:image/png
+i:button_filled_9patch.png:557:image/png
 t:font.fnt:6527:application/unknown
 i:font.png:24808:image/png
 i:font1.png:30298:image/png
