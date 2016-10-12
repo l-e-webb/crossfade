@@ -16,9 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
+import com.louiswebb.crossfade.game.Levels;
 
 /**
- * Created by louiswebb on 10/15/15.
+ * Manages all UI elements through a Stage.
  */
 public class UIRenderer implements Disposable {
     
@@ -34,6 +35,9 @@ public class UIRenderer implements Disposable {
     private Label winTime;
     private Label winMoves;
     private Label winLevel;
+    private TextButton leftButton;
+    private TextButton centerButton;
+    private TextButton rightButton;
     private int time;
     private int moves;
 
@@ -53,8 +57,8 @@ public class UIRenderer implements Disposable {
             timeNum.setText("" + time);
             winTime.setText(UIText.TIME + ": " + time);
         }
-        if (moves < screen.boardRenderer.getMoves()) {
-            moves = screen.boardRenderer.getMoves();
+        if (moves < screen.board.getMoves()) {
+            moves = screen.board.getMoves();
             movesNum.setText("" + moves);
             winMoves.setText(UIText.MOVES + ": " + moves);
         }
@@ -86,7 +90,7 @@ public class UIRenderer implements Disposable {
 
     public Stage getStage() { return stage; }
 
-    public void initUI() {
+     void initUI() {
 
         //Font inits.
         BitmapFont titleFont = new BitmapFont(Gdx.files.internal("font.fnt"), false);
@@ -132,18 +136,25 @@ public class UIRenderer implements Disposable {
         timeNum = new Label("0", skin);
         levelNum = new Label("1", skin);
         movesNum = new Label("0", skin);
-        final TextButton prevButton = new TextButton(UIText.PREVIOUS, skin);
-        final TextButton nextButton = new TextButton(UIText.NEXT, skin);
-        prevButton.addListener(new ClickListener() {
+        leftButton = new TextButton(UIText.PREVIOUS, skin);
+        centerButton = new TextButton(UIText.RESET, skin);
+        rightButton = new TextButton(UIText.NEXT, skin);
+        leftButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                screen.goToLevel(screen.level - 1);
+                screen.onLeftButtonClick();
             }
         });
-        nextButton.addListener(new ClickListener() {
+        centerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                screen.goToLevel(screen.level + 1);
+                screen.onCenterButtonClick();
+            }
+        });
+        rightButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                screen.onRightButtonClick();
             }
         });
         mainUiTable.add(titleLabel).colspan(6).expandY();
@@ -156,8 +167,9 @@ public class UIRenderer implements Disposable {
         mainUiTable.add(levelNum).uniform().colspan(2);
         mainUiTable.add(movesNum).uniform().colspan(2);
         mainUiTable.row();
-        mainUiTable.add(prevButton).expandY().fillX().colspan(3);
-        mainUiTable.add(nextButton).expandY().fillX().colspan(3);
+        mainUiTable.add(leftButton).expandY().fillX().colspan(2);
+        mainUiTable.add(centerButton).expandY().fillX().colspan(2);
+        mainUiTable.add(rightButton).expandY().fillX().colspan(2);
 
         //Pause Screen
         pauseUiTable = new Table().background(baseFilled9Patch.tint(Color.DARK_GRAY));
@@ -194,14 +206,25 @@ public class UIRenderer implements Disposable {
 
     }
 
-    public void newLevel() {
+    void newLevel() {
         moves = -1;
         time = -1;
-        winLevel.setText(UIText.LEVEL + ": " + screen.level);
-        levelNum.setText("" + screen.level);
+        int level = screen.level;
+        winLevel.setText(UIText.LEVEL + ": " + level);
+        levelNum.setText("" + level);
+        rightButton.setText(UIText.NEXT);
+        if (level == Levels.getRandomizedLevelIndex()) {
+            levelNum.setText(UIText.RANDOM);
+            rightButton.setText(UIText.RANDOM_BUTTON);
+            winLevel.setText(UIText.LEVEL + ": " + UIText.RANDOM);
+        } else if (level == Levels.getTrollLevelIndex()) {
+            levelNum.setText(UIText.UNKNOWN_LEVEL);
+            //Pointless:
+            winLevel.setText(UIText.LEVEL + ": " + UIText.UNKNOWN_LEVEL);
+        }
     }
 
-    public void updateTablePositions() {
+    void updateTablePositions() {
         float x = screen.viewport.getWorldWidth() / 2;
         float y = screen.viewport.getWorldHeight() / 2;
         float w = 3 * screen.viewport.getWorldWidth() / 5;

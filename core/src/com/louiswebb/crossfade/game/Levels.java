@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 /**
- * Created by louiswebb on 10/12/15.
+ * Loads and stores level data, has only static members.
  */
 public class Levels {
 
@@ -12,13 +12,20 @@ public class Levels {
 
     public static boolean[][][] levels;
 
+    public static boolean[][] trollLevel;
+
     private static final String LEVEL_DATA_FILEPATH = "levels.dat";
 
     private static final char LIGHT_MARKER = '#';
 
+    private Levels() {}
+
     public static void init() {
+        //Get level strings from file.
         String[][] levelData = getLevelData();
         if (levelData == null) return;
+
+        //Init levels array.
         levels = new boolean[levelData.length][][];
         for (int levelIndex = 0; levelIndex < levelData.length; levelIndex++) {
             String[] levelRows = levelData[levelIndex];
@@ -31,6 +38,10 @@ public class Levels {
             }
             levels[levelIndex] = level;
         }
+
+        //Init troll level.
+        trollLevel = new boolean[Board.WIDTH][Board.WIDTH];
+        trollLevel[Board.WIDTH / 2][Board.WIDTH / 2] = true;
     }
 
     private static String[][] getLevelData() {
@@ -52,5 +63,17 @@ public class Levels {
         }
 
         return levelData;
+    }
+
+    public static int getHighestLevelIndex() {
+        return levels != null ? levels.length - 1 : -1;
+    }
+
+    public static int getTrollLevelIndex() {
+        return levels != null ? levels.length : -1;
+    }
+
+    public static int getRandomizedLevelIndex() {
+        return levels != null ? levels.length + 1 : -1;
     }
 }

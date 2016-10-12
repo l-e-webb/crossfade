@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.louiswebb.crossfade.MainScreen;
 
 /**
- * Class which houses and renders and Board object.
+ * Class which houses and renders a Board object.
  */
 public class BoardRenderer {
 
@@ -20,14 +20,9 @@ public class BoardRenderer {
     private static final Color TILE_ON_COLOR = new Color(0,1,0,1);
     private static final Color TILE_OFF_COLOR = new Color(0.1f, 0.1f, 0.1f, 1f);
 
-    public BoardRenderer(Viewport viewport) {
-        board = new Board(Levels.levels[0]);
+    public BoardRenderer(Viewport viewport, Board board) {
         this.viewport = viewport;
-    }
-
-    public void newLevel(int level) {
-        board = new Board(Levels.levels[level]);
-        board.moves = 0;
+        this.board = board;
     }
 
     public void render(ShapeRenderer renderer) {
@@ -55,7 +50,7 @@ public class BoardRenderer {
     public boolean handleTouch(int screenX, int screenY) {
         int[] rowAndCol = getTileFromClick(screenX, screenY);
         if (rowAndCol[0] >= 0 && rowAndCol[0] < Board.WIDTH && rowAndCol[1] >= 0 && rowAndCol[1] < Board.WIDTH) {
-            return makeMove(Board.WIDTH - rowAndCol[0] - 1, rowAndCol[1]);
+            return board.selectTile(Board.WIDTH - rowAndCol[0] - 1, rowAndCol[1]);
         }
         return false;
     }
@@ -67,11 +62,4 @@ public class BoardRenderer {
         return new int[]{row, col};
     }
 
-    public boolean makeMove(int row, int column) {
-        return board.selectTile(row, column);
-    }
-
-    public int getMoves() {
-        return board.moves;
-    }
 }
