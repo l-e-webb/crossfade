@@ -1,12 +1,13 @@
-package com.louiswebb.crossfade;
+package com.louiswebb.crossfade.game;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.louiswebb.crossfade.MainScreen;
 
 /**
- * Created by louiswebb on 10/12/15.
+ * Class which houses and renders and Board object.
  */
 public class BoardRenderer {
 
@@ -20,12 +21,12 @@ public class BoardRenderer {
     private static final Color TILE_OFF_COLOR = new Color(0.1f, 0.1f, 0.1f, 1f);
 
     public BoardRenderer(Viewport viewport) {
-        board = new Board(Levels.LEVELS[0]);
+        board = new Board(Levels.levels[0]);
         this.viewport = viewport;
     }
 
     public void newLevel(int level) {
-        board = new Board(Levels.LEVELS[level]);
+        board = new Board(Levels.levels[level]);
         board.moves = 0;
     }
 
@@ -46,7 +47,7 @@ public class BoardRenderer {
             renderer.setColor(TILE_OFF_COLOR);
         }
         float leftEdge = TILE_WIDTH * column;
-        float botEdge = TILE_WIDTH * row;
+        float botEdge = TILE_WIDTH * (Board.WIDTH - row - 1);
         renderer.rect(leftEdge + OFFSET, botEdge + OFFSET, TILE_WIDTH - 2 * OFFSET, TILE_WIDTH - 2 * OFFSET);
     }
 
@@ -54,7 +55,7 @@ public class BoardRenderer {
     public boolean handleTouch(int screenX, int screenY) {
         int[] rowAndCol = getTileFromClick(screenX, screenY);
         if (rowAndCol[0] >= 0 && rowAndCol[0] < Board.WIDTH && rowAndCol[1] >= 0 && rowAndCol[1] < Board.WIDTH) {
-            return makeMove(rowAndCol[0], rowAndCol[1]);
+            return makeMove(Board.WIDTH - rowAndCol[0] - 1, rowAndCol[1]);
         }
         return false;
     }

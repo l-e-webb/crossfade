@@ -1,31 +1,29 @@
-package com.louiswebb.crossfade;
+package com.louiswebb.crossfade.game;
 
 /**
- * Created by louiswebb on 10/12/15.
+ * Class representing the game board and its current state.
  */
-public class Board {
+class Board {
 
-    public static final int WIDTH = 5;
+    static final int WIDTH = 5;
     private boolean[][] tiles;
-    public int moves;
+    int moves;
 
-    public Board() {
+    Board() {
         tiles = new boolean[WIDTH][WIDTH];
         moves = 0;
     }
 
-    public Board(int[][] level) {
+    Board(boolean[][] level) {
         tiles = new boolean[WIDTH][WIDTH];
-        if (WIDTH == level.length) {
-            for (int i = 0; i < WIDTH; i++) {
-                for (int j = 0; j < WIDTH; j++) {
-                    tiles[i][j] = level[WIDTH - i - 1][j] == 1;
-                }
+        for (int i = 0; i < level.length && i < WIDTH; i++) {
+            for (int j = 0; j < level[i].length && j < WIDTH; j++) {
+                tiles[i][j] = level[i][j];
             }
         }
     }
 
-    public boolean getTileValue(int row, int column) {
+    boolean getTileValue(int row, int column) {
         if (row >= WIDTH || column >= WIDTH) return false;
         return tiles[row][column];
     }
@@ -36,7 +34,7 @@ public class Board {
         }
     }
 
-    public boolean selectTile(int row, int column) {
+    boolean selectTile(int row, int column) {
         if (row >= WIDTH || column >= WIDTH) return false;
         for (int i = 0; i < WIDTH; i++) {
             flipTile(row, i);
@@ -50,7 +48,7 @@ public class Board {
         return isWinningState();
     }
 
-    public boolean isWinningState() {
+    boolean isWinningState() {
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 if (getTileValue(i, j)) return false;

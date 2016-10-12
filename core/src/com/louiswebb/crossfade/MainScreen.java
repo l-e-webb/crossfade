@@ -9,6 +9,8 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.louiswebb.crossfade.game.BoardRenderer;
+import com.louiswebb.crossfade.game.Levels;
 
 public class MainScreen extends ScreenAdapter implements InputProcessor {
 
@@ -52,7 +54,7 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
     }
 
     public void goToLevel(int level) {
-        this.level = (level > 0 && level < Levels.LEVELS.length) ? level : this.level;
+        this.level = (level > 0 && level < Levels.levels.length) ? level : this.level;
         boardRenderer.newLevel(this.level);
         uiRenderer.newLevel();
         time = 0f;
