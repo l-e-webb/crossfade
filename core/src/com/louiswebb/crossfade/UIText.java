@@ -22,9 +22,15 @@ public class UIText {
     public static final String CONT_MSG = "Press enter to continue";
     public static final String CONT_MSG_PAUSE = "Press escape to continue";
     public static final String CONT_MSG_AND = "Tap to continue";
+    public static final String SFX = "SFX";
+    public static final String SFX_LEVEL = "SFX level";
+    public static final String MUSIC = "Music";
+    public static final String MUSIC_LEVEL = "Music level";
+    public static final String ANIMATE_TILES = "Animate tiles";
+    public static final String CONTINUE = "Continue";
     public static final Color TEXT_COLOR = Color.GREEN;
     public static final Color INVERTED_TEXT_COLOR = Color.BLACK;
-    public static final Color PAUSE_TEXT_COLOR = Color.WHITE;
+    public static final Color PAUSE_BOX_COLOR = new Color(0, 0.15f, 0, 1);
     public static final float TEXT_OFFSET = 10f;
     public static final float TITLE_SCALE = 0.55f;
     public static final float TEXT_SCALE = 0.2f;

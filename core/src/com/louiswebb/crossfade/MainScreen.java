@@ -1,6 +1,5 @@
 package com.louiswebb.crossfade;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -75,6 +74,10 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
         state = State.PLAY;
     }
 
+    void goToNextLevel() {
+        goToLevel(this.level + 1);
+    }
+
     void reset() {
         board.reset();
         time = 0f;
@@ -98,13 +101,29 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
         }
     }
 
+    @Override
     public void pause() {
+        if (state == State.PLAY) {
+            state = State.PAUSE;
+        }
+    }
+
+    @Override
+    public void resume() {
+        if (state == State.PAUSE) {
+            state = State.PLAY;
+        }
+    }
+
+    public void togglePause() {
         switch (state) {
             case PLAY:
-                state = State.PAUSE;
+                pause();
                 break;
             case PAUSE:
-                state = State.PLAY;
+                resume();
+                break;
+            default:
                 break;
         }
     }
@@ -121,20 +140,16 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
     }
 
     @Override
-    public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.ESCAPE) {
-            pause();
-            return true;
-        }
-        if (state == State.WIN && keycode == Input.Keys.ENTER) {
-            goToLevel(level + 1);
-            return true;
-        }
+    public boolean keyUp(int keycode) {
         return false;
     }
 
     @Override
-    public boolean keyUp(int keycode) {
+    public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.ESCAPE) {
+            togglePause();
+            return true;
+        }
         return false;
     }
 
@@ -152,20 +167,14 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
                     return true;
                 }
                 return false;
-            case PAUSE:
-                if (CrossFadeGame.APP_TYPE == Application.ApplicationType.Android) {
-                    state = State.PLAY;
-                    return true;
-                }
-                return false;
             case WIN:
-                if (CrossFadeGame.APP_TYPE == Application.ApplicationType.Android) {
-                    goToLevel(level + 1);
-                    return true;
-                }
+                //Uncomment to make tapping the screen automatically continue after win.
+                //goToNextLevel();
+                //return true;
+                return false;
+            case PAUSE:default:
                 return false;
         }
-        return false;
     }
 
     @Override
