@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -15,12 +18,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.louiswebb.crossfade.game.Levels;
+import com.louiswebb.crossfade.sound.SoundManager;
 
 /**
  * Manages all UI elements through a Stage.
@@ -50,6 +55,11 @@ public class UIRenderer implements Disposable {
     private TextButton leftButton;
     private TextButton centerButton;
     private TextButton rightButton;
+    private CheckBox sfxOn;
+    private CheckBox musicOn;
+    private Slider sfxVolumeSlider;
+    private Slider musicVolumeSlider;
+    private CheckBox animateTiles;
     private int time;
     private int moves;
 
@@ -100,6 +110,22 @@ public class UIRenderer implements Disposable {
         }
     }
 
+    public void initPause() {
+        sfxOn.setChecked(SoundManager.isSfxOn());
+        musicOn.setChecked(SoundManager.isMusicOn());
+        sfxVolumeSlider.setValue(SoundManager.getSfxVolume());
+        musicVolumeSlider.setValue(SoundManager.getMusicVolume());
+        leftButton.setDisabled(true);
+        centerButton.setDisabled(true);
+        rightButton.setDisabled(true);
+    }
+
+    public void initUnpause() {
+        leftButton.setDisabled(false);
+        centerButton.setDisabled(false);
+        rightButton.setDisabled(false);
+    }
+
     public Stage getStage() { return stage; }
 
     void initUI() {
@@ -133,8 +159,8 @@ public class UIRenderer implements Disposable {
         buttonStyle.overFontColor = UIText.INVERTED_TEXT_COLOR;
         buttonStyle.font = uiFont;
         CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle(
-                baseFilled9Patch.tint(UIText.TEXT_COLOR),
                 baseEmpty9Patch.tint(UIText.TEXT_COLOR),
+                baseFilled9Patch.tint(UIText.TEXT_COLOR),
                 uiFont,
                 UIText.TEXT_COLOR
         );
@@ -163,9 +189,19 @@ public class UIRenderer implements Disposable {
         mainUiTable.setFillParent(true);
         mainUiTable.top();
         mainUiTable.pad(UIText.TEXT_OFFSET, UIText.TEXT_OFFSET, MainScreen.WORLD_WIDTH + UIText.TEXT_OFFSET, UIText.TEXT_OFFSET);
+        //This listener handles events whenever the game state is not PLAY, preventing any UI
+        //elements in this table from receiving events.
+        mainUiTable.addCaptureListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                if (screen.state != MainScreen.State.PLAY) {
+                    event.stop();
+                }
+                return false;
+            }
+        });
         //Uncomment to see wireframe.
         //mainUiTable.setDebug(true);
-        stage.addActor(mainUiTable);
         final Label titleLabel = new Label(UIText.TITLE, skin, "titleStyle");
         final Label timeLabel = new Label(UIText.TIME, skin);
         final Label levelLabel = new Label(UIText.LEVEL, skin);
@@ -180,18 +216,21 @@ public class UIRenderer implements Disposable {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 screen.onLeftButtonClick();
+                SoundManager.buttonSound();
             }
         });
         centerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 screen.onCenterButtonClick();
+                SoundManager.buttonSound();
             }
         });
         rightButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 screen.onRightButtonClick();
+                SoundManager.buttonSound();
             }
         });
         mainUiTable.add(titleLabel).colspan(6).expandY();
@@ -212,23 +251,49 @@ public class UIRenderer implements Disposable {
         pauseUiTable = new Table().background(baseTransparent9Patch.tint(UIText.PAUSE_BOX_COLOR));
         //Uncomment to see wireframe.
         //pauseUiTable.setDebug(true);
-        stage.addActor(pauseUiTable);
         final Label pauseLabel = new Label(UIText.PAUSED, skin);
-        final CheckBox sfxOn = new CheckBox(UIText.SFX, skin);
+        sfxOn = new CheckBox(UIText.SFX, skin);
         sfxOn.getImageCell().maxSize(CHECKBOX_SIZE).spaceRight(CHECKBOX_RIGHT_PADDING);
+        sfxOn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                SoundManager.setSfx(sfxOn.isChecked());
+                SoundManager.buttonSound();
+            }
+        });
         final Label sfxLevelLabel = new Label(UIText.SFX_LEVEL, skin);
-        final Slider sfxLevelSlider = new Slider(0, 1, 0.1f, false, skin);
-        final CheckBox musicOn = new CheckBox(UIText.MUSIC, skin);
+        sfxVolumeSlider = new Slider(0, 1, 0.1f, false, skin);
+        sfxVolumeSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                SoundManager.setSfxVolume(sfxVolumeSlider.getValue());
+            }
+        });
+        musicOn = new CheckBox(UIText.MUSIC, skin);
         musicOn.getImageCell().maxSize(CHECKBOX_SIZE).spaceRight(CHECKBOX_RIGHT_PADDING);
+        musicOn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                SoundManager.setMusic(musicOn.isChecked());
+                SoundManager.buttonSound();
+            }
+        });
         final Label musicLevelLabel = new Label(UIText.MUSIC_LEVEL, skin);
-        final Slider musicLevelSlider = new Slider(0, 1, 0.1f, false, skin);
-        final CheckBox animateTiles = new CheckBox(UIText.ANIMATE_TILES, skin);
+        musicVolumeSlider = new Slider(0, 1, 0.1f, false, skin);
+        musicVolumeSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                SoundManager.setMusicVolume(musicVolumeSlider.getValue());
+            }
+        });
+        animateTiles = new CheckBox(UIText.ANIMATE_TILES, skin);
         animateTiles.getImageCell().maxSize(CHECKBOX_SIZE).spaceRight(CHECKBOX_RIGHT_PADDING);
         final Button pauseContinueButton = new TextButton(UIText.CONTINUE, skin);
         pauseContinueButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                screen.resume();
+                screen.unpauseGame();
+                SoundManager.buttonSound();
             }
         });
         pauseUiTable.add(pauseLabel).center().colspan(2);
@@ -236,12 +301,12 @@ public class UIRenderer implements Disposable {
         pauseUiTable.add(sfxOn).left().colspan(2).spaceTop(ROW_PADDING);
         pauseUiTable.row();
         pauseUiTable.add(sfxLevelLabel).left();
-        pauseUiTable.add(sfxLevelSlider).growX();
+        pauseUiTable.add(sfxVolumeSlider).growX();
         pauseUiTable.row();
         pauseUiTable.add(musicOn).left().colspan(2).spaceTop(ROW_PADDING);
         pauseUiTable.row();
         pauseUiTable.add(musicLevelLabel).left();
-        pauseUiTable.add(musicLevelSlider).growX();
+        pauseUiTable.add(musicVolumeSlider).growX();
         pauseUiTable.row();
         pauseUiTable.add(animateTiles).left().colspan(2).spaceTop(ROW_PADDING);
         pauseUiTable.row();
@@ -251,7 +316,6 @@ public class UIRenderer implements Disposable {
         winUiTable = new Table().background(baseTransparent9Patch.tint(UIText.PAUSE_BOX_COLOR));
         //Uncomment to see wireframe.
         //winUiTable.setDebug(true);
-        stage.addActor(winUiTable);
         final Label winMsg = new Label(UIText.WIN_MSG, skin);
         winLevel = new Label("", skin);
         winTime = new Label("", skin);
@@ -261,6 +325,7 @@ public class UIRenderer implements Disposable {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 screen.goToNextLevel();
+                SoundManager.buttonSound();
             }
         });
         winUiTable.add(winMsg).spaceBottom(ROW_PADDING);
@@ -273,6 +338,9 @@ public class UIRenderer implements Disposable {
         winUiTable.row();
         winUiTable.add(winContinueButton).pad(BUTTON_PADDING);
 
+        stage.addActor(mainUiTable);
+        stage.addActor(pauseUiTable);
+        stage.addActor(winUiTable);
     }
 
     void newLevel() {

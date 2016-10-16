@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.louiswebb.crossfade.game.Board;
 import com.louiswebb.crossfade.game.BoardRenderer;
 import com.louiswebb.crossfade.game.Levels;
+import com.louiswebb.crossfade.sound.SoundManager;
 
 public class MainScreen extends ScreenAdapter implements InputProcessor {
 
@@ -40,6 +41,7 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
         multiplexer.addProcessor(this);
         multiplexer.addProcessor(uiRenderer.getStage());
         Gdx.input.setInputProcessor(multiplexer);
+        SoundManager.playMusic();
         goToLevel(1);
     }
 
@@ -86,14 +88,17 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
     }
 
     void onLeftButtonClick() {
+        if (state == State.PAUSE) return;
         goToLevel(this.level - 1);
     }
 
     void onCenterButtonClick() {
+        if (state == State.PAUSE) return;
         reset();
     }
 
     void onRightButtonClick() {
+        if (state == State.PAUSE) return;
         if (this.level == Levels.getRandomizedLevelIndex()) {
             goToLevel(this.level);
         } else {
@@ -103,25 +108,37 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void pause() {
-        if (state == State.PLAY) {
-            state = State.PAUSE;
-        }
+        pauseGame();
+        SoundManager.stopMusic();
     }
 
     @Override
     public void resume() {
+        SoundManager.playMusic();
+    }
+
+    public void pauseGame() {
+        if (state == State.PLAY) {
+            state = State.PAUSE;
+            uiRenderer.initPause();
+        }
+    }
+
+
+    public void unpauseGame() {
         if (state == State.PAUSE) {
             state = State.PLAY;
+            uiRenderer.initUnpause();
         }
     }
 
     public void togglePause() {
         switch (state) {
             case PLAY:
-                pause();
+                pauseGame();
                 break;
             case PAUSE:
-                resume();
+                unpauseGame();
                 break;
             default:
                 break;
@@ -132,6 +149,11 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
     public void resize(int width, int height) {
         viewport.update(width, height, true);
         uiRenderer.updateTablePositions();
+    }
+
+    @Override
+    public void hide() {
+        SoundManager.stopMusic();
     }
 
     @Override
@@ -149,6 +171,9 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
         if (keycode == Input.Keys.ESCAPE) {
             togglePause();
             return true;
+        } else if (keycode == Input.Keys.MENU) {
+            pauseGame();
+            return true;
         }
         return false;
     }
@@ -164,6 +189,7 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
             case PLAY:
                 if (boardRenderer.handleTouch(screenX, screenY)) {
                     state = State.WIN;
+                    SoundManager.winSound();
                     return true;
                 }
                 return false;

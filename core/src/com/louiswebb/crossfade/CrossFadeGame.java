@@ -13,6 +13,9 @@ public class CrossFadeGame extends Game {
 	@Override
 	public void create () {
         APP_TYPE = Gdx.app.getType();
+		if (APP_TYPE == Application.ApplicationType.Android) {
+			Gdx.input.setCatchMenuKey(true);
+		}
 		Levels.init();
 		SoundManager.init();
         this.setScreen(new MainScreen());

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.louiswebb.crossfade.MainScreen;
+import com.louiswebb.crossfade.sound.SoundManager;
 
 /**
  * Class which houses and renders a Board object.
@@ -50,6 +51,7 @@ public class BoardRenderer {
     public boolean handleTouch(int screenX, int screenY) {
         int[] rowAndCol = getTileFromClick(screenX, screenY);
         if (rowAndCol[0] >= 0 && rowAndCol[0] < Board.WIDTH && rowAndCol[1] >= 0 && rowAndCol[1] < Board.WIDTH) {
+            SoundManager.moveSound();
             return board.selectTile(Board.WIDTH - rowAndCol[0] - 1, rowAndCol[1]);
         }
         return false;
