@@ -29,6 +29,7 @@ public class UIText {
     public static final String ANIMATE_TILES = "Animate tiles";
     public static final String CONTINUE = "Continue";
     public static final Color TEXT_COLOR = Color.GREEN;
+    public static final Color DARK_COLOR = Color.FOREST;
     public static final Color INVERTED_TEXT_COLOR = Color.BLACK;
     public static final Color PAUSE_BOX_COLOR = new Color(0, 0.15f, 0, 1);
     public static final float TEXT_OFFSET = 10f;

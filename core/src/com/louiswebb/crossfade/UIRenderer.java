@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -18,10 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.louiswebb.crossfade.game.Levels;
@@ -36,10 +34,10 @@ public class UIRenderer implements Disposable {
     public static final float CHECKBOX_SIZE = 40f;
     public static final float CHECKBOX_RIGHT_PADDING = 25f;
     public static final float PAUSE_TABLE_WIDTH_RATIO = 0.85f;
-    public static final int SLIDER_KNOB_SIZE = 25;
-    public static final int SLIDER_HEIGHT = 30;
-    public static final float ROW_PADDING = 15f;
-    
+    public static final int SLIDER_KNOB_WIDTH = 20;
+    public static final int SLIDER_KNOB_HEIGHT = 25;
+    public static final float ROW_PADDING = 20f;
+
     private MainScreen screen;
     private Stage stage;
     private Table mainUiTable;
@@ -158,21 +156,27 @@ public class UIRenderer implements Disposable {
         buttonStyle.fontColor = UIText.TEXT_COLOR;
         buttonStyle.overFontColor = UIText.INVERTED_TEXT_COLOR;
         buttonStyle.font = uiFont;
+        TextureRegionDrawable checkboxEmpty = new TextureRegionDrawable(
+                new TextureRegion(new Texture("checkbox_empty.png"))
+        );
+        TextureRegionDrawable checkboxFilled = new TextureRegionDrawable(
+                new TextureRegion(new Texture("checkbox_filled.png"))
+        );
         CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle(
-                baseEmpty9Patch.tint(UIText.TEXT_COLOR),
-                baseFilled9Patch.tint(UIText.TEXT_COLOR),
+                checkboxEmpty.tint(UIText.TEXT_COLOR),
+                checkboxFilled.tint(UIText.TEXT_COLOR),
                 uiFont,
                 UIText.TEXT_COLOR
         );
-        Sprite sliderBackgroundSprite = new Sprite(baseLabelTexture);
-        sliderBackgroundSprite.setSize(SLIDER_HEIGHT, SLIDER_HEIGHT);
-        SpriteDrawable sliderBackground = new SpriteDrawable(sliderBackgroundSprite).tint(Color.FOREST);
+        TextureRegionDrawable sliderBackground = new TextureRegionDrawable(
+                new TextureRegion(new Texture("slider_background.png"))
+        );
         Sprite sliderKnobSprite = new Sprite(new Texture("slider_knob.png"));
-        sliderKnobSprite.setSize(SLIDER_KNOB_SIZE, SLIDER_KNOB_SIZE);
-        SpriteDrawable sliderKnob = new SpriteDrawable(sliderKnobSprite).tint(Color.GREEN);
+        sliderKnobSprite.setSize(SLIDER_KNOB_WIDTH, SLIDER_KNOB_HEIGHT);
+        SpriteDrawable sliderKnob = new SpriteDrawable(sliderKnobSprite);
         Slider.SliderStyle sliderStyle = new Slider.SliderStyle(
-                sliderBackground,
-                sliderKnob
+                sliderBackground.tint(UIText.DARK_COLOR),
+                sliderKnob.tint(UIText.TEXT_COLOR)
         );
 
 
