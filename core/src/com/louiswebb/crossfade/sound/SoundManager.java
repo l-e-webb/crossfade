@@ -63,7 +63,6 @@ public class SoundManager implements Disposable {
 
     private static void initSounds() {
         instance.moveSound = Gdx.audio.newSound(Gdx.files.internal("move_sound.wav"));
-        //TODO: replace with different sound.
         instance.buttonSound = instance.moveSound;
         instance.winSound = Gdx.audio.newSound(Gdx.files.internal("win_sound.mp3"));
     }

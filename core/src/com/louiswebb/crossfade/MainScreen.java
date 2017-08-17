@@ -1,10 +1,6 @@
 package com.louiswebb.crossfade;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -41,7 +37,7 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
         multiplexer.addProcessor(this);
         multiplexer.addProcessor(uiRenderer.getStage());
         Gdx.input.setInputProcessor(multiplexer);
-        SoundManager.playMusic();
+        SoundManager.setMusic(CrossFadeGame.APP_TYPE != Application.ApplicationType.WebGL);
         goToLevel(1);
     }
 
