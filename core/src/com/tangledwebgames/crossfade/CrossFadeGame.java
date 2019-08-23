@@ -1,10 +1,10 @@
-package com.louiswebb.crossfade;
+package com.tangledwebgames.crossfade;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.louiswebb.crossfade.game.Levels;
-import com.louiswebb.crossfade.sound.SoundManager;
+import com.tangledwebgames.crossfade.game.Levels;
+import com.tangledwebgames.crossfade.sound.SoundManager;
 
 public class CrossFadeGame extends Game {
 

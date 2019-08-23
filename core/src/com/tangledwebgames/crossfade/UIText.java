@@ -1,4 +1,4 @@
-package com.louiswebb.crossfade;
+package com.tangledwebgames.crossfade;
 
 import com.badlogic.gdx.graphics.Color;
 
@@ -33,8 +33,8 @@ public class UIText {
     public static final Color INVERTED_TEXT_COLOR = Color.BLACK;
     public static final Color PAUSE_BOX_COLOR = new Color(0, 0.15f, 0, 1);
     public static final float TEXT_OFFSET = 10f;
-    public static final float TITLE_SCALE = 0.55f;
-    public static final float TEXT_SCALE = 0.2f;
+    public static final float TITLE_SCALE = 0.875f;
+    public static final float TEXT_SCALE = 1f;
     public static final float PAUSE_BOX_OPACITY = 0.25f;
 
     private UIText() {}

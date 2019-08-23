@@ -1,4 +1,4 @@
-package com.louiswebb.crossfade.game;
+package com.tangledwebgames.crossfade.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

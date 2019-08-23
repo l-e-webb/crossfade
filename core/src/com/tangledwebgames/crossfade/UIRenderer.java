@@ -1,4 +1,4 @@
-package com.louiswebb.crossfade;
+package com.tangledwebgames.crossfade;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -22,8 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
-import com.louiswebb.crossfade.game.Levels;
-import com.louiswebb.crossfade.sound.SoundManager;
+import com.tangledwebgames.crossfade.game.Levels;
+import com.tangledwebgames.crossfade.sound.SoundManager;
 
 /**
  * Manages all UI elements through a Stage.
@@ -33,9 +33,10 @@ public class UIRenderer implements Disposable {
     public static final float BUTTON_PADDING = 10f;
     public static final float CHECKBOX_SIZE = 40f;
     public static final float CHECKBOX_RIGHT_PADDING = 25f;
-    public static final float PAUSE_TABLE_WIDTH_RATIO = 0.85f;
-    public static final int SLIDER_KNOB_WIDTH = 20;
-    public static final int SLIDER_KNOB_HEIGHT = 25;
+    public static final float PAUSE_TABLE_WIDTH_RATIO = 0.875f;
+    public static final int SLIDER_KNOB_WIDTH = 12;
+    public static final int SLIDER_KNOB_HEIGHT = 20;
+    public static final int SLIDER_PADDING_LEFT = 10;
     public static final float ROW_PADDING = 20f;
 
     private MainScreen screen;
@@ -129,7 +130,7 @@ public class UIRenderer implements Disposable {
     void initUI() {
 
         //Font inits.
-        BitmapFont titleFont = new BitmapFont(Gdx.files.internal("font.fnt"), false);
+        BitmapFont titleFont = new BitmapFont(Gdx.files.internal("titleFont.fnt"), false);
         titleFont.getData().setScale(UIText.TITLE_SCALE);
         titleFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         BitmapFont uiFont = new BitmapFont(Gdx.files.internal("font.fnt"), false);
@@ -305,12 +306,12 @@ public class UIRenderer implements Disposable {
         pauseUiTable.add(sfxOn).left().colspan(2).spaceTop(ROW_PADDING);
         pauseUiTable.row();
         pauseUiTable.add(sfxLevelLabel).left();
-        pauseUiTable.add(sfxVolumeSlider).growX();
+        pauseUiTable.add(sfxVolumeSlider).growX().padLeft(SLIDER_PADDING_LEFT);
         pauseUiTable.row();
         pauseUiTable.add(musicOn).left().colspan(2).spaceTop(ROW_PADDING);
         pauseUiTable.row();
         pauseUiTable.add(musicLevelLabel).left();
-        pauseUiTable.add(musicVolumeSlider).growX();
+        pauseUiTable.add(musicVolumeSlider).growX().padLeft(SLIDER_PADDING_LEFT);
         pauseUiTable.row();
         pauseUiTable.add(animateTiles).left().colspan(2).spaceTop(ROW_PADDING);
         pauseUiTable.row();

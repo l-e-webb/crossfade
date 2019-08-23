@@ -1,9 +1,9 @@
-package com.louiswebb.crossfade.desktop;
+package com.tangledwebgames.crossfade.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.louiswebb.crossfade.CrossFadeGame;
-import com.louiswebb.crossfade.MainScreen;
+import com.tangledwebgames.crossfade.CrossFadeGame;
+import com.tangledwebgames.crossfade.MainScreen;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
