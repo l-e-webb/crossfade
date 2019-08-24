@@ -35,7 +35,7 @@ public class HtmlLauncher extends GwtApplication {
         final Context2d context = canvas.getContext2d();
         context.setTextAlign(Context2d.TextAlign.CENTER);
         context.setTextBaseline(Context2d.TextBaseline.MIDDLE);
-        context.setFont("32pt Courier");
+        context.setFont("32pt Arial");
 
         return new Preloader.PreloaderCallback() {
             @Override

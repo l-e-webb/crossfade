@@ -1,24 +1,51 @@
 package com.tangledwebgames.crossfade.game;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.tangledwebgames.crossfade.MainScreen;
 
 /**
  * Class representing the game board and its current state.
  */
-public class Board {
+public class Board extends Stage {
+
+    static boolean debug = false;
 
     public static final int WIDTH = 5;
-    private boolean[][] tiles;
+    static final float TILE_PADDING_RATIO = 0.016f;
+    static final Color TILE_ON_COLOR = new Color(0,1,0,1);
+    static final Color TILE_ON_ACTIVE_COLOR = new Color(0.4f, 1f, 0.15f, 1f);
+    static final Color TILE_OFF_COLOR = new Color(0.1f, 0.1f, 0.1f, 1f);
+    static final Color TILE_OFF_ACTIVE_COLOR = new Color(0.2f, 0.06f, 0.03f, 1f);
+    Group boardGroup;
+    ShapeRenderer renderer;
+    MainScreen mainScreen;
+    private Tile[][] tiles;
     private boolean[][] originalState;
     private int moves;
 
-    public Board() {
+    public Board(MainScreen mainScreen, Viewport viewport, ShapeRenderer renderer) {
+        super(viewport);
+        this.mainScreen = mainScreen;
+        this.renderer = renderer;
+        boardGroup = new Group();
+        addActor(boardGroup);
+        tiles = new Tile[WIDTH][WIDTH];
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                Tile tile = new Tile(i, j);
+                tiles[i][j] = tile;
+                boardGroup.addActor(tile);
+                tile.init(this);
+            }
+        }
         originalState = new boolean[WIDTH][WIDTH];
         reset();
-    }
-
-    public Board(boolean[][] level) {
-        initializeLevel(level);
+        setDebugAll(debug);
     }
 
     public void initializeLevel(boolean[][] level) {
@@ -32,12 +59,12 @@ public class Board {
 
     boolean getTileValue(int row, int column) {
         if (row >= WIDTH || column >= WIDTH) return false;
-        return tiles[row][column];
+        return tiles[row][column].value;
     }
 
     private void flipTile(int row, int column) {
         if (row < WIDTH && column < WIDTH) {
-            tiles[row][column] = !tiles[row][column];
+            tiles[row][column].toggle();
         }
     }
 
@@ -52,7 +79,12 @@ public class Board {
             }
         }
         moves++;
-        return isWinningState();
+        clearActiveTiles();
+        boolean winningState = isWinningState();
+        if (isWinningState()) {
+            mainScreen.win();
+        }
+        return winningState;
     }
 
     boolean isWinningState() {
@@ -67,7 +99,7 @@ public class Board {
     public void makeRandomLevel(boolean solvable) {
         if (solvable) {
             //Wipe board clean.
-            tiles = new boolean[WIDTH][WIDTH];
+            tiles = new Tile[WIDTH][WIDTH];
             //Create random solvable board by making a random series of moves from a blank board.
             int randomMoves = MathUtils.random(3, WIDTH * WIDTH * 2 / 3);
             for (int i = 0; i < randomMoves; i++) {
@@ -77,7 +109,7 @@ public class Board {
             originalState = new boolean[WIDTH][WIDTH];
             for (int i = 0; i < WIDTH; i++) {
                 for (int j = 0; j < WIDTH; j++) {
-                    originalState[i][j] = tiles[i][j];
+                    originalState[i][j] = tiles[i][j].value;
                 }
             }
         } else {
@@ -92,13 +124,53 @@ public class Board {
     }
 
     public void reset() {
-        tiles = new boolean[WIDTH][WIDTH];
-        for (int i = 0; i < originalState.length && i < WIDTH; i++) {
-            for (int j = 0; j < originalState[i].length && j < WIDTH; j++) {
-                tiles[i][j] = originalState[i][j];
+        moves = 0;
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                tiles[i][j].value = originalState[i][j];
             }
         }
-        moves = 0;
+        updateSize();
     }
 
+    public void updateSize() {
+        float worldWidth = getWidth();
+        float tilePadding = worldWidth * TILE_PADDING_RATIO;
+        float boardSize = worldWidth - tilePadding;
+        boardGroup.setPosition(
+                tilePadding,
+                tilePadding
+        );
+        boardGroup.setSize(boardSize, boardSize);
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                tiles[i][j].updateSize(tilePadding);
+            }
+        }
+    }
+
+    @Override
+    public void draw() {
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        super.draw();
+        renderer.end();
+    }
+
+    void updateActiveTiles(int row, int column) {
+        clearActiveTiles();
+        for (int i = 0; i < WIDTH; i++) {
+            tiles[i][column].active = true;
+        }
+        for (int j = 0; j < WIDTH; j++) {
+            tiles[row][j].active = true;
+        }
+    }
+
+    void clearActiveTiles() {
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                tiles[i][j].active = false;
+            }
+        }
+    }
 }

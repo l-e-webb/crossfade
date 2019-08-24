@@ -1,18 +1,21 @@
 package com.tangledwebgames.crossfade;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.tangledwebgames.crossfade.game.Board;
-import com.tangledwebgames.crossfade.game.BoardRenderer;
 import com.tangledwebgames.crossfade.game.Levels;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 
 public class MainScreen extends ScreenAdapter implements InputProcessor {
 
     ExtendViewport viewport;
-    BoardRenderer boardRenderer;
     Board board;
     UIRenderer uiRenderer;
 
@@ -30,12 +33,12 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
         time = 0f;
         renderer = new ShapeRenderer();
         viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, WORLD_WIDTH, 0);
-        board = new Board();
-        boardRenderer = new BoardRenderer(viewport, board);
+        board = new Board(this, viewport, renderer);
         uiRenderer = new UIRenderer(this);
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(this);
         multiplexer.addProcessor(uiRenderer.getStage());
+        multiplexer.addProcessor(board);
         Gdx.input.setInputProcessor(multiplexer);
         SoundManager.setMusic(CrossFadeGame.APP_TYPE != Application.ApplicationType.WebGL);
         goToLevel(1);
@@ -48,7 +51,7 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         viewport.apply();
         renderer.setProjectionMatrix(viewport.getCamera().combined);
-        boardRenderer.render(renderer);
+        board.draw();
         uiRenderer.render();
     }
 
@@ -128,6 +131,11 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
         }
     }
 
+    public void win() {
+        state = State.WIN;
+        SoundManager.winSound();
+    }
+
     public void togglePause() {
         switch (state) {
             case PLAY:
@@ -145,6 +153,7 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
     public void resize(int width, int height) {
         viewport.update(width, height, true);
         uiRenderer.updateTablePositions();
+        board.updateSize();
     }
 
     @Override
@@ -155,6 +164,7 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
     @Override
     public void dispose() {
         renderer.dispose();
+        board.dispose();
     }
 
     @Override
@@ -181,22 +191,12 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        switch (state) {
-            case PLAY:
-                if (boardRenderer.handleTouch(screenX, screenY)) {
-                    state = State.WIN;
-                    SoundManager.winSound();
-                    return true;
-                }
-                return false;
-            case WIN:
-                //Uncomment to make tapping the screen automatically continue after win.
-                //goToNextLevel();
-                //return true;
-                return false;
-            case PAUSE:default:
-                return false;
-        }
+        //Uncomment to make tapping the screen automatically continue after win.
+//        if (state == State.WIN) {
+//            goToNextLevel();
+//            return true;
+//        }
+        return false;
     }
 
     @Override
