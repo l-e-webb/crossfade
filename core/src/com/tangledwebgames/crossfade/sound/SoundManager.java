@@ -136,6 +136,10 @@ public class SoundManager implements Disposable {
         }
     }
 
+    public static void disposeOfInstance() {
+        instance.dispose();
+    }
+
     @Override
     public void dispose() {
         if (backgroundMusic != null) backgroundMusic.dispose();

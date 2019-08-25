@@ -65,15 +65,15 @@ public class UIRenderer implements Disposable {
     private int time;
     private int moves;
 
-    public UIRenderer(MainScreen screen) {
-        this.screen = screen;
+    UIRenderer() {
+        screen = MainScreen.instance;
         stage = new Stage(screen.viewport);
         time = -1;
         moves = -1;
         initUI();
     }
 
-    public void render() {
+    void render() {
 
         //Update time and move UI elements
         if (time < (int) screen.time) {
@@ -112,7 +112,7 @@ public class UIRenderer implements Disposable {
         }
     }
 
-    public void initPause() {
+    void initPause() {
         sfxOn.setChecked(SoundManager.isSfxOn());
         musicOn.setChecked(SoundManager.isMusicOn());
         sfxVolumeSlider.setValue(SoundManager.getSfxVolume());
@@ -122,13 +122,13 @@ public class UIRenderer implements Disposable {
         rightButton.setDisabled(true);
     }
 
-    public void initUnpause() {
+    void initUnpause() {
         leftButton.setDisabled(false);
         centerButton.setDisabled(false);
         rightButton.setDisabled(false);
     }
 
-    public Stage getStage() { return stage; }
+    Stage getStage() { return stage; }
 
     void initUI() {
 
@@ -378,6 +378,7 @@ public class UIRenderer implements Disposable {
         winUiTable.setPosition(x, y, Align.center);
     }
 
+    @Override
     public void dispose() {
         stage.dispose();
     }

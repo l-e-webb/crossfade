@@ -15,6 +15,8 @@ import com.tangledwebgames.crossfade.sound.SoundManager;
 
 public class MainScreen extends ScreenAdapter implements InputProcessor {
 
+    public static MainScreen instance;
+
     ExtendViewport viewport;
     Board board;
     UIRenderer uiRenderer;
@@ -30,11 +32,12 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void show() {
+        instance = this;
         time = 0f;
         renderer = new ShapeRenderer();
         viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, WORLD_WIDTH, 0);
-        board = new Board(this, viewport, renderer);
-        uiRenderer = new UIRenderer(this);
+        board = new Board(viewport, renderer);
+        uiRenderer = new UIRenderer();
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(this);
         multiplexer.addProcessor(uiRenderer.getStage());
@@ -136,6 +139,10 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
         SoundManager.winSound();
     }
 
+    public boolean inGame() {
+        return state == State.PLAY;
+    }
+
     public void togglePause() {
         switch (state) {
             case PLAY:
@@ -165,6 +172,7 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
     public void dispose() {
         renderer.dispose();
         board.dispose();
+        SoundManager.disposeOfInstance();
     }
 
     @Override

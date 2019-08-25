@@ -23,14 +23,12 @@ public class Board extends Stage {
     static final Color TILE_OFF_ACTIVE_COLOR = new Color(0.2f, 0.06f, 0.03f, 1f);
     Group boardGroup;
     ShapeRenderer renderer;
-    MainScreen mainScreen;
     private Tile[][] tiles;
     private boolean[][] originalState;
     private int moves;
 
-    public Board(MainScreen mainScreen, Viewport viewport, ShapeRenderer renderer) {
+    public Board(Viewport viewport, ShapeRenderer renderer) {
         super(viewport);
-        this.mainScreen = mainScreen;
         this.renderer = renderer;
         boardGroup = new Group();
         addActor(boardGroup);
@@ -82,7 +80,7 @@ public class Board extends Stage {
         clearActiveTiles();
         boolean winningState = isWinningState();
         if (isWinningState()) {
-            mainScreen.win();
+            MainScreen.instance.win();
         }
         return winningState;
     }
@@ -98,12 +96,18 @@ public class Board extends Stage {
 
     public void makeRandomLevel(boolean solvable) {
         if (solvable) {
-            //Wipe board clean.
-            tiles = new Tile[WIDTH][WIDTH];
+            //Reset board
+            originalState = new boolean[WIDTH][WIDTH];
+            reset();
             //Create random solvable board by making a random series of moves from a blank board.
             int randomMoves = MathUtils.random(3, WIDTH * WIDTH * 2 / 3);
             for (int i = 0; i < randomMoves; i++) {
                 selectTile(MathUtils.random(WIDTH - 1), MathUtils.random(WIDTH - 1));
+            }
+            if (isWinningState()) {
+                //If the randomized level is already a win-state, make another.
+                makeRandomLevel(true);
+                return;
             }
             //Copied randomized solvable board to original state.
             originalState = new boolean[WIDTH][WIDTH];

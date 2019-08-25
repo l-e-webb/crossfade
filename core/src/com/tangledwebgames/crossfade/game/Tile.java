@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 
 class Tile extends Actor {
@@ -50,18 +51,27 @@ class Tile extends Actor {
         addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (!MainScreen.instance.inGame()) {
+                    return false;
+                }
                 b.updateActiveTiles(row, column);
                 return super.touchDown(event, x, y, pointer, button);
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (!MainScreen.instance.inGame()) {
+                    return;
+                }
                 b.clearActiveTiles();
                 super.touchUp(event, x, y, pointer, button);
             }
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if (!MainScreen.instance.inGame()) {
+                    return;
+                }
                 b.updateActiveTiles(row, column);
                 Gdx.app.log("Tile", "activating tiles on enter");
                 super.enter(event, x, y, pointer, fromActor);
@@ -69,6 +79,9 @@ class Tile extends Actor {
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                if (!MainScreen.instance.inGame()) {
+                    return;
+                }
                 b.clearActiveTiles();
                 Gdx.app.log("Tile", "clearing active tiles on exit");
                 super.exit(event, x, y, pointer, toActor);
@@ -76,8 +89,13 @@ class Tile extends Actor {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                b.selectTile(row, column);
+                if (!MainScreen.instance.inGame()) {
+                    return;
+                }
                 SoundManager.moveSound();
+                if (b.selectTile(row, column)) {
+                    MainScreen.instance.win();
+                }
                 super.clicked(event, x, y);
             }
         });
