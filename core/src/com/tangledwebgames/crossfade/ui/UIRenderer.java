@@ -1,11 +1,9 @@
-package com.tangledwebgames.crossfade;
+package com.tangledwebgames.crossfade.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -25,6 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
+import com.tangledwebgames.crossfade.Assets;
+import com.tangledwebgames.crossfade.MainScreen;
+import com.tangledwebgames.crossfade.PreferenceWrapper;
+import com.tangledwebgames.crossfade.game.Board;
 import com.tangledwebgames.crossfade.game.Levels;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 
@@ -34,7 +36,7 @@ import com.tangledwebgames.crossfade.sound.SoundManager;
 public class UIRenderer implements Disposable {
 
     public static final float BUTTON_PADDING = 10f;
-    public static final float CHECKBOX_SIZE = 40f;
+    public static final float CHECKBOX_SIZE = 42f;
     public static final float CHECKBOX_RIGHT_PADDING = 25f;
     public static final float PAUSE_TABLE_WIDTH_RATIO = 0.875f;
     public static final int SLIDER_KNOB_WIDTH = 12;
@@ -62,27 +64,28 @@ public class UIRenderer implements Disposable {
     private Slider sfxVolumeSlider;
     private Slider musicVolumeSlider;
     private CheckBox animateTiles;
+    private CheckBox highlightTiles;
     private int time;
     private int moves;
 
-    UIRenderer() {
+    public UIRenderer() {
         screen = MainScreen.instance;
-        stage = new Stage(screen.viewport);
+        stage = new Stage(screen.getViewport());
         time = -1;
         moves = -1;
         initUI();
     }
 
-    void render() {
+    public void render() {
 
         //Update time and move UI elements
-        if (time < (int) screen.time) {
-            time = (int) screen.time;
+        if (time < (int) screen.getTime()) {
+            time = (int) screen.getTime();
             timeNum.setText("" + time);
             winTime.setText(UIText.TIME + ": " + time);
         }
-        if (moves < screen.board.getMoves()) {
-            moves = screen.board.getMoves();
+        if (moves < screen.getBoard().getMoves()) {
+            moves = screen.getBoard().getMoves();
             movesNum.setText("" + moves);
             winMoves.setText(UIText.MOVES + ": " + moves);
         }
@@ -96,7 +99,7 @@ public class UIRenderer implements Disposable {
     }
 
     private void setVisibleTables() {
-        switch (screen.state) {
+        switch (screen.getState()) {
             case WIN:
                 winUiTable.setVisible(true);
                 pauseUiTable.setVisible(false);
@@ -112,59 +115,57 @@ public class UIRenderer implements Disposable {
         }
     }
 
-    void initPause() {
+    public void initPause() {
         sfxOn.setChecked(SoundManager.isSfxOn());
         musicOn.setChecked(SoundManager.isMusicOn());
         sfxVolumeSlider.setValue(SoundManager.getSfxVolume());
         musicVolumeSlider.setValue(SoundManager.getMusicVolume());
+        animateTiles.setChecked(MainScreen.instance.getBoard().animateTiles);
+        highlightTiles.setChecked(MainScreen.instance.getBoard().highlightTiles);
         leftButton.setDisabled(true);
         centerButton.setDisabled(true);
         rightButton.setDisabled(true);
     }
 
-    void initUnpause() {
+    public void initUnpause() {
         leftButton.setDisabled(false);
         centerButton.setDisabled(false);
         rightButton.setDisabled(false);
     }
 
-    Stage getStage() { return stage; }
+    public Stage getStage() { return stage; }
 
-    void initUI() {
+    public void initUI() {
 
         //Font inits.
-        BitmapFont titleFont = new BitmapFont(Gdx.files.internal("titleFont.fnt"), false);
+        BitmapFont titleFont = Assets.instance.titleFont;
         titleFont.getData().setScale(UIText.TITLE_SCALE);
         titleFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        BitmapFont uiFont = new BitmapFont(Gdx.files.internal("font.fnt"), false);
+        BitmapFont uiFont = Assets.instance.uiFont;
         uiFont.getData().setScale(UIText.TEXT_SCALE);
         uiFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         //Style inits.
-        Texture baseLabelTexture = new Texture("base_label_9patch.png");
-        NinePatchDrawable baseLabel = new NinePatchDrawable(
-                new NinePatch(baseLabelTexture, 5, 5, 5, 5)
-        );
         Label.LabelStyle labelStyle = new Label.LabelStyle(uiFont, UIText.TEXT_COLOR);
         Label.LabelStyle titleStyle = new Label.LabelStyle(titleFont, UIText.TEXT_COLOR);
         NinePatchDrawable baseFilled9Patch = new NinePatchDrawable(
-                new NinePatch(new Texture("button_filled_9patch.png"), 13, 13 , 13, 13));
+                new NinePatch(Assets.instance.buttonFilled, 13, 13 , 13, 13));
         NinePatchDrawable baseEmpty9Patch = new NinePatchDrawable(
-                new NinePatch(new Texture("button_empty_9patch.png"), 13, 13 , 13, 13));
+                new NinePatch(Assets.instance.buttonEmpty, 13, 13 , 13, 13));
         NinePatchDrawable baseTransparent9Patch = new NinePatchDrawable(
-                new NinePatch(new Texture("button_transparent_filled_9patch.png"), 13, 13, 13,13)
+                new NinePatch(Assets.instance.buttonTransparent, 13, 13, 13,13)
         );
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.up = baseEmpty9Patch.tint(UIText.TEXT_COLOR);
-        buttonStyle.over = baseFilled9Patch.tint(UIText.TEXT_COLOR);
+        buttonStyle.up = baseEmpty9Patch.tint(UIText.BUTTON_COLOR);
+        buttonStyle.over = baseFilled9Patch.tint(UIText.ACTIVE_BUTTON_COLOR);
         buttonStyle.fontColor = UIText.TEXT_COLOR;
         buttonStyle.overFontColor = UIText.INVERTED_TEXT_COLOR;
         buttonStyle.font = uiFont;
         TextureRegionDrawable checkboxEmpty = new TextureRegionDrawable(
-                new TextureRegion(new Texture("checkbox_empty.png"))
+                Assets.instance.checkboxEmpty
         );
         TextureRegionDrawable checkboxFilled = new TextureRegionDrawable(
-                new TextureRegion(new Texture("checkbox_filled.png"))
+                Assets.instance.checkboxFilled
         );
         CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle(
                 checkboxEmpty.tint(UIText.TEXT_COLOR),
@@ -173,9 +174,9 @@ public class UIRenderer implements Disposable {
                 UIText.TEXT_COLOR
         );
         TextureRegionDrawable sliderBackground = new TextureRegionDrawable(
-                new TextureRegion(new Texture("slider_background.png"))
+                Assets.instance.sliderBackground
         );
-        Sprite sliderKnobSprite = new Sprite(new Texture("slider_knob.png"));
+        Sprite sliderKnobSprite = new Sprite(Assets.instance.sliderKnob);
         sliderKnobSprite.setSize(SLIDER_KNOB_WIDTH, SLIDER_KNOB_HEIGHT);
         SpriteDrawable sliderKnob = new SpriteDrawable(sliderKnobSprite);
         Slider.SliderStyle sliderStyle = new Slider.SliderStyle(
@@ -202,7 +203,7 @@ public class UIRenderer implements Disposable {
         mainUiTable.addCaptureListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
-                if (screen.state != MainScreen.State.PLAY) {
+                if (!screen.inGame()) {
                     event.stop();
                 }
                 return false;
@@ -266,7 +267,9 @@ public class UIRenderer implements Disposable {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 SoundManager.setSfx(sfxOn.isChecked());
-                SoundManager.buttonSound();
+                if (screen.getState() == MainScreen.State.PAUSE) {
+                    SoundManager.buttonSound();
+                }
             }
         });
         final Label sfxLevelLabel = new Label(UIText.SFX_LEVEL, skin);
@@ -283,7 +286,9 @@ public class UIRenderer implements Disposable {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 SoundManager.setMusic(musicOn.isChecked());
-                SoundManager.buttonSound();
+                if (screen.getState() == MainScreen.State.PAUSE) {
+                    SoundManager.buttonSound();
+                }
             }
         });
         final Label musicLevelLabel = new Label(UIText.MUSIC_LEVEL, skin);
@@ -296,6 +301,27 @@ public class UIRenderer implements Disposable {
         });
         animateTiles = new CheckBox(UIText.ANIMATE_TILES, skin);
         animateTiles.getImageCell().maxSize(CHECKBOX_SIZE).spaceRight(CHECKBOX_RIGHT_PADDING);
+        animateTiles.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                screen.getBoard().animateTiles = animateTiles.isChecked();
+                if (screen.getState() == MainScreen.State.PAUSE) {
+                    SoundManager.buttonSound();
+                }
+            }
+        });
+        highlightTiles = new CheckBox(UIText.HIGHLIGHT_TILES, skin);
+        highlightTiles.getImage().setSize(CHECKBOX_SIZE, CHECKBOX_SIZE);
+        highlightTiles.getImageCell().maxSize(CHECKBOX_SIZE).spaceRight(CHECKBOX_RIGHT_PADDING);
+        highlightTiles.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                screen.getBoard().highlightTiles = highlightTiles.isChecked();
+                if (screen.getState() == MainScreen.State.PAUSE) {
+                    SoundManager.buttonSound();
+                }
+            }
+        });
         final Button pauseContinueButton = new TextButton(UIText.CONTINUE, skin);
         pauseContinueButton.addListener(new ClickListener(){
             @Override
@@ -317,6 +343,8 @@ public class UIRenderer implements Disposable {
         pauseUiTable.add(musicVolumeSlider).growX().padLeft(SLIDER_PADDING_LEFT);
         pauseUiTable.row();
         pauseUiTable.add(animateTiles).left().colspan(2).spaceTop(ROW_PADDING);
+        pauseUiTable.row();
+        pauseUiTable.add(highlightTiles).left().colspan(2).spaceTop(ROW_PADDING);
         pauseUiTable.row();
         pauseUiTable.add(pauseContinueButton).center().colspan(2).pad(BUTTON_PADDING).spaceTop(ROW_PADDING);
 
@@ -351,10 +379,10 @@ public class UIRenderer implements Disposable {
         stage.addActor(winUiTable);
     }
 
-    void newLevel() {
+    public void newLevel() {
         moves = -1;
         time = -1;
-        int level = screen.level;
+        int level = screen.getLevel();
         winLevel.setText(UIText.LEVEL + ": " + level);
         levelNum.setText("" + level);
         rightButton.setText(UIText.NEXT);
@@ -369,9 +397,9 @@ public class UIRenderer implements Disposable {
         }
     }
 
-    void updateTablePositions() {
-        float x = screen.viewport.getWorldWidth() / 2;
-        float y = screen.viewport.getWorldHeight() / 2;
+    public void updateTablePositions() {
+        float x = screen.getViewport().getWorldWidth() / 2;
+        float y = screen.getViewport().getWorldHeight() / 2;
         pauseUiTable.setSize(MainScreen.WORLD_WIDTH * PAUSE_TABLE_WIDTH_RATIO, pauseUiTable.getPrefHeight());
         pauseUiTable.setPosition(x, y, Align.center);
         winUiTable.setSize(MainScreen.WORLD_WIDTH * PAUSE_TABLE_WIDTH_RATIO, winUiTable.getPrefHeight());

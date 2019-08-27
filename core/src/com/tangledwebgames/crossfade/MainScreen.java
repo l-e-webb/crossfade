@@ -1,73 +1,74 @@
 package com.tangledwebgames.crossfade;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.tangledwebgames.crossfade.game.Board;
 import com.tangledwebgames.crossfade.game.Levels;
 import com.tangledwebgames.crossfade.sound.SoundManager;
+import com.tangledwebgames.crossfade.ui.UIRenderer;
 
-public class MainScreen extends ScreenAdapter implements InputProcessor {
+public class MainScreen extends ScreenAdapter {
 
     public static MainScreen instance;
 
-    ExtendViewport viewport;
+    public static final float WORLD_WIDTH = 480f;
+    public static final float WORLD_HEIGHT = 768f;
+
+    Viewport viewport;
     Board board;
     UIRenderer uiRenderer;
+    ShapeRenderer renderer;
 
     float time;
     int level;
     State state;
 
-    public static final float WORLD_WIDTH = 480f;
-    public static final float WORLD_HEIGHT = 768f;
-
-    private ShapeRenderer renderer;
 
     @Override
     public void show() {
         instance = this;
+        state = State.START;
         time = 0f;
         renderer = new ShapeRenderer();
         viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, WORLD_WIDTH, 0);
-        board = new Board(viewport, renderer);
+        board = new Board(getViewport(), getRenderer());
         uiRenderer = new UIRenderer();
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(this);
+        multiplexer.addProcessor(new InputHandler());
         multiplexer.addProcessor(uiRenderer.getStage());
-        multiplexer.addProcessor(board);
+        multiplexer.addProcessor(getBoard());
         Gdx.input.setInputProcessor(multiplexer);
-        SoundManager.setMusic(CrossFadeGame.APP_TYPE != Application.ApplicationType.WebGL);
         goToLevel(1);
     }
 
     @Override
     public void render(float delta) {
-        if (state == State.PLAY) time += delta;
+        if (getState() == State.PLAY) time = getTime() + delta;
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        viewport.apply();
-        renderer.setProjectionMatrix(viewport.getCamera().combined);
-        board.draw();
+        getViewport().apply();
+        getRenderer().setProjectionMatrix(getViewport().getCamera().combined);
+        getBoard().draw();
         uiRenderer.render();
     }
 
-    void goToLevel(int level) {
+    public void goToLevel(int level) {
         if (level >= Levels.getRandomizedLevelIndex()) {
             //Randomized level
             level = Levels.getRandomizedLevelIndex();
-            board.makeRandomLevel(true);
+            getBoard().makeRandomLevel(true);
         } else if (level == Levels.getTrollLevelIndex()) {
             //Troll level
-            board.initializeLevel(Levels.trollLevel);
+            getBoard().initializeLevel(Levels.trollLevel);
         } else if (level <= Levels.getHighestLevelIndex() && level > 0) {
-            board.initializeLevel(Levels.levels[level]);
+            getBoard().initializeLevel(Levels.levels[level]);
         } else {
             reset();
             return;
@@ -78,39 +79,40 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
         state = State.PLAY;
     }
 
-    void goToNextLevel() {
-        goToLevel(this.level + 1);
+    public void goToNextLevel() {
+        goToLevel(this.getLevel() + 1);
     }
 
-    void reset() {
-        board.reset();
+    public void reset() {
+        getBoard().reset();
         time = 0f;
         state = State.PLAY;
         uiRenderer.newLevel();
     }
 
-    void onLeftButtonClick() {
-        if (state == State.PAUSE) return;
-        goToLevel(this.level - 1);
+    public void onLeftButtonClick() {
+        if (getState() == State.PAUSE) return;
+        goToLevel(this.getLevel() - 1);
     }
 
-    void onCenterButtonClick() {
-        if (state == State.PAUSE) return;
+    public void onCenterButtonClick() {
+        if (getState() == State.PAUSE) return;
         reset();
     }
 
-    void onRightButtonClick() {
-        if (state == State.PAUSE) return;
-        if (this.level == Levels.getRandomizedLevelIndex()) {
-            goToLevel(this.level);
+    public void onRightButtonClick() {
+        if (getState() == State.PAUSE) return;
+        if (this.getLevel() == Levels.getRandomizedLevelIndex()) {
+            goToLevel(this.getLevel());
         } else {
-            goToLevel(this.level + 1);
+            goToLevel(this.getLevel() + 1);
         }
     }
 
     @Override
     public void pause() {
         pauseGame();
+        PreferenceWrapper.flush();
         SoundManager.stopMusic();
     }
 
@@ -120,17 +122,17 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
     }
 
     public void pauseGame() {
-        if (state == State.PLAY) {
-            state = State.PAUSE;
+        if (getState() == State.PLAY) {
             uiRenderer.initPause();
+            state = State.PAUSE;
         }
     }
 
 
     public void unpauseGame() {
-        if (state == State.PAUSE) {
-            state = State.PLAY;
+        if (getState() == State.PAUSE) {
             uiRenderer.initUnpause();
+            state = State.PLAY;
         }
     }
 
@@ -140,11 +142,11 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
     }
 
     public boolean inGame() {
-        return state == State.PLAY;
+        return getState() == State.PLAY;
     }
 
     public void togglePause() {
-        switch (state) {
+        switch (getState()) {
             case PLAY:
                 pauseGame();
                 break;
@@ -158,76 +160,118 @@ public class MainScreen extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+        getViewport().update(width, height, true);
         uiRenderer.updateTablePositions();
-        board.updateSize();
+        getBoard().updateSize();
     }
 
     @Override
     public void hide() {
+        PreferenceWrapper.flush();
         SoundManager.stopMusic();
     }
 
     @Override
     public void dispose() {
-        renderer.dispose();
-        board.dispose();
-        SoundManager.disposeOfInstance();
+        getRenderer().dispose();
+        getBoard().dispose();
+        Assets.instance.dispose();
     }
 
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
+    public Viewport getViewport() {
+        return viewport;
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.ESCAPE) {
-            togglePause();
-            return true;
-        } else if (keycode == Input.Keys.MENU) {
-            pauseGame();
-            return true;
+    public float getTime() {
+        return time;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public ShapeRenderer getRenderer() {
+        return renderer;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    class InputHandler extends GestureDetector {
+
+        GestureHandler gestureHandler;
+
+        InputHandler() {
+            this(new GestureHandler());
         }
-        return false;
+
+        private InputHandler(GestureHandler gestureHandler) {
+            super(gestureHandler);
+            this.gestureHandler = gestureHandler;
+        }
+
+        @Override
+        public boolean touchDown(int x, int y, int pointer, int button) {
+            //Uncomment to make tapping the screen automatically continue after win.
+//          if (state == State.WIN) {
+//              goToNextLevel();
+//              return true;
+//          }
+            gestureHandler.touchStartX = x;
+            gestureHandler.touchStartY = y;
+            return false;
+        }
+
+        @Override
+        public boolean keyDown(int keycode) {
+            if (keycode == Input.Keys.ESCAPE) {
+                togglePause();
+                return true;
+            } else if (keycode == Input.Keys.MENU) {
+                pauseGame();
+                return true;
+            }
+            return false;
+        }
     }
 
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
+    class GestureHandler extends GestureDetector.GestureAdapter {
+
+        static final float PAN_REGISTER_RATIO = 0.2f;
+        static final float SCREEN_TOP_MARGIN_RATIO = 0.15f;
+        float screenTopMargin;
+        float panRegisterLength;
+        float touchStartX;
+        float touchStartY;
+
+        GestureHandler() {
+            super();
+            screenTopMargin = getViewport().getScreenHeight() * SCREEN_TOP_MARGIN_RATIO;
+            panRegisterLength = (float)Math.pow(getViewport().getScreenHeight() * PAN_REGISTER_RATIO, 2);
+        }
+
+        @Override
+        public boolean panStop(float x, float y, int pointer, int button) {
+            if (touchStartY < screenTopMargin){
+                float deltaX = Math.abs(x - touchStartX);
+                float deltaY = Math.abs(y - touchStartY);
+                float distance2 = deltaX * deltaX + deltaY * deltaY;
+                if (distance2 > panRegisterLength) {
+                    pauseGame();
+                    return true;
+                }
+            }
+            return super.panStop(x, y, pointer, button);
+        }
     }
 
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        //Uncomment to make tapping the screen automatically continue after win.
-//        if (state == State.WIN) {
-//            goToNextLevel();
-//            return true;
-//        }
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
-
-    enum State {
+    public enum State {
+        START,
         PLAY,
         PAUSE,
         WIN

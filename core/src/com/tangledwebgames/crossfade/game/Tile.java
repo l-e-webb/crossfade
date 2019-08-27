@@ -2,16 +2,23 @@ package com.tangledwebgames.crossfade.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.tangledwebgames.crossfade.Assets;
 import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 
 class Tile extends Actor {
+
+    static boolean useSprites = true;
+
     boolean value;
     boolean active;
     int row;
@@ -32,16 +39,25 @@ class Tile extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        ShapeRenderer renderer = board.renderer;
         Color color;
-        if (value) {
-            color = active ? Board.TILE_ON_ACTIVE_COLOR : Board.TILE_ON_COLOR;
+        if (board.highlightTiles) {
+            if (value) {
+                color = active ? Board.TILE_ON_ACTIVE_COLOR : Board.TILE_ON_COLOR;
+            } else {
+                color = active ? Board.TILE_OFF_ACTIVE_COLOR : Board.TILE_OFF_COLOR;
+            }
         } else {
-            color = active ? Board.TILE_OFF_ACTIVE_COLOR : Board.TILE_OFF_COLOR;
+            color = value ? Board.TILE_ON_COLOR : Board.TILE_OFF_COLOR;
         }
-        renderer.setColor(color);
-        Vector2 screenPos = localToStageCoordinates(new Vector2(0, 0));
-        renderer.rect(screenPos.x, screenPos.y, getWidth(), getHeight());
+        if (useSprites) {
+            batch.setColor(color);
+            batch.draw(Assets.instance.tile, getX(), getY(), getWidth(), getHeight());
+        } else {
+            ShapeRenderer renderer = board.renderer;
+            renderer.setColor(color);
+            Vector2 screenPos = localToStageCoordinates(new Vector2(0, 0));
+            renderer.rect(screenPos.x, screenPos.y, getWidth(), getHeight());
+        }
     }
 
     void init(Board board) {

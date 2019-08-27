@@ -1,75 +1,74 @@
 package com.tangledwebgames.crossfade.sound;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Disposable;
+import com.tangledwebgames.crossfade.Assets;
+import com.tangledwebgames.crossfade.CrossFadeGame;
+import com.tangledwebgames.crossfade.PreferenceWrapper;
 
 /**
  *  Handles playing sound effects and music.
  */
-public class SoundManager implements Disposable {
+public class SoundManager {
 
-    private static SoundManager instance;
-
-    private Music backgroundMusic;
-    private Sound moveSound;
-    private Sound buttonSound;
-    private Sound winSound;
-
+    private static final float MOVE_SOUND_MOD = 1.2f;
+    private static final float BUTTON_SOUND_MOD = 1.2f;
+    private static final float WIN_SOUND_MOD = 0.65f;
     private static boolean sfx = true;
     private static boolean music = true;
-
     private static float sfxVolume = 1f;
     private static float musicVolume = 1f;
 
     private SoundManager() {}
 
-    private static void playSfx(Sound sound) {
+    private static void playSfx(Sound sound, float volumeMod) {
         if (sfx && sound != null) {
-            sound.play(sfxVolume);
+            sound.play(Math.min(sfxVolume * volumeMod, 1f));
         }
     }
 
+    private static void playSfx(Sound sound) {
+        playSfx(sound, 1f);
+    }
+
     public static void moveSound() {
-        playSfx(instance.moveSound);
+        playSfx(Assets.instance.moveSound, MOVE_SOUND_MOD);
     }
 
     public static void buttonSound() {
-        playSfx(instance.buttonSound);
+        playSfx(Assets.instance.buttonSound, BUTTON_SOUND_MOD);
     }
 
     public static void winSound() {
-        playSfx(instance.winSound);
+        playSfx(Assets.instance.winSound, WIN_SOUND_MOD);
     }
 
     public static void playMusic() {
-        if (music && instance.backgroundMusic != null && !instance.backgroundMusic.isPlaying()) {
-            instance.backgroundMusic.play();
+        if (music && Assets.instance.backgroundMusic != null && !Assets.instance.backgroundMusic.isPlaying()) {
+            Assets.instance.backgroundMusic.play();
         }
     }
 
     public static void stopMusic() {
-        if (instance.backgroundMusic != null && instance.backgroundMusic.isPlaying()) {
-            instance.backgroundMusic.stop();
+        if (Assets.instance.backgroundMusic != null && Assets.instance.backgroundMusic.isPlaying()) {
+            Assets.instance.backgroundMusic.stop();
         }
     }
 
     public static void init() {
-        instance = new SoundManager();
-        initSounds();
-        initMusic();
-    }
-
-    private static void initSounds() {
-        instance.moveSound = Gdx.audio.newSound(Gdx.files.internal("move_sound.wav"));
-        instance.buttonSound = instance.moveSound;
-        instance.winSound = Gdx.audio.newSound(Gdx.files.internal("win_sound.mp3"));
-    }
-
-    private static void initMusic() {
-        instance.backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("test_bgm.mp3"));
-        instance.backgroundMusic.setLooping(true);
+        Preferences prefs = PreferenceWrapper.prefs;
+        setMusic(prefs.getBoolean(
+                PreferenceWrapper.MUSIC_ON_KEY,
+                CrossFadeGame.APP_TYPE != Application.ApplicationType.WebGL
+        ));
+        setMusicVolume(prefs.getFloat(PreferenceWrapper.MUSIC_VOLUME_KEY, 1f));
+        setSfx(prefs.getBoolean(PreferenceWrapper.SFX_ON_KEY, true));
+        setSfxVolume(prefs.getFloat(PreferenceWrapper.SFX_VOLUME_KEY, 1f));
     }
 
     public static boolean isSfxOn() {
@@ -130,21 +129,9 @@ public class SoundManager implements Disposable {
     public static void setMusicVolume(float musicVolume) {
         if (0 <= musicVolume && musicVolume <= 1) {
             SoundManager.musicVolume = musicVolume;
-            if (instance.backgroundMusic != null) {
-                instance.backgroundMusic.setVolume(musicVolume);
+            if (Assets.instance.backgroundMusic != null) {
+                Assets.instance.backgroundMusic.setVolume(musicVolume);
             }
         }
-    }
-
-    public static void disposeOfInstance() {
-        instance.dispose();
-    }
-
-    @Override
-    public void dispose() {
-        if (backgroundMusic != null) backgroundMusic.dispose();
-        if (moveSound != null) moveSound.dispose();
-        if (buttonSound != null) buttonSound.dispose();
-        if (winSound != null) winSound.dispose();
     }
 }

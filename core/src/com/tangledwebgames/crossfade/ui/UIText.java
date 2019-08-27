@@ -1,4 +1,4 @@
-package com.tangledwebgames.crossfade;
+package com.tangledwebgames.crossfade.ui;
 
 import com.badlogic.gdx.graphics.Color;
 
@@ -27,10 +27,13 @@ public class UIText {
     public static final String MUSIC = "Music";
     public static final String MUSIC_LEVEL = "Music level";
     public static final String ANIMATE_TILES = "Animate tiles";
+    public static final String HIGHLIGHT_TILES = "Highlight tiles\non touch";
     public static final String CONTINUE = "Continue";
     public static final Color TEXT_COLOR = Color.GREEN;
     public static final Color DARK_COLOR = Color.FOREST;
     public static final Color INVERTED_TEXT_COLOR = Color.BLACK;
+    public static final Color BUTTON_COLOR = Color.GREEN;
+    public static final Color ACTIVE_BUTTON_COLOR = Color.ORANGE;
     public static final Color PAUSE_BOX_COLOR = new Color(0, 0.15f, 0, 1);
     public static final float TEXT_OFFSET = 10f;
     public static final float TITLE_SCALE = 0.875f;

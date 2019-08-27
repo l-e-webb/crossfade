@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.tangledwebgames.crossfade.MainScreen;
+import com.tangledwebgames.crossfade.PreferenceWrapper;
 
 /**
  * Class representing the game board and its current state.
@@ -16,11 +17,15 @@ public class Board extends Stage {
     static boolean debug = false;
 
     public static final int WIDTH = 5;
-    static final float TILE_PADDING_RATIO = 0.016f;
-    static final Color TILE_ON_COLOR = new Color(0,1,0,1);
-    static final Color TILE_ON_ACTIVE_COLOR = new Color(0.4f, 1f, 0.15f, 1f);
-    static final Color TILE_OFF_COLOR = new Color(0.1f, 0.1f, 0.1f, 1f);
-    static final Color TILE_OFF_ACTIVE_COLOR = new Color(0.2f, 0.06f, 0.03f, 1f);
+
+    static final float TILE_PADDING_RATIO = 0.005f;
+    static final Color TILE_ON_COLOR = new Color(0, 1, 0, 1);
+    static final Color TILE_ON_ACTIVE_COLOR = new Color(1f, 0.55f, 0, 1);
+    static final Color TILE_OFF_COLOR = new Color(0.25f, 0.25f, 0.25f, 1);
+    static final Color TILE_OFF_ACTIVE_COLOR = new Color(0.275f, 0.16f, 0.1f, 1);
+
+    public boolean animateTiles;
+    public boolean highlightTiles;
     Group boardGroup;
     ShapeRenderer renderer;
     private Tile[][] tiles;
@@ -43,6 +48,8 @@ public class Board extends Stage {
         }
         originalState = new boolean[WIDTH][WIDTH];
         reset();
+        animateTiles = PreferenceWrapper.prefs.getBoolean(PreferenceWrapper.ANIMATE_TILES_KEY, false);
+        highlightTiles = PreferenceWrapper.prefs.getBoolean(PreferenceWrapper.HIGHLIGHT_TILES_KEY, true);
         setDebugAll(debug);
     }
 
