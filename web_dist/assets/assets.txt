@@ -3,8 +3,8 @@ i:base_label_9patch.png:307:image/png
 i:button_empty_9patch.png:654:image/png
 i:button_filled_9patch.png:485:image/png
 i:button_transparent_filled_9patch.png:605:image/png
-i:checkbox_empty.png:405:image/png
-i:checkbox_filled.png:582:image/png
+i:checkbox_empty.png:426:image/png
+i:checkbox_filled.png:822:image/png
 t:font.fnt:11237:application/unknown
 i:font.png:4592:image/png
 b:levels.dat:1258:application/unknown
@@ -12,6 +12,8 @@ a:move_sound.wav:14358:audio/x-wav
 i:slider_background.png:170:image/png
 i:slider_knob.png:374:image/png
 a:test_bgm.mp3:1780497:application/unknown
+i:tile.png:1606:image/png
+i:tileSmall.png:830:image/png
 t:titleFont.fnt:11278:application/unknown
 i:titleFont.png:9924:image/png
 i:titleFont1.png:9831:image/png
