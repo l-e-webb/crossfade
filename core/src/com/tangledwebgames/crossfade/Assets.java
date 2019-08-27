@@ -22,6 +22,7 @@ public class Assets implements Disposable, AssetErrorListener {
     private static final String TITLE_FONT_PATH = "titleFont.fnt";
     private static final String UI_FONT_PATH = "font.fnt";
     private static final String TILE_SPRITE_PATH = "tile.png";
+    private static final String TILE_SMALL_SPRITE_PATH = "tileSmall.png";
     private static final String BUTTON_EMPTY_PATH = "button_empty_9patch.png";
     private static final String BUTTON_FILLED_PATH = "button_filled_9patch.png";
     private static final String BUTTON_TRANSPARENT_PATH = "button_transparent_filled_9patch.png";
@@ -37,6 +38,7 @@ public class Assets implements Disposable, AssetErrorListener {
     public BitmapFont titleFont;
     public BitmapFont uiFont;
     public Texture tile;
+    public Texture tileSmall;
     public Texture buttonEmpty;
     public Texture buttonFilled;
     public Texture buttonTransparent;
@@ -62,6 +64,7 @@ public class Assets implements Disposable, AssetErrorListener {
         assetManager.load(TITLE_FONT_PATH, BitmapFont.class);
         assetManager.load(UI_FONT_PATH, BitmapFont.class);
         assetManager.load(TILE_SPRITE_PATH, Texture.class);
+        assetManager.load(TILE_SMALL_SPRITE_PATH, Texture.class);
         assetManager.load(BUTTON_EMPTY_PATH, Texture.class);
         assetManager.load(BUTTON_FILLED_PATH, Texture.class);
         assetManager.load(BUTTON_TRANSPARENT_PATH, Texture.class);
@@ -78,6 +81,7 @@ public class Assets implements Disposable, AssetErrorListener {
         titleFont = assetManager.get(TITLE_FONT_PATH);
         uiFont = assetManager.get(UI_FONT_PATH);
         tile = assetManager.get(TILE_SPRITE_PATH, Texture.class);
+        tileSmall = assetManager.get(TILE_SMALL_SPRITE_PATH, Texture.class);
         buttonEmpty = assetManager.get(BUTTON_EMPTY_PATH);
         buttonFilled = assetManager.get(BUTTON_FILLED_PATH);
         buttonTransparent = assetManager.get(BUTTON_TRANSPARENT_PATH);

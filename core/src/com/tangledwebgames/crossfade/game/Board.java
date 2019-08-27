@@ -24,6 +24,10 @@ public class Board extends Stage {
     static final Color TILE_OFF_COLOR = new Color(0.25f, 0.25f, 0.25f, 1);
     static final Color TILE_OFF_ACTIVE_COLOR = new Color(0.275f, 0.16f, 0.1f, 1);
 
+    static final float FLIP_DURATION = 0.25f;
+    static final float HALF_FLIP_DURATION = FLIP_DURATION / 2;
+    static final float FLIP_DELAY = 0f;
+
     public boolean animateTiles;
     public boolean highlightTiles;
     Group boardGroup;
@@ -48,7 +52,7 @@ public class Board extends Stage {
         }
         originalState = new boolean[WIDTH][WIDTH];
         reset();
-        animateTiles = PreferenceWrapper.prefs.getBoolean(PreferenceWrapper.ANIMATE_TILES_KEY, false);
+        animateTiles = PreferenceWrapper.prefs.getBoolean(PreferenceWrapper.ANIMATE_TILES_KEY, true);
         highlightTiles = PreferenceWrapper.prefs.getBoolean(PreferenceWrapper.HIGHLIGHT_TILES_KEY, true);
         setDebugAll(debug);
     }
@@ -63,33 +67,44 @@ public class Board extends Stage {
     }
 
     boolean getTileValue(int row, int column) {
-        if (row >= WIDTH || column >= WIDTH) return false;
+        if (row < 0 || row >= WIDTH || column < 0 || column >= WIDTH) return false;
         return tiles[row][column].value;
     }
 
-    private void flipTile(int row, int column) {
-        if (row < WIDTH && column < WIDTH) {
+    private void toggleTile(int row, int column) {
+        if (row >= 0 && row < WIDTH && column >= 0 && column < WIDTH) {
             tiles[row][column].toggle();
         }
     }
 
+    private void flipTile(int row, int column, Tile.FlipDirection direction, float delay) {
+        if (row >= 0 && row < WIDTH && column >= 0 && column < WIDTH) {
+            tiles[row][column].flip(direction, delay);
+        }
+    }
+
     boolean selectTile(int row, int column) {
-        if (row >= WIDTH || column >= WIDTH) return false;
+        if (row < 0 || row >= WIDTH || column < 0 || column >= WIDTH) return false;
         for (int i = 0; i < WIDTH; i++) {
-            flipTile(row, i);
+            toggleTile(row, i);
         }
         for (int i = 0; i < WIDTH; i++) {
             if (i != row) {
-                flipTile(i, column);
+                toggleTile(i, column);
+            }
+        }
+        if (animateTiles) {
+            for (int d = 1; d < 5; d++) {
+                float delay = d * FLIP_DELAY;
+                flipTile(row + d, column, Tile.FlipDirection.VERTICAL, delay);
+                flipTile(row - d, column, Tile.FlipDirection.VERTICAL, delay);
+                flipTile(row, column + d, Tile.FlipDirection.HORIZONTAL, delay);
+                flipTile(row, column - d, Tile.FlipDirection.HORIZONTAL, delay);
             }
         }
         moves++;
         clearActiveTiles();
-        boolean winningState = isWinningState();
-        if (isWinningState()) {
-            MainScreen.instance.win();
-        }
-        return winningState;
+        return isWinningState();
     }
 
     boolean isWinningState() {
@@ -108,9 +123,12 @@ public class Board extends Stage {
             reset();
             //Create random solvable board by making a random series of moves from a blank board.
             int randomMoves = MathUtils.random(3, WIDTH * WIDTH * 2 / 3);
+            boolean animateTilesTemp = animateTiles;
+            animateTiles = false;
             for (int i = 0; i < randomMoves; i++) {
                 selectTile(MathUtils.random(WIDTH - 1), MathUtils.random(WIDTH - 1));
             }
+            animateTiles = animateTilesTemp;
             if (isWinningState()) {
                 //If the randomized level is already a win-state, make another.
                 makeRandomLevel(true);
@@ -177,7 +195,7 @@ public class Board extends Stage {
         }
     }
 
-    void clearActiveTiles() {
+    public void clearActiveTiles() {
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 tiles[i][j].active = false;

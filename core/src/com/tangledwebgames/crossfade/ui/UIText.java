@@ -29,16 +29,16 @@ public class UIText {
     public static final String ANIMATE_TILES = "Animate tiles";
     public static final String HIGHLIGHT_TILES = "Highlight tiles\non touch";
     public static final String CONTINUE = "Continue";
-    public static final Color TEXT_COLOR = Color.GREEN;
-    public static final Color DARK_COLOR = Color.FOREST;
-    public static final Color INVERTED_TEXT_COLOR = Color.BLACK;
+    public static final Color PRIMARY_COLOR = Color.GREEN;
+    public static final Color DARK_COLOR = new Color(0.08f, 0.2f, 0.08f, 1);
+    public static final Color SLIDER_COLOR = Color.FOREST;
+    public static final Color DARK_TEXT_COLOR = Color.BLACK;
     public static final Color BUTTON_COLOR = Color.GREEN;
     public static final Color ACTIVE_BUTTON_COLOR = Color.ORANGE;
-    public static final Color PAUSE_BOX_COLOR = new Color(0, 0.15f, 0, 1);
+    public static final Color OFF_CHECKBOX_COLOR = new Color(0.25f, 0.25f, 0.25f, 1);
     public static final float TEXT_OFFSET = 10f;
     public static final float TITLE_SCALE = 0.875f;
     public static final float TEXT_SCALE = 1f;
-    public static final float PAUSE_BOX_OPACITY = 0.25f;
 
     private UIText() {}
 

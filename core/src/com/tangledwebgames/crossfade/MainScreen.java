@@ -55,6 +55,8 @@ public class MainScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         getViewport().apply();
         getRenderer().setProjectionMatrix(getViewport().getCamera().combined);
+        board.act(delta);
+        uiRenderer.getStage().act(delta);
         getBoard().draw();
         uiRenderer.render();
     }
@@ -123,6 +125,7 @@ public class MainScreen extends ScreenAdapter {
 
     public void pauseGame() {
         if (getState() == State.PLAY) {
+            board.clearActiveTiles();
             uiRenderer.initPause();
             state = State.PAUSE;
         }
