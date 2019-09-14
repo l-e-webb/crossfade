@@ -39,10 +39,10 @@ public class MainScreen extends ScreenAdapter {
         renderer = new ShapeRenderer();
         viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, WORLD_WIDTH, 0);
         board = new Board(getViewport(), getRenderer());
-        uiRenderer = new UIRenderer();
+        uiRenderer = new UIRenderer(this);
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(new InputHandler());
-        multiplexer.addProcessor(uiRenderer.getStage());
+        multiplexer.addProcessor(uiRenderer);
         multiplexer.addProcessor(getBoard());
         Gdx.input.setInputProcessor(multiplexer);
         goToLevel(1);
@@ -56,9 +56,9 @@ public class MainScreen extends ScreenAdapter {
         getViewport().apply();
         getRenderer().setProjectionMatrix(getViewport().getCamera().combined);
         board.act(delta);
-        uiRenderer.getStage().act(delta);
+        uiRenderer.act(delta);
         getBoard().draw();
-        uiRenderer.render();
+        uiRenderer.draw();
     }
 
     public void goToLevel(int level) {
@@ -92,17 +92,17 @@ public class MainScreen extends ScreenAdapter {
         uiRenderer.newLevel();
     }
 
-    public void onLeftButtonClick() {
+    public void onPrevButtonClick() {
         if (getState() == State.PAUSE) return;
         goToLevel(this.getLevel() - 1);
     }
 
-    public void onCenterButtonClick() {
+    public void onResetButtonClick() {
         if (getState() == State.PAUSE) return;
         reset();
     }
 
-    public void onRightButtonClick() {
+    public void onNextButtonClick() {
         if (getState() == State.PAUSE) return;
         if (this.getLevel() == Levels.getRandomizedLevelIndex()) {
             goToLevel(this.getLevel());
@@ -115,6 +115,7 @@ public class MainScreen extends ScreenAdapter {
     public void pause() {
         pauseGame();
         PreferenceWrapper.flush();
+        Levels.saveRecords();
         SoundManager.stopMusic();
     }
 
@@ -133,15 +134,25 @@ public class MainScreen extends ScreenAdapter {
 
 
     public void unpauseGame() {
-        if (getState() == State.PAUSE) {
-            uiRenderer.initUnpause();
-            state = State.PLAY;
-        }
+        if (inGame()) return;
+        uiRenderer.initUnpause();
+        state = State.PLAY;
     }
 
     public void win() {
         state = State.WIN;
+        if (level <= Levels.getHighestLevelIndex() &&
+                (Levels.records[level] == 0 ||
+                board.getMoves() < Levels.records[level])) {
+            Levels.records[level] = board.getMoves();
+            uiRenderer.newRecordWinText();
+        }
         SoundManager.winSound();
+    }
+
+    public void levelSelect() {
+        uiRenderer.initLevelSelect();
+        state = State.LEVEL_SELECT;
     }
 
     public boolean inGame() {
@@ -225,8 +236,9 @@ public class MainScreen extends ScreenAdapter {
 //              goToNextLevel();
 //              return true;
 //          }
-            gestureHandler.touchStartX = x;
-            gestureHandler.touchStartY = y;
+            //Uncomment to pause by swiping down
+//            gestureHandler.touchStartX = x;
+//            gestureHandler.touchStartY = y;
             return false;
         }
 
@@ -258,25 +270,27 @@ public class MainScreen extends ScreenAdapter {
             panRegisterLength = (float)Math.pow(getViewport().getScreenHeight() * PAN_REGISTER_RATIO, 2);
         }
 
-        @Override
-        public boolean panStop(float x, float y, int pointer, int button) {
-            if (touchStartY < screenTopMargin){
-                float deltaX = Math.abs(x - touchStartX);
-                float deltaY = Math.abs(y - touchStartY);
-                float distance2 = deltaX * deltaX + deltaY * deltaY;
-                if (distance2 > panRegisterLength) {
-                    pauseGame();
-                    return true;
-                }
-            }
-            return super.panStop(x, y, pointer, button);
-        }
+        //Uncomment to pause by swiping down
+//        @Override
+//        public boolean panStop(float x, float y, int pointer, int button) {
+//            if (touchStartY < screenTopMargin){
+//                float deltaX = Math.abs(x - touchStartX);
+//                float deltaY = Math.abs(y - touchStartY);
+//                float distance2 = deltaX * deltaX + deltaY * deltaY;
+//                if (distance2 > panRegisterLength) {
+//                    pauseGame();
+//                    return true;
+//                }
+//            }
+//            return super.panStop(x, y, pointer, button);
+//        }
     }
 
     public enum State {
         START,
         PLAY,
         PAUSE,
-        WIN
+        WIN,
+        LEVEL_SELECT
     }
 }

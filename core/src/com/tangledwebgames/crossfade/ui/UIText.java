@@ -5,40 +5,33 @@ import com.badlogic.gdx.graphics.Color;
 /**
  * Data class for storing UI text.
  */
-public class UIText {
+class UIText {
 
-    public static final String TITLE = "CrossFade";
-    public static final String MOVES = "Moves";
-    public static final String TIME = "Time";
-    public static final String LEVEL = "Level";
-    public static final String NEXT = "Next";
-    public static final String RESET = "Reset";
-    public static final String PREVIOUS = "Prev";
-    public static final String RANDOM = "Random";
-    public static final String RANDOM_BUTTON = "Rand.";
-    public static final String UNKNOWN_LEVEL = "???";
-    public static final String PAUSED = "Paused";
-    public static final String WIN_MSG = "You Win!";
-    public static final String CONT_MSG = "Press enter to continue";
-    public static final String CONT_MSG_PAUSE = "Press escape to continue";
-    public static final String CONT_MSG_AND = "Tap to continue";
-    public static final String SFX = "SFX";
-    public static final String SFX_LEVEL = "SFX level";
-    public static final String MUSIC = "Music";
-    public static final String MUSIC_LEVEL = "Music level";
-    public static final String ANIMATE_TILES = "Animate tiles";
-    public static final String HIGHLIGHT_TILES = "Highlight tiles\non touch";
-    public static final String CONTINUE = "Continue";
-    public static final Color PRIMARY_COLOR = Color.GREEN;
-    public static final Color DARK_COLOR = new Color(0.08f, 0.2f, 0.08f, 1);
-    public static final Color SLIDER_COLOR = Color.FOREST;
-    public static final Color DARK_TEXT_COLOR = Color.BLACK;
-    public static final Color BUTTON_COLOR = Color.GREEN;
-    public static final Color ACTIVE_BUTTON_COLOR = Color.ORANGE;
-    public static final Color OFF_CHECKBOX_COLOR = new Color(0.25f, 0.25f, 0.25f, 1);
-    public static final float TEXT_OFFSET = 10f;
-    public static final float TITLE_SCALE = 0.875f;
-    public static final float TEXT_SCALE = 1f;
+    static final String TITLE = "CrossFade";
+    static final String MOVES = "Moves";
+    static final String TIME = "Time";
+    static final String LEVEL = "Level";
+    static final String NEXT = "Next";
+    static final String RESET = "Reset";
+    static final String PREVIOUS = "Prev";
+    static final String RANDOM = "Random";
+    static final String RANDOM_BUTTON = "Rand.";
+    static final String UNKNOWN_LEVEL = "???";
+    static final String PAUSED = "Paused";
+    static final String WIN_MSG = "You Win!";
+    static final String NEW_RECORD = "A new record!";
+    static final String SFX = "SFX";
+    static final String SFX_LEVEL = "SFX level";
+    static final String MUSIC = "Music";
+    static final String MUSIC_LEVEL = "Music level";
+    static final String ANIMATE_TILES = "Animate tiles";
+    static final String HIGHLIGHT_TILES = "Highlight tiles\non touch";
+    static final String CONTINUE = "Continue";
+    static final String BEST = "Record";
+    static final String MENU = "Menu";
+    static final String LEVEL_SELECT = "Levels";
+    static final String SELECT_LEVEL = "Select";
+    static final String LEVEL_SELECT_HEADING = "Select a level";
 
     private UIText() {}
 

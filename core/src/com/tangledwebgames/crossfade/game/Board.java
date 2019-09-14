@@ -30,24 +30,23 @@ public class Board extends Stage {
 
     public boolean animateTiles;
     public boolean highlightTiles;
-    Group boardGroup;
+    BoardGroup boardGroup;
     ShapeRenderer renderer;
     private Tile[][] tiles;
     private boolean[][] originalState;
     private int moves;
+    boolean radialFlips = false;
+    Tile.FlipDirection nonRadialDirection = Tile.FlipDirection.HORIZONTAL;
 
     public Board(Viewport viewport, ShapeRenderer renderer) {
         super(viewport);
         this.renderer = renderer;
-        boardGroup = new Group();
+        boardGroup = new BoardGroup(WIDTH);
         addActor(boardGroup);
-        tiles = new Tile[WIDTH][WIDTH];
+        tiles = boardGroup.tiles;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                Tile tile = new Tile(i, j);
-                tiles[i][j] = tile;
-                boardGroup.addActor(tile);
-                tile.init(this);
+                tiles[i][j].init(this);
             }
         }
         originalState = new boolean[WIDTH][WIDTH];
@@ -94,12 +93,22 @@ public class Board extends Stage {
             }
         }
         if (animateTiles) {
+            if (!radialFlips) {
+                flipTile(row, column, nonRadialDirection, 0);
+            }
             for (int d = 1; d < 5; d++) {
-                float delay = d * FLIP_DELAY;
-                flipTile(row + d, column, Tile.FlipDirection.VERTICAL, delay);
-                flipTile(row - d, column, Tile.FlipDirection.VERTICAL, delay);
-                flipTile(row, column + d, Tile.FlipDirection.HORIZONTAL, delay);
-                flipTile(row, column - d, Tile.FlipDirection.HORIZONTAL, delay);
+                if (radialFlips) {
+                    float delay = d * FLIP_DELAY;
+                    flipTile(row + d, column, Tile.FlipDirection.VERTICAL, delay);
+                    flipTile(row - d, column, Tile.FlipDirection.VERTICAL, delay);
+                    flipTile(row, column + d, Tile.FlipDirection.HORIZONTAL, delay);
+                    flipTile(row, column - d, Tile.FlipDirection.HORIZONTAL, delay);
+                } else {
+                    flipTile(row + d, column, nonRadialDirection, 0);
+                    flipTile(row - d, column, nonRadialDirection, 0);
+                    flipTile(row, column + d, nonRadialDirection, 0);
+                    flipTile(row, column - d, nonRadialDirection, 0);
+                }
             }
         }
         moves++;
@@ -154,11 +163,7 @@ public class Board extends Stage {
 
     public void reset() {
         moves = 0;
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < WIDTH; j++) {
-                tiles[i][j].value = originalState[i][j];
-            }
-        }
+        boardGroup.setTileValues(originalState);
         updateSize();
     }
 
@@ -166,16 +171,8 @@ public class Board extends Stage {
         float worldWidth = getWidth();
         float tilePadding = worldWidth * TILE_PADDING_RATIO;
         float boardSize = worldWidth - tilePadding;
-        boardGroup.setPosition(
-                tilePadding,
-                tilePadding
-        );
-        boardGroup.setSize(boardSize, boardSize);
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < WIDTH; j++) {
-                tiles[i][j].updateSize(tilePadding);
-            }
-        }
+        boardGroup.updateSize(0, 0, boardSize, tilePadding);
+
     }
 
     @Override

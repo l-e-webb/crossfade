@@ -23,11 +23,8 @@ public class Assets implements Disposable, AssetErrorListener {
     private static final String UI_FONT_PATH = "font.fnt";
     private static final String TILE_SPRITE_PATH = "tile.png";
     private static final String TILE_SMALL_SPRITE_PATH = "tileSmall.png";
-    private static final String BUTTON_EMPTY_PATH = "button_empty_9patch.png";
-    private static final String BUTTON_FILLED_PATH = "button_filled_9patch.png";
-    private static final String BUTTON_TRANSPARENT_PATH = "button_transparent_filled_9patch.png";
-    private static final String CHECKBOX_EMPTY_PATH = "checkbox_empty.png";
-    private static final String CHECKBOX_FILLED_PATH = "checkbox_filled.png";
+    private static final String GREY_BOX = "grey_box.png";
+    private static final String WHITE_BOX = "white_box.png";
     private static final String SLIDER_BACKGROUND_PATH = "slider_background.png";
     private static final String SLIDER_KNOB_PATH = "slider_knob.png";
     private static final String BACKGROUND_MUSIC_PATH = "test_bgm.mp3";
@@ -39,14 +36,10 @@ public class Assets implements Disposable, AssetErrorListener {
     public BitmapFont uiFont;
     public Texture tile;
     public Texture tileSmall;
-    public Texture buttonEmpty;
-    public Texture buttonFilled;
-    public Texture buttonTransparent;
-    public TextureRegion checkboxEmpty;
-    public TextureRegion checkboxFilled;
+    public Texture greyBox;
+    public Texture whiteBox;
     public TextureRegion sliderBackground;
     public Sprite sliderKnob;
-    public String levelData;
     public Music backgroundMusic;
     public Sound moveSound;
     public Sound buttonSound;
@@ -65,11 +58,8 @@ public class Assets implements Disposable, AssetErrorListener {
         assetManager.load(UI_FONT_PATH, BitmapFont.class);
         assetManager.load(TILE_SPRITE_PATH, Texture.class);
         assetManager.load(TILE_SMALL_SPRITE_PATH, Texture.class);
-        assetManager.load(BUTTON_EMPTY_PATH, Texture.class);
-        assetManager.load(BUTTON_FILLED_PATH, Texture.class);
-        assetManager.load(BUTTON_TRANSPARENT_PATH, Texture.class);
-        assetManager.load(CHECKBOX_EMPTY_PATH, Texture.class);
-        assetManager.load(CHECKBOX_FILLED_PATH, Texture.class);
+        assetManager.load(GREY_BOX, Texture.class);
+        assetManager.load(WHITE_BOX, Texture.class);
         assetManager.load(SLIDER_BACKGROUND_PATH, Texture.class);
         assetManager.load(SLIDER_KNOB_PATH, Texture.class);
         assetManager.load(BACKGROUND_MUSIC_PATH, Music.class);
@@ -82,11 +72,8 @@ public class Assets implements Disposable, AssetErrorListener {
         uiFont = assetManager.get(UI_FONT_PATH);
         tile = assetManager.get(TILE_SPRITE_PATH, Texture.class);
         tileSmall = assetManager.get(TILE_SMALL_SPRITE_PATH, Texture.class);
-        buttonEmpty = assetManager.get(BUTTON_EMPTY_PATH);
-        buttonFilled = assetManager.get(BUTTON_FILLED_PATH);
-        buttonTransparent = assetManager.get(BUTTON_TRANSPARENT_PATH);
-        checkboxEmpty = new TextureRegion(assetManager.get(CHECKBOX_EMPTY_PATH, Texture.class));
-        checkboxFilled = new TextureRegion(assetManager.get(CHECKBOX_FILLED_PATH, Texture.class));
+        greyBox = assetManager.get(GREY_BOX, Texture.class);
+        whiteBox = assetManager.get(WHITE_BOX, Texture.class);
         sliderBackground = new TextureRegion(assetManager.get(SLIDER_BACKGROUND_PATH, Texture.class));
         sliderKnob = new Sprite(assetManager.get(SLIDER_KNOB_PATH, Texture.class));
         backgroundMusic = assetManager.get(BACKGROUND_MUSIC_PATH);
@@ -105,4 +92,5 @@ public class Assets implements Disposable, AssetErrorListener {
     public void dispose() {
         if (assetManager != null) assetManager.dispose();
     }
+
 }

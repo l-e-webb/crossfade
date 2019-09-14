@@ -23,6 +23,7 @@ class Tile extends Actor {
     int row;
     int column;
     Board board;
+    BoardGroup boardGroup;
 
     TileState state;
     FlipDirection flipDirection;
@@ -91,6 +92,12 @@ class Tile extends Actor {
         flip(direction, 0);
     }
 
+    void endFlip() {
+        state = TileState.IDLE;
+        flipTimer = 0;
+        flipWaitTimer = 0;
+    }
+
     void init(Board board) {
         this.board = board;
         final Board b = board;
@@ -120,7 +127,6 @@ class Tile extends Actor {
                     return;
                 }
                 b.updateActiveTiles(row, column);
-                Gdx.app.log("Tile", "activating tiles on enter");
                 super.enter(event, x, y, pointer, fromActor);
             }
 
@@ -130,7 +136,6 @@ class Tile extends Actor {
                     return;
                 }
                 b.clearActiveTiles();
-                Gdx.app.log("Tile", "clearing active tiles on exit");
                 super.exit(event, x, y, pointer, toActor);
             }
 
@@ -154,17 +159,17 @@ class Tile extends Actor {
 
     void updateSize(float tilePadding) {
         setPosition(getXAnchor(), getYAnchor());
-        float tileWidth = getParent().getWidth() / Board.WIDTH;
+        float tileWidth = boardGroup.getWidth() / boardGroup.boardWidth;
         setSize(tileWidth - tilePadding, tileWidth - tilePadding);
     }
 
     float getXAnchor() {
-        float tileWidth = getParent().getWidth() / Board.WIDTH;
+        float tileWidth = boardGroup.getWidth() / boardGroup.boardWidth;
         return tileWidth * column;
     }
 
     float getYAnchor() {
-        float tileHeight = getParent().getHeight() / Board.WIDTH;
+        float tileHeight = boardGroup.getHeight() / boardGroup.boardWidth;
         return tileHeight * (Board.WIDTH - row - 1);
     }
 
@@ -206,7 +211,7 @@ class Tile extends Actor {
                 }
                 break;
         }
-        if (board.highlightTiles) {
+        if (board != null && board.highlightTiles) {
             if (displayValue) {
                 return active ? Board.TILE_ON_ACTIVE_COLOR : Board.TILE_ON_COLOR;
             } else {

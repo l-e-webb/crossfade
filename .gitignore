@@ -65,3 +65,6 @@ build/
 
 ## OS Specific
 .DS_Store
+
+## Project specific
+records.json
