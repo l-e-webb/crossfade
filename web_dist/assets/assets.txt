@@ -1,14 +1,10 @@
 d:assets:0:application/unknown
-i:base_label_9patch.png:307:image/png
-i:button_empty_9patch.png:654:image/png
-i:button_filled_9patch.png:485:image/png
-i:button_transparent_filled_9patch.png:605:image/png
-i:checkbox_empty.png:426:image/png
-i:checkbox_filled.png:822:image/png
 t:font.fnt:11237:application/unknown
 i:font.png:4592:image/png
+i:grey_box.png:176:image/png
 b:levels.dat:1258:application/unknown
 a:move_sound.wav:14358:audio/x-wav
+t:records.json:63:application/unknown
 i:slider_background.png:170:image/png
 i:slider_knob.png:374:image/png
 a:test_bgm.mp3:1780497:application/unknown
@@ -18,6 +14,7 @@ t:titleFont.fnt:11278:application/unknown
 i:titleFont.png:9924:image/png
 i:titleFont1.png:9831:image/png
 i:titleFont2.png:2762:image/png
+i:white_box.png:155:image/png
 a:win_sound.mp3:18807:application/unknown
 t:com/badlogic/gdx/graphics/g3d/particles/particles.fragment.glsl:859:application/unknown
 t:com/badlogic/gdx/graphics/g3d/particles/particles.vertex.glsl:2996:application/unknown
