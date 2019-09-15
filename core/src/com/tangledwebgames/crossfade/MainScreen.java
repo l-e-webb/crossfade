@@ -66,6 +66,8 @@ public class MainScreen extends ScreenAdapter {
             //Randomized level
             level = Levels.getRandomizedLevelIndex();
             getBoard().makeRandomLevel(true);
+        } else if (level == Levels.getSandboxLevelIndex()) {
+            getBoard().initializeLevel(Levels.sandboxLevelPlaceholder);
         } else if (level == Levels.getTrollLevelIndex()) {
             //Troll level
             getBoard().initializeLevel(Levels.trollLevel);
@@ -140,6 +142,9 @@ public class MainScreen extends ScreenAdapter {
     }
 
     public void win() {
+        //Sandbox level cannot win
+        if (level == Levels.getSandboxLevelIndex()) return;
+
         state = State.WIN;
         if (level <= Levels.getHighestLevelIndex() &&
                 (Levels.records[level] == 0 ||

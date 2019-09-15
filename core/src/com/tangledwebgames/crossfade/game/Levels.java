@@ -16,6 +16,7 @@ public class Levels {
     public static boolean[][][] levels;
     public static boolean[][] trollLevel;
     public static boolean[][] randomLevelPlaceholder;
+    public static boolean[][] sandboxLevelPlaceholder;
     public static int[] records;
 
     private static final String LEVEL_DATA_FILEPATH = "levels.dat";
@@ -47,7 +48,7 @@ public class Levels {
         trollLevel = new boolean[Board.WIDTH][Board.WIDTH];
         trollLevel[Board.WIDTH / 2][Board.WIDTH / 2] = true;
 
-        //Init random level placeholder.
+        //Init random & sandbox level placeholders.
         randomLevelPlaceholder = new boolean[][]{
                 {false, true, true, true, false},
                 {false, true, false, true, false},
@@ -55,6 +56,7 @@ public class Levels {
                 {false, true, true, false, false},
                 {false, true, false, true, false}
         };
+        sandboxLevelPlaceholder = new boolean[5][5];
 
         //Init user record.
         records = new int[levels.length];
@@ -68,6 +70,9 @@ public class Levels {
         try {
             JsonValue recordJson = new JsonReader().parse(recordsFile);
             records = recordJson.asIntArray();
+            if (records.length != levels.length) {
+                records = new int[levels.length];
+            }
         } catch (RuntimeException e) {
             Gdx.app.error(LOG_TAG, "Error parsing user record data as JSON.");
         }
@@ -115,14 +120,18 @@ public class Levels {
     }
 
     public static int getRandomizedLevelIndex() {
-        return levels != null ? levels.length + 1 : -1;
+        return levels != null ? levels.length + 2 : -1;
     }
+
+    public static int getSandboxLevelIndex() { return levels != null ? levels.length + 1 : -1; }
 
     public static boolean[][] getLevel(int i) {
         if (i >= 0 && i <= getHighestLevelIndex()) {
             return levels[i];
         } else if (i == getTrollLevelIndex()) {
             return trollLevel;
+        } else if (i == getSandboxLevelIndex()) {
+            return sandboxLevelPlaceholder;
         } else if (i == getRandomizedLevelIndex()) {
             return randomLevelPlaceholder;
         } else {

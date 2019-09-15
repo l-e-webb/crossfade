@@ -32,6 +32,7 @@ class UIText {
     static final String LEVEL_SELECT = "Levels";
     static final String SELECT_LEVEL = "Select";
     static final String LEVEL_SELECT_HEADING = "Select a level";
+    static final String SANDBOX = "Sandbox";
 
     private UIText() {}
 

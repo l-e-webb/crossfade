@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.game.Board;
 import com.tangledwebgames.crossfade.game.BoardGroup;
@@ -92,7 +91,7 @@ public class LevelSelectTable extends Table {
 
     private class LevelSelectListItem extends Table {
 
-        Label recordLabel;
+        Label recordNumLabel;
         BoardGroup boardGroup;
         int level;
 
@@ -103,23 +102,29 @@ public class LevelSelectTable extends Table {
             background(itemBackground);
             setTouchable(Touchable.enabled);
             this.level = level;
-            String levelLabelText = UIText.LEVEL + ": ";
+            Label levelLabel = new Label(UIText.LEVEL + ":", skin);
+            String levelNumLabelText = "";
             if (level <= Levels.getHighestLevelIndex()) {
-                levelLabelText += level;
+                levelNumLabelText += level;
+            } else if (level == Levels.getSandboxLevelIndex()) {
+                levelNumLabelText += UIText.SANDBOX;
             } else if (level == Levels.getTrollLevelIndex()) {
-                levelLabelText += UIText.UNKNOWN_LEVEL;
+                levelNumLabelText += UIText.UNKNOWN_LEVEL;
             } else if (level == getRandomizedLevelIndex()) {
-                levelLabelText += UIText.RANDOM;
+                levelNumLabelText += UIText.RANDOM;
             }
-            Label levelLabel = new Label(levelLabelText, skin);
-            recordLabel = new Label(UIText.BEST + ": -" , skin);
+            Label levelNumLabel = new Label(levelNumLabelText, skin, "highlightStyle");
+            Label recordLabel = new Label(UIText.BEST + ":", skin);
+            recordNumLabel = new Label("", skin);
 
             pad(Dimensions.PADDING_SMALL);
             //padRight(Dimensions.PADDING_MEDIUM);
             defaults().left().pad(Dimensions.PADDING_SMALL).expandY();
             add(levelLabel);
+            add(levelNumLabel);
             row();
             add(recordLabel);
+            add(recordNumLabel);
             left();
 
             boardGroup = new BoardGroup(Board.WIDTH);
@@ -167,13 +172,15 @@ public class LevelSelectTable extends Table {
         }
 
         void updateRecordLabelText() {
-            String recordLabelText = UIText.BEST + ": ";
+            String recordLabelText;
             if (level <= Levels.getHighestLevelIndex() && Levels.records[level] > 0) {
-                recordLabelText += Levels.records[level];
+                recordLabelText = "" + Levels.records[level];
+                recordNumLabel.setStyle(skin.get("highlightStyle", Label.LabelStyle.class));
             } else {
-                recordLabelText += "-";
+                recordLabelText = "-";
+                recordNumLabel.setStyle(skin.get("deemphasisStyle", Label.LabelStyle.class));
             }
-            recordLabel.setText(recordLabelText);
+            recordNumLabel.setText(recordLabelText);
         }
 
         @Override

@@ -154,6 +154,8 @@ class MainUITable extends Table {
         if (level == Levels.getRandomizedLevelIndex()) {
             levelNum.setText(UIText.RANDOM);
             nextButton.setText(UIText.RANDOM_BUTTON);
+        } else if (level == Levels.getSandboxLevelIndex()) {
+            levelNum.setText(UIText.SANDBOX);
         } else if (level == Levels.getTrollLevelIndex()) {
             levelNum.setText(UIText.UNKNOWN_LEVEL);
         }
