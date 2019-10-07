@@ -26,7 +26,9 @@ public class CrossFadeGame extends Game {
 		}
         Assets.instance.loadAll();
 		PreferenceWrapper.init();
-		CrossFadePurchaseManager.setPurchaseManager(purchaseManager);
+		if (APP_TYPE == Application.ApplicationType.Android) {
+			CrossFadePurchaseManager.setPurchaseManager(purchaseManager);
+		}
 		Levels.init();
 		SoundManager.init();
 		UiText.init();

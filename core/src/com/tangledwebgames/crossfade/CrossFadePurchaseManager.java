@@ -22,6 +22,7 @@ public class CrossFadePurchaseManager {
     static UiRenderer uiRenderer;
 
     public static void setPurchaseManager(PurchaseManager pm) {
+        if (pm == null) return;
         CrossFadePurchaseManager.pm = pm;
         init();
     }
