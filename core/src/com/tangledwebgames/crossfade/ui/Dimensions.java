@@ -8,12 +8,14 @@ public class Dimensions {
     static final float PADDING_MEDIUM = 10f;
     static final float PADDING_LARGE = 24f;
     static final float MAIN_UI_ROW_HEIGHT =65f;
-    static final float PAUSE_BUTTON_MIN_WIDTH = 200f;
+    static final float PAUSE_BUTTON_MIN_WIDTH = 220f;
     static final float PAUSE_BUTTON_HEIGHT = 60f;
     static final float CHECKBOX_SIZE = 42f;
     static final float CHECKBOX_RIGHT_PADDING = 25f;
     static final float PAUSE_TABLE_WIDTH_RATIO = 0.875f;
     static final float LEVEL_SELECT_HEIGHT_RATIO = 0.9f;
+    static final float PURCHASE_DIALOG_HEIGHT_RATIO = 0.7f;
+    static final float GENERIC_DIALOG_HEIGHT_RATIO = 0.5f;
     static final int SLIDER_KNOB_WIDTH = 12;
     static final int SLIDER_KNOB_HEIGHT = 20;
     static final float SLIDER_PADDING_LEFT = 12.5f;
@@ -22,6 +24,7 @@ public class Dimensions {
 
     static final float TITLE_SCALE = 0.875f;
     static final float TEXT_SCALE = 1f;
+    static final float SMALL_TEXT_SCALE = 1f;
 
     static final Color SLIDER_COLOR = Color.FOREST;
     static final Color PRIMARY_COLOR = new Color(0.05f, 0.95f, 0.05f, 1);

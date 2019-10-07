@@ -10,12 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.game.Levels;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 
-class MainUITable extends Table {
+class MainUiTable extends Table {
 
     private Label timeNum;
     private Label levelNum;
@@ -30,7 +29,7 @@ class MainUITable extends Table {
     private TextButton menuButton;
     private TextButton levelSelectButton;
     
-    MainUITable(Skin skin, Drawable background) {
+    MainUiTable(Skin skin, Drawable background) {
         super();
         this.highlightStyle = skin.get("highlightStyle", Label.LabelStyle.class);
         this.deemphasisStyle = skin.get("deemphasisStyle", Label.LabelStyle.class);
@@ -48,20 +47,20 @@ class MainUITable extends Table {
             }
         });
 
-        final Label titleLabel = new Label(UIText.TITLE, skin, "titleStyle");
-        final Label timeLabel = new Label(UIText.TIME, skin);
-        final Label levelLabel = new Label(UIText.LEVEL, skin);
-        final Label movesLabel = new Label(UIText.MOVES, skin);
-        final Label bestMovesLabel = new Label(UIText.BEST, skin);
+        final Label titleLabel = new Label(UiText.TITLE, skin, "titleStyle");
+        final Label timeLabel = new Label(UiText.TIME, skin);
+        final Label levelLabel = new Label(UiText.LEVEL, skin);
+        final Label movesLabel = new Label(UiText.MOVES, skin);
+        final Label bestMovesLabel = new Label(UiText.BEST, skin);
         timeNum = new Label("0", skin, "highlightStyle");
         levelNum = new Label("1", skin, "highlightStyle");
         movesNum = new Label("0", skin, "highlightStyle");
         bestMovesNum = new Label("0", skin, "highlightStyle");
-        prevButton = new TextButton(UIText.PREVIOUS, skin);
-        resetButton = new TextButton(UIText.RESET, skin);
-        nextButton = new TextButton(UIText.NEXT, skin);
-        menuButton = new TextButton(UIText.MENU, skin);
-        levelSelectButton = new TextButton(UIText.LEVEL_SELECT, skin);
+        prevButton = new TextButton(UiText.PREVIOUS, skin);
+        resetButton = new TextButton(UiText.RESET, skin);
+        nextButton = new TextButton(UiText.NEXT, skin);
+        menuButton = new TextButton(UiText.MENU, skin);
+        levelSelectButton = new TextButton(UiText.LEVEL_SELECT, skin);
         prevButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -86,7 +85,7 @@ class MainUITable extends Table {
         menuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainScreen.instance.pauseGame();
+                MainScreen.instance.pauseMenu();
                 SoundManager.buttonSound();
             }
         });
@@ -150,14 +149,14 @@ class MainUITable extends Table {
 
     void updateForNewLevel(int level) {
         levelNum.setText("" + level);
-        nextButton.setText(UIText.NEXT);
+        nextButton.setText(UiText.NEXT);
         if (level == Levels.getRandomizedLevelIndex()) {
-            levelNum.setText(UIText.RANDOM);
-            nextButton.setText(UIText.RANDOM_BUTTON);
+            levelNum.setText(UiText.RANDOM);
+            nextButton.setText(UiText.RANDOM_BUTTON);
         } else if (level == Levels.getSandboxLevelIndex()) {
-            levelNum.setText(UIText.SANDBOX);
+            levelNum.setText(UiText.SANDBOX);
         } else if (level == Levels.getTrollLevelIndex()) {
-            levelNum.setText(UIText.UNKNOWN_LEVEL);
+            levelNum.setText(UiText.UNKNOWN_LEVEL);
         }
         if (level > Levels.getHighestLevelIndex() || Levels.records[level] == 0) {
             bestMovesNum.setText("-");

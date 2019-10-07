@@ -10,9 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Align;
+import com.tangledwebgames.crossfade.CrossFadePurchaseManager;
 import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.game.Board;
 import com.tangledwebgames.crossfade.game.BoardGroup;
@@ -43,10 +46,6 @@ public class LevelSelectTable extends Table {
         this.itemBackgroundHighlight = itemBackgroundHighlight;
         levelSelectGroup = new VerticalGroup();
         levelSelectGroup.grow().wrap(false).left().columnLeft().space(Dimensions.LEVEL_SELECT_ITEM_PADDING);
-        for (int i = 1; i <= getRandomizedLevelIndex(); i++) {
-            levelSelectGroup.addActor(new LevelSelectListItem(i));
-        }
-
         ScrollPane levelSelectPane = new ScrollPane(levelSelectGroup, skin);
         levelSelectPane.setFadeScrollBars(false);
         levelSelectPane.setScrollingDisabled(true, false);
@@ -55,8 +54,8 @@ public class LevelSelectTable extends Table {
         levelSelectPaneContainer.fill();
         levelSelectPaneContainer.background(scrollBoxBackground);
 
-        Label levelSelectHeading = new Label(UIText.LEVEL_SELECT_HEADING, skin);
-        TextButton continueButton = new TextButton(UIText.CONTINUE, skin);
+        Label levelSelectHeading = new Label(UiText.LEVEL_SELECT_HEADING, skin);
+        TextButton continueButton = new TextButton(UiText.CONTINUE, skin);
         continueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -69,6 +68,8 @@ public class LevelSelectTable extends Table {
         add(levelSelectPaneContainer).grow().spaceBottom(Dimensions.PADDING_LARGE);
         row();
         add(continueButton).center().height(Dimensions.PAUSE_BUTTON_HEIGHT).minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);
+
+        createLevelContents();
     }
 
     @Override
@@ -77,6 +78,14 @@ public class LevelSelectTable extends Table {
             updateAll();
         }
         super.draw(batch, parentAlpha);
+    }
+
+    void createLevelContents() {
+        levelSelectGroup.clear();
+        for (int i = 1; i <= getRandomizedLevelIndex(); i++) {
+            levelSelectGroup.addActor(new LevelSelectListItem(i));
+        }
+        initialValidation = false;
     }
 
     void updateAll() {
@@ -102,30 +111,38 @@ public class LevelSelectTable extends Table {
             background(itemBackground);
             setTouchable(Touchable.enabled);
             this.level = level;
-            Label levelLabel = new Label(UIText.LEVEL + ":", skin);
-            String levelNumLabelText = "";
-            if (level <= Levels.getHighestLevelIndex()) {
-                levelNumLabelText += level;
-            } else if (level == Levels.getSandboxLevelIndex()) {
-                levelNumLabelText += UIText.SANDBOX;
-            } else if (level == Levels.getTrollLevelIndex()) {
-                levelNumLabelText += UIText.UNKNOWN_LEVEL;
-            } else if (level == getRandomizedLevelIndex()) {
-                levelNumLabelText += UIText.RANDOM;
-            }
-            Label levelNumLabel = new Label(levelNumLabelText, skin, "highlightStyle");
-            Label recordLabel = new Label(UIText.BEST + ":", skin);
-            recordNumLabel = new Label("", skin);
 
-            pad(Dimensions.PADDING_SMALL);
-            //padRight(Dimensions.PADDING_MEDIUM);
-            defaults().left().pad(Dimensions.PADDING_SMALL).expandY();
-            add(levelLabel);
-            add(levelNumLabel);
-            row();
-            add(recordLabel);
-            add(recordNumLabel);
-            left();
+            if (CrossFadePurchaseManager.isFullVersion() || level <= Levels.MAX_FREE_LEVEL) {
+                Label levelLabel = new Label(UiText.LEVEL + ":", skin);
+                String levelNumLabelText = "";
+                if (level <= Levels.getHighestLevelIndex()) {
+                    levelNumLabelText += level;
+                } else if (level == Levels.getSandboxLevelIndex()) {
+                    levelNumLabelText += UiText.SANDBOX;
+                } else if (level == Levels.getTrollLevelIndex()) {
+                    levelNumLabelText += UiText.UNKNOWN_LEVEL;
+                } else if (level == getRandomizedLevelIndex()) {
+                    levelNumLabelText += UiText.RANDOM;
+                }
+                Label levelNumLabel = new Label(levelNumLabelText, skin, "highlightStyle");
+                Label recordLabel = new Label(UiText.BEST + ":", skin);
+                recordNumLabel = new Label("", skin);
+
+                pad(Dimensions.PADDING_SMALL);
+                //padRight(Dimensions.PADDING_MEDIUM);
+                defaults().left().pad(Dimensions.PADDING_SMALL).expandY();
+                add(levelLabel);
+                add(levelNumLabel);
+                row();
+                add(recordLabel);
+                add(recordNumLabel);
+                left();
+            } else {
+                pad(Dimensions.PADDING_SMALL);
+                Label lockedLabel = new Label(UiText.LOCKED, skin, "highlightStyle");
+                lockedLabel.setAlignment(Align.center);
+                add(lockedLabel).grow().padRight(Value.percentHeight(1));
+            }
 
             boardGroup = new BoardGroup(Board.WIDTH);
             boardGroup.setTileValues(Levels.getLevel(level));
@@ -155,6 +172,7 @@ public class LevelSelectTable extends Table {
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
                     if (MainScreen.instance.getLevel() != level) {
+                        MainScreen.instance.unpauseGame();
                         MainScreen.instance.goToLevel(level);
                         SoundManager.buttonSound();
                     }
@@ -172,6 +190,9 @@ public class LevelSelectTable extends Table {
         }
 
         void updateRecordLabelText() {
+            if (!CrossFadePurchaseManager.isFullVersion() && level > Levels.MAX_FREE_LEVEL) {
+                return;
+            }
             String recordLabelText;
             if (level <= Levels.getHighestLevelIndex() && Levels.records[level] > 0) {
                 recordLabelText = "" + Levels.records[level];

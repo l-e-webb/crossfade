@@ -14,6 +14,7 @@ public class PreferenceWrapper {
     public static final String MUSIC_VOLUME_KEY = "music_volume";
     public static final String ANIMATE_TILES_KEY = "animate_tiles";
     public static final String HIGHLIGHT_TILES_KEY = "highlight_tiles";
+    public static final String FULL_VERSION_KEY = "full_version";
 
     private static final String PREFERENCES_NAME = "crossfade_preferences";
 
@@ -29,6 +30,7 @@ public class PreferenceWrapper {
         prefs.putFloat(SFX_VOLUME_KEY, SoundManager.getSfxVolume());
         prefs.putBoolean(ANIMATE_TILES_KEY, MainScreen.instance.getBoard().animateTiles);
         prefs.putBoolean(HIGHLIGHT_TILES_KEY, MainScreen.instance.getBoard().highlightTiles);
+        prefs.putBoolean(FULL_VERSION_KEY, CrossFadePurchaseManager.isFullVersion());
         prefs.flush();
     }
 }

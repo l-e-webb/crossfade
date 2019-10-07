@@ -4,6 +4,7 @@
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 
 	<inherits name='CrossFadeGame' />
+	<inherits name="com.badlogic.gdx.pay_client"/>
 	<entry-point class='com.tangledwebgames.crossfade.client.HtmlLauncher' />
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
 	<set-configuration-property name="gdx.assetpath" value="../android/assets" />

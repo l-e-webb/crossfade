@@ -11,7 +11,8 @@ import com.badlogic.gdx.utils.JsonValue;
  */
 public class Levels {
 
-    public static final String LOG_TAG = Levels.class.getSimpleName();
+    static final String LOG_TAG = Levels.class.getSimpleName();
+    public static final int MAX_FREE_LEVEL = 25;
 
     public static boolean[][][] levels;
     public static boolean[][] trollLevel;

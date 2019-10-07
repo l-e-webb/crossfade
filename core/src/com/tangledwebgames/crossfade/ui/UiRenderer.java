@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -21,22 +23,27 @@ import com.tangledwebgames.crossfade.MainScreen;
 /**
  * Manages all UI elements through a Stage.
  */
-public class UIRenderer extends Stage {
+public class UiRenderer extends Stage {
 
     private MainScreen screen;
-    private MainUITable mainUiTable;
-    private PauseUITable pauseUiTable;
-    private WinUiTable winUiTable;
+    private MainUiTable mainUiTable;
+    private MenuTable menuTable;
+    private WinTable winTable;
     private LevelSelectTable levelSelectTable;
+    private PurchaseTable purchaseTable;
+    private CrossFadeDialog dialog;
 
     private int time;
     private int moves;
 
-    public UIRenderer(MainScreen screen) {
+    PauseState pauseState;
+
+    public UiRenderer(MainScreen screen) {
         super(screen.getViewport());
         this.screen = screen;
         time = -1;
         moves = -1;
+        pauseState = PauseState.NOT_PAUSED;
         initUI();
     }
 
@@ -51,49 +58,109 @@ public class UIRenderer extends Stage {
             time = newTime;
             moves = newMoves;
             mainUiTable.setTimeAndMoves(time, moves);
-            winUiTable.setWinTimeAndMoves(time, moves);
+            winTable.setWinTimeAndMoves(time, moves);
         }
-        //Update table visibility
-        setVisibleTables();
+    }
+
+    public PauseState getPauseState() {
+        return pauseState;
     }
 
     private void setVisibleTables() {
-        switch (screen.getState()) {
+        winTable.setVisible(false);
+        menuTable.setVisible(false);
+        levelSelectTable.setVisible(false);
+        purchaseTable.setVisible(false);
+        dialog.setVisible(false);
+        switch (getPauseState()) {
+            case NOT_PAUSED: default:
+                break;
             case WIN:
-                winUiTable.setVisible(true);
-                pauseUiTable.setVisible(false);
-                levelSelectTable.setVisible(false);
+                winTable.setVisible(true);
                 break;
-            case PAUSE:
-                winUiTable.setVisible(false);
-                pauseUiTable.setVisible(true);
-                levelSelectTable.setVisible(false);
-                break;
-            case PLAY: default:
-                winUiTable.setVisible(false);
-                pauseUiTable.setVisible(false);
-                levelSelectTable.setVisible(false);
+            case MENU:
+                menuTable.setVisible(true);
                 break;
             case LEVEL_SELECT:
-                winUiTable.setVisible(false);
-                pauseUiTable.setVisible(false);
                 levelSelectTable.setVisible(true);
+                break;
+            case PURCHASE:
+                purchaseTable.setVisible(true);
+                break;
+            case PURCHASE_FAILED:
+            case PURCHASE_SUCCESS:
+            case PURCHASE_NO_RESTORE:
+                dialog.setVisible(true);
                 break;
         }
     }
 
-    public void initPause() {
-        pauseUiTable.initPause();
+    public void initPause(PauseState state) {
+        pauseState = state;
+        switch (state) {
+            case MENU:
+                showMenu();
+                break;
+            case LEVEL_SELECT:
+                showLevelSelect();
+                break;
+            case PURCHASE:
+                showPurchaseDialog(false);
+            case NOT_PAUSED:
+                initUnpause();
+                break;
+            case PURCHASE_SUCCESS:
+                showPurchaseSuccess();
+                break;
+            case PURCHASE_FAILED:
+                showPurchaseFailed();
+                break;
+            case PURCHASE_NO_RESTORE:
+                showNoRestore();
+                break;
+            case WIN: default:
+                break;
+        }
+        setVisibleTables();
+    }
+
+    private void showMenu() {
+        menuTable.initPause();
         mainUiTable.disableButtons();
     }
 
-    public void initLevelSelect() {
+    private void showLevelSelect() {
         levelSelectTable.updateAll();
         mainUiTable.disableButtons();
     }
 
-    public void initUnpause() {
+    private void initUnpause() {
         mainUiTable.enableButtons();
+    }
+
+    public void showPurchaseDialog(boolean fromAttemptToAccessUnavailableContent) {
+        pauseState = PauseState.PURCHASE;
+        purchaseTable.update(fromAttemptToAccessUnavailableContent);
+        purchaseTable.enableAll();
+        updateTablePositions();
+        setVisibleTables();
+    }
+
+    public void onPurchase() {
+        resetTablesOnPurchase();
+        initPause(PauseState.PURCHASE_SUCCESS);
+    }
+
+    void showPurchaseSuccess() {
+        dialog.setLabelText(UiText.FULL_VERSION_UNLOCKED);
+    }
+
+    void showPurchaseFailed() {
+        dialog.setLabelText(UiText.PURCHASE_ERROR);
+    }
+
+    void showNoRestore() {
+        dialog.setLabelText(UiText.NO_RESTORE);
     }
 
     public void initUI() {
@@ -105,9 +172,13 @@ public class UIRenderer extends Stage {
         BitmapFont uiFont = Assets.instance.uiFont;
         uiFont.getData().setScale(Dimensions.TEXT_SCALE);
         uiFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        BitmapFont smallFont = Assets.instance.smallFont;
+        smallFont.getData().setScale(Dimensions.SMALL_TEXT_SCALE);
+        smallFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         //Style inits.
         Label.LabelStyle labelStyle = new Label.LabelStyle(uiFont, Dimensions.PRIMARY_COLOR);
+        Label.LabelStyle smallStyle = new Label.LabelStyle(smallFont, Dimensions.PRIMARY_COLOR);
         Label.LabelStyle titleStyle = new Label.LabelStyle(titleFont, Dimensions.PRIMARY_COLOR);
         Label.LabelStyle highlightStyle = new Label.LabelStyle(uiFont, Dimensions.ACTIVE_BUTTON_COLOR);
         Label.LabelStyle deemphasisStyle = new Label.LabelStyle(uiFont, Dimensions.DARK_COLOR);
@@ -149,6 +220,7 @@ public class UIRenderer extends Stage {
         //Skin init.
         Skin skin = new Skin();
         skin.add("titleStyle", titleStyle);
+        skin.add("smallStyle", smallStyle);
         skin.add("highlightStyle", highlightStyle);
         skin.add("deemphasisStyle", deemphasisStyle);
         skin.add("default", labelStyle);
@@ -156,14 +228,15 @@ public class UIRenderer extends Stage {
         skin.add("default", checkBoxStyle);
         skin.add("default-horizontal", sliderStyle);
         skin.add("default", scrollPaneStyle);
+
         //Main UI
-        mainUiTable = new MainUITable(skin, whiteBox.tint(Dimensions.UI_BACKGROUND_COLOR));
+        mainUiTable = new MainUiTable(skin, whiteBox.tint(Dimensions.UI_BACKGROUND_COLOR));
 
         //Pause Screen
-        pauseUiTable = new PauseUITable(skin, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
+        menuTable = new MenuTable(skin, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
 
         //Win Screen
-        winUiTable = new WinUiTable(skin, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
+        winTable = new WinTable(skin, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
 
         //Level select
         levelSelectTable = new LevelSelectTable(skin,
@@ -173,10 +246,28 @@ public class UIRenderer extends Stage {
                 box9Patch.tint(Dimensions.ACTIVE_BUTTON_COLOR)
         );
 
+        //Purchase table
+        purchaseTable = new PurchaseTable(skin, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
+
+        //Dialog
+        dialog = new CrossFadeDialog(skin, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
+        dialog.setButtonText(UiText.OK);
+        dialog.setButtonListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                MainScreen.instance.unpauseGame();
+            }
+        });
+
         addActor(mainUiTable);
-        addActor(pauseUiTable);
-        addActor(winUiTable);
+        addActor(menuTable);
+        addActor(winTable);
         addActor(levelSelectTable);
+        addActor(purchaseTable);
+        addActor(dialog);
+
+        updateTablePositions();
+        setVisibleTables();
     }
 
     public void newLevel() {
@@ -184,22 +275,31 @@ public class UIRenderer extends Stage {
         time = -1;
         int level = screen.getLevel();
         mainUiTable.updateForNewLevel(level);
-        winUiTable.updateForNewLevel(level);
+        winTable.updateForNewLevel(level);
     }
 
     public void newRecordWinText() {
-        winUiTable.newRecordWinText();
+        winTable.newRecordWinText();
     }
 
     public void updateTablePositions() {
         float x = screen.getViewport().getWorldWidth() / 2;
         float y = screen.getViewport().getWorldHeight() / 2;
-        pauseUiTable.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, pauseUiTable.getPrefHeight());
-        pauseUiTable.setPosition(x, y, Align.center);
-        winUiTable.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, winUiTable.getPrefHeight());
-        winUiTable.setPosition(x, y, Align.center);
+        menuTable.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, menuTable.getPrefHeight());
+        menuTable.setPosition(x, y, Align.center);
+        winTable.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, winTable.getPrefHeight());
+        winTable.setPosition(x, y, Align.center);
         levelSelectTable.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, MainScreen.WORLD_HEIGHT * Dimensions.LEVEL_SELECT_HEIGHT_RATIO);
         levelSelectTable.setPosition(x, y, Align.center);
+        purchaseTable.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, MainScreen.WORLD_HEIGHT * Dimensions.PURCHASE_DIALOG_HEIGHT_RATIO);
+        purchaseTable.setPosition(x, y, Align.center);
+        dialog.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, MainScreen.WORLD_HEIGHT * Dimensions.GENERIC_DIALOG_HEIGHT_RATIO);
+        dialog.setPosition(x, y, Align.center);
+    }
+
+    void resetTablesOnPurchase() {
+        menuTable.initContents();
+        levelSelectTable.createLevelContents();
     }
 
 }

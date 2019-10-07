@@ -12,7 +12,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.tangledwebgames.crossfade.game.Board;
 import com.tangledwebgames.crossfade.game.Levels;
 import com.tangledwebgames.crossfade.sound.SoundManager;
-import com.tangledwebgames.crossfade.ui.UIRenderer;
+import com.tangledwebgames.crossfade.ui.PauseState;
+import com.tangledwebgames.crossfade.ui.UiRenderer;
 
 public class MainScreen extends ScreenAdapter {
 
@@ -23,7 +24,7 @@ public class MainScreen extends ScreenAdapter {
 
     Viewport viewport;
     Board board;
-    UIRenderer uiRenderer;
+    UiRenderer uiRenderer;
     ShapeRenderer renderer;
 
     float time;
@@ -39,7 +40,8 @@ public class MainScreen extends ScreenAdapter {
         renderer = new ShapeRenderer();
         viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, WORLD_WIDTH, 0);
         board = new Board(getViewport(), getRenderer());
-        uiRenderer = new UIRenderer(this);
+        uiRenderer = new UiRenderer(this);
+        CrossFadePurchaseManager.setUiRenderer(uiRenderer);
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(new InputHandler());
         multiplexer.addProcessor(uiRenderer);
@@ -62,6 +64,11 @@ public class MainScreen extends ScreenAdapter {
     }
 
     public void goToLevel(int level) {
+        if (!CrossFadePurchaseManager.isFullVersion() &&
+                level > Levels.MAX_FREE_LEVEL) {
+            purchaseDialog(true);
+            return;
+        }
         if (level >= Levels.getRandomizedLevelIndex()) {
             //Randomized level
             level = Levels.getRandomizedLevelIndex();
@@ -95,27 +102,27 @@ public class MainScreen extends ScreenAdapter {
     }
 
     public void onPrevButtonClick() {
-        if (getState() == State.PAUSE) return;
+        if (!inGame()) return;
         goToLevel(this.getLevel() - 1);
     }
 
     public void onResetButtonClick() {
-        if (getState() == State.PAUSE) return;
+        if (!inGame()) return;
         reset();
     }
 
     public void onNextButtonClick() {
-        if (getState() == State.PAUSE) return;
-        if (this.getLevel() == Levels.getRandomizedLevelIndex()) {
-            goToLevel(this.getLevel());
+        if (!inGame()) return;
+        if (getLevel() == Levels.getRandomizedLevelIndex()) {
+            goToLevel(getLevel());
         } else {
-            goToLevel(this.getLevel() + 1);
+            goToLevel(getLevel() + 1);
         }
     }
 
     @Override
     public void pause() {
-        pauseGame();
+        pauseMenu();
         PreferenceWrapper.flush();
         Levels.saveRecords();
         SoundManager.stopMusic();
@@ -126,26 +133,27 @@ public class MainScreen extends ScreenAdapter {
         SoundManager.playMusic();
     }
 
-    public void pauseGame() {
-        if (getState() == State.PLAY) {
-            board.clearActiveTiles();
-            uiRenderer.initPause();
-            state = State.PAUSE;
-        }
+    public boolean inGame() {
+        return getState() == State.PLAY;
     }
 
+    public void pauseGame() {
+        state = State.PAUSE;
+    }
 
-    public void unpauseGame() {
-        if (inGame()) return;
-        uiRenderer.initUnpause();
-        state = State.PLAY;
+    public void pauseMenu() {
+        if (getState() == State.PLAY) {
+            board.clearActiveTiles();
+            pauseGame();
+            uiRenderer.initPause(PauseState.MENU);
+        }
     }
 
     public void win() {
         //Sandbox level cannot win
         if (level == Levels.getSandboxLevelIndex()) return;
 
-        state = State.WIN;
+        state = State.PAUSE;
         if (level <= Levels.getHighestLevelIndex() &&
                 (Levels.records[level] == 0 ||
                 board.getMoves() < Levels.records[level])) {
@@ -153,21 +161,29 @@ public class MainScreen extends ScreenAdapter {
             uiRenderer.newRecordWinText();
         }
         SoundManager.winSound();
+        uiRenderer.initPause(PauseState.WIN);
     }
 
     public void levelSelect() {
-        uiRenderer.initLevelSelect();
-        state = State.LEVEL_SELECT;
+        pauseGame();
+        uiRenderer.initPause(PauseState.LEVEL_SELECT);
     }
 
-    public boolean inGame() {
-        return getState() == State.PLAY;
+    public void purchaseDialog(boolean fromAttemptToAccessUnavailableContent) {
+        pauseGame();
+        uiRenderer.showPurchaseDialog(fromAttemptToAccessUnavailableContent);
+    }
+
+    public void unpauseGame() {
+        if (inGame()) return;
+        uiRenderer.initPause(PauseState.NOT_PAUSED);
+        state = State.PLAY;
     }
 
     public void togglePause() {
         switch (getState()) {
             case PLAY:
-                pauseGame();
+                pauseMenu();
                 break;
             case PAUSE:
                 unpauseGame();
@@ -253,7 +269,7 @@ public class MainScreen extends ScreenAdapter {
                 togglePause();
                 return true;
             } else if (keycode == Input.Keys.MENU) {
-                pauseGame();
+                pauseMenu();
                 return true;
             }
             return false;
@@ -283,7 +299,7 @@ public class MainScreen extends ScreenAdapter {
 //                float deltaY = Math.abs(y - touchStartY);
 //                float distance2 = deltaX * deltaX + deltaY * deltaY;
 //                if (distance2 > panRegisterLength) {
-//                    pauseGame();
+//                    pauseMenu();
 //                    return true;
 //                }
 //            }
@@ -295,7 +311,5 @@ public class MainScreen extends ScreenAdapter {
         START,
         PLAY,
         PAUSE,
-        WIN,
-        LEVEL_SELECT
     }
 }
