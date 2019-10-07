@@ -2,11 +2,15 @@ d:assets:0:application/unknown
 t:font.fnt:11237:application/unknown
 i:font.png:4592:image/png
 i:grey_box.png:176:image/png
-b:levels.dat:1258:application/unknown
+b:levels.dat:1952:application/unknown
 a:move_sound.wav:14358:audio/x-wav
-t:records.json:63:application/unknown
+t:records.json:104:application/unknown
 i:slider_background.png:170:image/png
 i:slider_knob.png:374:image/png
+t:smallFont.fnt:11242:application/unknown
+i:smallFont.png:3825:image/png
+d:strings:0:application/unknown
+b:strings/GameText.properties:1107:application/unknown
 a:test_bgm.mp3:1780497:application/unknown
 i:tile.png:1606:image/png
 i:tileSmall.png:830:image/png
