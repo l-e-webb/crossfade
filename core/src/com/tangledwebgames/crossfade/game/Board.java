@@ -3,16 +3,12 @@ package com.tangledwebgames.crossfade.game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.tangledwebgames.crossfade.MainScreen;
-import com.tangledwebgames.crossfade.PreferenceWrapper;
 
 /**
  * Class representing the game board and its current state.
  */
-public class Board extends Stage {
+public class Board extends GameController {
 
     static boolean debug = false;
 
@@ -28,15 +24,15 @@ public class Board extends Stage {
     static final float HALF_FLIP_DURATION = FLIP_DURATION / 2;
     static final float FLIP_DELAY = 0f;
 
-    public boolean animateTiles;
-    public boolean highlightTiles;
-    BoardGroup boardGroup;
+    private static boolean radialFlips = false;
+    private static Tile.FlipDirection nonRadialDirection = Tile.FlipDirection.HORIZONTAL;
+
     ShapeRenderer renderer;
+
+    private BoardGroup boardGroup;
     private Tile[][] tiles;
     private boolean[][] originalState;
     private int moves;
-    boolean radialFlips = false;
-    Tile.FlipDirection nonRadialDirection = Tile.FlipDirection.HORIZONTAL;
 
     public Board(Viewport viewport, ShapeRenderer renderer) {
         super(viewport);
@@ -51,18 +47,20 @@ public class Board extends Stage {
         }
         originalState = new boolean[WIDTH][WIDTH];
         reset();
-        animateTiles = PreferenceWrapper.prefs.getBoolean(PreferenceWrapper.ANIMATE_TILES_KEY, true);
-        highlightTiles = PreferenceWrapper.prefs.getBoolean(PreferenceWrapper.HIGHLIGHT_TILES_KEY, true);
         setDebugAll(debug);
-    }
-
-    public void initializeLevel(boolean[][] level) {
-        this.originalState = level;
-        reset();
     }
 
     public int getMoves() {
         return moves;
+    }
+
+    public boolean isWinningState() {
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (getTileValue(i, j)) return false;
+            }
+        }
+        return true;
     }
 
     boolean getTileValue(int row, int column) {
@@ -82,8 +80,8 @@ public class Board extends Stage {
         }
     }
 
-    boolean selectTile(int row, int column) {
-        if (row < 0 || row >= WIDTH || column < 0 || column >= WIDTH) return false;
+    void selectTile(int row, int column) {
+        if (row < 0 || row >= WIDTH || column < 0 || column >= WIDTH) return;
         for (int i = 0; i < WIDTH; i++) {
             toggleTile(row, i);
         }
@@ -113,16 +111,14 @@ public class Board extends Stage {
         }
         moves++;
         clearActiveTiles();
-        return isWinningState();
+        if (isWinningState() && winListener != null) {
+            winListener.onWin();
+        }
     }
 
-    boolean isWinningState() {
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < WIDTH; j++) {
-                if (getTileValue(i, j)) return false;
-            }
-        }
-        return true;
+    protected void initializeLevel(boolean[][] level) {
+        this.originalState = level;
+        reset();
     }
 
     public void makeRandomLevel(boolean solvable) {
@@ -161,7 +157,7 @@ public class Board extends Stage {
         reset();
     }
 
-    public void reset() {
+    protected void resetBoard() {
         moves = 0;
         boardGroup.setTileValues(originalState);
         updateSize();

@@ -1,8 +1,6 @@
 package com.tangledwebgames.crossfade.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -10,16 +8,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.tangledwebgames.crossfade.CrossFadePurchaseManager;
-import com.tangledwebgames.crossfade.MainScreen;
 
-class PurchaseTable extends Table {
+class PurchaseMenu extends Table {
 
     private Label textLabel;
     private TextButton buyButton;
     private TextButton restoreButton;
     private TextButton cancelButton;
 
-    PurchaseTable(Skin skin, Drawable drawable) {
+    PurchaseMenu(Skin skin, UiReceiver receiver, Drawable drawable) {
         super();
         background(drawable);
         Label headingLabel = new Label(UiText.BUY_FULL_VERSION, skin);
@@ -29,25 +26,25 @@ class PurchaseTable extends Table {
         restoreButton = new TextButton(UiText.RESTORE, skin);
         cancelButton = new TextButton(UiText.CANCEL, skin);
 
-        final PurchaseTable purchaseTable = this;
+        final PurchaseMenu purchaseMenu = this;
         buyButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                purchaseTable.waitForTransaction();
-                CrossFadePurchaseManager.buyFullVersion();
+                purchaseMenu.waitForTransaction();
+                receiver.onPurchaseTableBuyButtonClicked();
             }
         });
         restoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                purchaseTable.waitForTransaction();
-                CrossFadePurchaseManager.restore();
+                purchaseMenu.waitForTransaction();
+                receiver.onPurchaseTableRestoreButtonClicked();
             }
         });
         cancelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainScreen.instance.unpauseGame();
+                receiver.onPurchaseTableCancelButtonClicked();
             }
         });
 
@@ -70,7 +67,6 @@ class PurchaseTable extends Table {
         String mainText = fromAttemptToAccessUnavailableContent ?
                 UiText.CONTENT_UNAVAILABLE : CrossFadePurchaseManager.getLocalDescription();
         mainText += " " + UiText.RESTORE_PROMPT;
-        Gdx.app.log("FIND ME", mainText);
         textLabel.setText(mainText);
         invalidateHierarchy();
     }
@@ -81,7 +77,7 @@ class PurchaseTable extends Table {
         cancelButton.setDisabled(false);
     }
 
-    void waitForTransaction() {
+    private void waitForTransaction() {
         buyButton.setDisabled(true);
         restoreButton.setDisabled(true);
         cancelButton.setDisabled(true);

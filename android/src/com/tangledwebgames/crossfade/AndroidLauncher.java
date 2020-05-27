@@ -5,9 +5,9 @@ import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.pay.android.googlebilling.PurchaseManagerGoogleBilling;
-import com.tangledwebgames.crossfade.CrossFadeGame;
 
 public class AndroidLauncher extends AndroidApplication {
+
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -16,6 +16,5 @@ public class AndroidLauncher extends AndroidApplication {
 		game.purchaseManager = new PurchaseManagerGoogleBilling(this);
 		initialize(game, config);
 	}
-
 
 }

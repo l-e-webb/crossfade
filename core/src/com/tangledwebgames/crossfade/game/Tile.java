@@ -1,6 +1,5 @@
 package com.tangledwebgames.crossfade.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -11,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.tangledwebgames.crossfade.Assets;
-import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 
 class Tile extends Actor {
@@ -105,7 +103,7 @@ class Tile extends Actor {
         addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (!MainScreen.instance.inGame()) {
+                if (!b.active) {
                     return false;
                 }
                 b.updateActiveTiles(row, column);
@@ -114,7 +112,7 @@ class Tile extends Actor {
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (!MainScreen.instance.inGame()) {
+                if (!b.active) {
                     return;
                 }
                 b.clearActiveTiles();
@@ -123,7 +121,7 @@ class Tile extends Actor {
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                if (!MainScreen.instance.inGame() || pointer == -1) {
+                if (!b.active || pointer == -1) {
                     return;
                 }
                 b.updateActiveTiles(row, column);
@@ -132,7 +130,7 @@ class Tile extends Actor {
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                if (!MainScreen.instance.inGame() || pointer == -1) {
+                if (!b.active || pointer == -1) {
                     return;
                 }
                 b.clearActiveTiles();
@@ -141,13 +139,11 @@ class Tile extends Actor {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!MainScreen.instance.inGame()) {
+                if (!b.active) {
                     return;
                 }
                 SoundManager.moveSound();
-                if (b.selectTile(row, column)) {
-                    MainScreen.instance.win();
-                }
+                b.selectTile(row, column);
                 super.clicked(event, x, y);
             }
         });

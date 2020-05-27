@@ -15,26 +15,33 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
-import com.tangledwebgames.crossfade.CrossFadePurchaseManager;
 import com.tangledwebgames.crossfade.MainScreen;
+import com.tangledwebgames.crossfade.SettingsManager;
 import com.tangledwebgames.crossfade.game.Board;
 import com.tangledwebgames.crossfade.game.BoardGroup;
 import com.tangledwebgames.crossfade.game.Levels;
-import com.tangledwebgames.crossfade.sound.SoundManager;
 
 import static com.tangledwebgames.crossfade.game.Levels.getRandomizedLevelIndex;
 
-public class LevelSelectTable extends Table {
+class LevelSelectMenu extends Table {
 
-    static float itemPrefWidth;
+    private static float itemPrefWidth;
 
-    Drawable itemBackground;
-    Drawable itemBackgroundHighlight;
-    Skin skin;
-    VerticalGroup levelSelectGroup;
-    boolean initialValidation = false;
+    private Skin skin;
+    private UiReceiver receiver;
+    private Drawable itemBackground;
+    private Drawable itemBackgroundHighlight;
+    private VerticalGroup levelSelectGroup;
+    private boolean initialValidation = false;
 
-    LevelSelectTable(Skin skin, Drawable background, Drawable scrollBoxBackground, Drawable itemBackground, Drawable itemBackgroundHighlight) {
+    LevelSelectMenu(
+            Skin skin,
+            UiReceiver receiver,
+            Drawable background,
+            Drawable scrollBoxBackground,
+            Drawable itemBackground,
+            Drawable itemBackgroundHighlight
+    ) {
         super();
         //Uncomment to see wireframe
         //setDebug(true);
@@ -42,10 +49,13 @@ public class LevelSelectTable extends Table {
         background(background);
         pad(Dimensions.PADDING_LARGE);
         this.skin = skin;
+        this.receiver = receiver;
         this.itemBackground = itemBackground;
         this.itemBackgroundHighlight = itemBackgroundHighlight;
-        levelSelectGroup = new VerticalGroup();
-        levelSelectGroup.grow().wrap(false).left().columnLeft().space(Dimensions.LEVEL_SELECT_ITEM_PADDING);
+        levelSelectGroup = new VerticalGroup()
+                .grow().wrap(false)
+                .left().columnLeft()
+                .space(Dimensions.LEVEL_SELECT_ITEM_PADDING);
         ScrollPane levelSelectPane = new ScrollPane(levelSelectGroup, skin);
         levelSelectPane.setFadeScrollBars(false);
         levelSelectPane.setScrollingDisabled(true, false);
@@ -60,14 +70,16 @@ public class LevelSelectTable extends Table {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                MainScreen.instance.unpauseGame();
+                receiver.onLevelSelectContinueButtonClicked();
             }
         });
         add(levelSelectHeading).center().spaceBottom(Dimensions.PADDING_MEDIUM);
         row();
         add(levelSelectPaneContainer).grow().spaceBottom(Dimensions.PADDING_LARGE);
         row();
-        add(continueButton).center().height(Dimensions.PAUSE_BUTTON_HEIGHT).minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);
+        add(continueButton).center()
+                .height(Dimensions.PAUSE_BUTTON_HEIGHT)
+                .minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);
 
         createLevelContents();
     }
@@ -94,7 +106,7 @@ public class LevelSelectTable extends Table {
                 LevelSelectListItem item = (LevelSelectListItem) child;
                 item.updateBoardGroupPosition();
                 item.updateRecordLabelText();
-            } catch (ClassCastException e) {}
+            } catch (ClassCastException ignored) {}
         }
     }
 
@@ -112,7 +124,7 @@ public class LevelSelectTable extends Table {
             setTouchable(Touchable.enabled);
             this.level = level;
 
-            if (CrossFadePurchaseManager.isFullVersion() || level <= Levels.MAX_FREE_LEVEL) {
+            if (SettingsManager.isFullVersion() || level <= Levels.MAX_FREE_LEVEL) {
                 Label levelLabel = new Label(UiText.LEVEL + ":", skin);
                 String levelNumLabelText = "";
                 if (level <= Levels.getHighestLevelIndex()) {
@@ -171,11 +183,7 @@ public class LevelSelectTable extends Table {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
-                    if (MainScreen.instance.getLevel() != level) {
-                        MainScreen.instance.unpauseGame();
-                        MainScreen.instance.goToLevel(level);
-                        SoundManager.buttonSound();
-                    }
+                    receiver.onLevelSelected(level);
                 }
             });
         }
@@ -190,7 +198,7 @@ public class LevelSelectTable extends Table {
         }
 
         void updateRecordLabelText() {
-            if (!CrossFadePurchaseManager.isFullVersion() && level > Levels.MAX_FREE_LEVEL) {
+            if (!SettingsManager.isFullVersion() && level > Levels.MAX_FREE_LEVEL) {
                 return;
             }
             String recordLabelText;

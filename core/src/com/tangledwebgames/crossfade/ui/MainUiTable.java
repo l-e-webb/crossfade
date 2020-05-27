@@ -1,7 +1,5 @@
 package com.tangledwebgames.crossfade.ui;
 
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -12,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.game.Levels;
-import com.tangledwebgames.crossfade.sound.SoundManager;
 
 class MainUiTable extends Table {
 
@@ -29,22 +26,19 @@ class MainUiTable extends Table {
     private TextButton menuButton;
     private TextButton levelSelectButton;
     
-    MainUiTable(Skin skin, Drawable background) {
+    MainUiTable(Skin skin, UiReceiver receiver, Drawable background) {
         super();
         this.highlightStyle = skin.get("highlightStyle", Label.LabelStyle.class);
         this.deemphasisStyle = skin.get("deemphasisStyle", Label.LabelStyle.class);
         //background(background);
         setBounds(0, MainScreen.WORLD_WIDTH, MainScreen.WORLD_WIDTH, MainScreen.WORLD_HEIGHT - MainScreen.WORLD_WIDTH);
-        //This listener handles events whenever the game state is not PLAY, preventing any UI
+        //This listener handles events whenever the is paused, preventing any UI
         //elements in this table from receiving events.
-        addCaptureListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                if (!MainScreen.instance.inGame()) {
-                    event.stop();
-                }
-                return false;
+        addCaptureListener(event -> {
+            if (!receiver.isMainUiTableEnabled()) {
+                event.stop();
             }
+            return false;
         });
 
         final Label titleLabel = new Label(UiText.TITLE, skin, "titleStyle");
@@ -64,36 +58,31 @@ class MainUiTable extends Table {
         prevButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainScreen.instance.onPrevButtonClick();
-                SoundManager.buttonSound();
+                receiver.onPreviousButtonClicked();
             }
         });
         resetButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainScreen.instance.onResetButtonClick();
-                SoundManager.buttonSound();
+                receiver.onResetButtonClicked();
             }
         });
         nextButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainScreen.instance.onNextButtonClick();
-                SoundManager.buttonSound();
+                receiver.onNextButtonClicked();
             }
         });
         menuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainScreen.instance.pauseMenu();
-                SoundManager.buttonSound();
+                receiver.onMenuButtonClicked();
             }
         });
         levelSelectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainScreen.instance.levelSelect();
-                SoundManager.buttonSound();
+                receiver.onLevelSelectButtonClicked();
             }
         });
 

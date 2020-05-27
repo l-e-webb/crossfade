@@ -1,6 +1,5 @@
 package com.tangledwebgames.crossfade;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.pay.Information;
 import com.badlogic.gdx.pay.Offer;
@@ -9,37 +8,28 @@ import com.badlogic.gdx.pay.PurchaseManager;
 import com.badlogic.gdx.pay.PurchaseManagerConfig;
 import com.badlogic.gdx.pay.PurchaseObserver;
 import com.badlogic.gdx.pay.Transaction;
-import com.tangledwebgames.crossfade.ui.PauseState;
-import com.tangledwebgames.crossfade.ui.UiRenderer;
+
+import javax.annotation.Nonnull;
 
 public class CrossFadePurchaseManager {
 
-    static final String LOG_TAG = CrossFadePurchaseManager.class.getSimpleName();
-    static final String FULL_VERSION_SKU = "full_version";
+    private static final String LOG_TAG = CrossFadePurchaseManager.class.getSimpleName();
+    private static final String FULL_VERSION_SKU = "full_version";
 
-    static PurchaseManager pm;
-    static boolean fullVersion;
-    static UiRenderer uiRenderer;
+    private static PurchaseManager pm;
+    private static boolean isPurchaseObserverInstalled = false;
 
-    public static void setPurchaseManager(PurchaseManager pm) {
-        if (pm == null) return;
+    static void setPurchaseManager(@Nonnull PurchaseManager pm) {
         CrossFadePurchaseManager.pm = pm;
         init();
     }
 
-    public static void setUiRenderer(UiRenderer uiRenderer) {
-        CrossFadePurchaseManager.uiRenderer = uiRenderer;
-    }
-
-    public static boolean isFullVersion() {
-        if (CrossFadeGame.APP_TYPE != Application.ApplicationType.Android) {
-            return true;
-        }
-        return fullVersion;
-    }
-
-    public static void buyFullVersion() {
+    static void buyFullVersion() {
         pm.purchase(FULL_VERSION_SKU);
+    }
+
+    public static boolean isPurchaseAvailable() {
+        return isPurchaseObserverInstalled && !SettingsManager.isFullVersion();
     }
 
     public static String getLocalPrice() {
@@ -54,26 +44,28 @@ public class CrossFadePurchaseManager {
         return info.getLocalDescription().replace("\n", "");
     }
 
-    public static void restore() {
+    static void restore() {
         pm.purchaseRestore();
     }
 
-    static void init() {
+    private static void init() {
         PurchaseManagerConfig pmc = new PurchaseManagerConfig();
         pmc.addOffer(new Offer().setType(OfferType.ENTITLEMENT).setIdentifier(FULL_VERSION_SKU));
         pm.install(new CrossFadePurchaseObserver(), pmc ,true);
-        fullVersion = PreferenceWrapper.prefs.getBoolean(PreferenceWrapper.FULL_VERSION_KEY, false);
     }
 
     static class CrossFadePurchaseObserver implements PurchaseObserver {
+
         @Override
         public void handleInstall() {
             Gdx.app.log(LOG_TAG, "Purchase manager installed");
+            isPurchaseObserverInstalled = true;
         }
 
         @Override
         public void handleInstallError(Throwable e) {
-
+            Gdx.app.error(LOG_TAG, e.getMessage());
+            isPurchaseObserverInstalled = false;
         }
 
         @Override
@@ -83,33 +75,34 @@ public class CrossFadePurchaseManager {
                     handlePurchase(t);
                 }
             }
-            if (!fullVersion) {
-                uiRenderer.initPause(PauseState.PURCHASE_NO_RESTORE);
+            if (!SettingsManager.isFullVersion()) {
+                MainController.instance.showPurchaseNoRestoreDialog();
             }
         }
 
         @Override
         public void handleRestoreError(Throwable e) {
-            uiRenderer.initPause(PauseState.PURCHASE_FAILED);
+            MainController.instance.showPurchaseFailedDialog();
         }
 
         @Override
         public void handlePurchase(Transaction transaction) {
             if (transaction.isPurchased() &&
                     transaction.getIdentifier().equals(FULL_VERSION_SKU)) {
-                fullVersion = true;
-                uiRenderer.onPurchase();
+                SettingsManager.setIsFullVersion(true);
+                SettingsManager.flush();
+                MainController.instance.showPurchaseSuccessDialog();
             }
         }
 
         @Override
         public void handlePurchaseError(Throwable e) {
-            uiRenderer.initPause(PauseState.PURCHASE_FAILED);
+            MainController.instance.showPurchaseFailedDialog();
         }
 
         @Override
         public void handlePurchaseCanceled() {
-            MainScreen.instance.unpauseGame();
+            MainController.instance.unpauseGame();
         }
     }
 }

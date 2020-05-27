@@ -14,10 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.tangledwebgames.crossfade.CrossFadePurchaseManager;
-import com.tangledwebgames.crossfade.MainScreen;
-import com.tangledwebgames.crossfade.sound.SoundManager;
+import com.tangledwebgames.crossfade.SettingsManager;
 
-class MenuTable extends Table {
+class PauseMenu extends Table {
 
     private CheckBox sfxOn;
     private CheckBox musicOn;
@@ -26,27 +25,30 @@ class MenuTable extends Table {
     private CheckBox animateTiles;
     private CheckBox highlightTiles;
     private Skin skin;
+    private boolean listenForChanges = true;
     
-    MenuTable(Skin skin, Drawable background) {
+    PauseMenu(Skin skin, UiReceiver receiver, Drawable background) {
         super();
         //Uncomment to see wireframe.
         //setDebug(true);
         background(background);
         pad(Dimensions.PADDING_LARGE);
         this.skin = skin;
-        initContents();
+        initContents(receiver);
     }
 
     void initPause() {
-        sfxOn.setChecked(SoundManager.isSfxOn());
-        musicOn.setChecked(SoundManager.isMusicOn());
-        sfxVolumeSlider.setValue(SoundManager.getSfxVolume());
-        musicVolumeSlider.setValue(SoundManager.getMusicVolume());
-        animateTiles.setChecked(MainScreen.instance.getBoard().animateTiles);
-        highlightTiles.setChecked(MainScreen.instance.getBoard().highlightTiles);
+        listenForChanges = false;
+        sfxOn.setChecked(SettingsManager.isSfxOn());
+        musicOn.setChecked(SettingsManager.isMusicOn());
+        sfxVolumeSlider.setValue(SettingsManager.getSfxVolume());
+        musicVolumeSlider.setValue(SettingsManager.getMusicVolume());
+        animateTiles.setChecked(SettingsManager.isAnimateTiles());
+        highlightTiles.setChecked(SettingsManager.isHighlightTiles());
+        listenForChanges = true;
     }
 
-    void initContents() {
+    void initContents(UiReceiver receiver) {
         clear();
         final Label pauseLabel = new Label(UiText.PAUSED, skin);
         sfxOn = new CheckBox(UiText.SFX, skin);
@@ -55,10 +57,8 @@ class MenuTable extends Table {
         sfxOn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                SoundManager.setSfx(sfxOn.isChecked());
-                if (MainScreen.instance.getState() == MainScreen.State.PAUSE) {
-                    SoundManager.buttonSound();
-                }
+                if (!listenForChanges) return;
+                receiver.onSfxCheckboxChanged(sfxOn.isChecked());
             }
         });
         final Label sfxLevelLabel = new Label(UiText.SFX_LEVEL, skin);
@@ -66,7 +66,8 @@ class MenuTable extends Table {
         sfxVolumeSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                SoundManager.setSfxVolume(sfxVolumeSlider.getValue());
+                if (!listenForChanges) return;
+                receiver.onSfxVolumeSliderChanged(sfxVolumeSlider.getValue());
             }
         });
         musicOn = new CheckBox(UiText.MUSIC, skin);
@@ -75,10 +76,8 @@ class MenuTable extends Table {
         musicOn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                SoundManager.setMusic(musicOn.isChecked());
-                if (MainScreen.instance.getState() == MainScreen.State.PAUSE) {
-                    SoundManager.buttonSound();
-                }
+                if (!listenForChanges) return;
+                receiver.onMusicCheckboxChanged(musicOn.isChecked());
             }
         });
         final Label musicLevelLabel = new Label(UiText.MUSIC_LEVEL, skin);
@@ -86,7 +85,8 @@ class MenuTable extends Table {
         musicVolumeSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                SoundManager.setMusicVolume(musicVolumeSlider.getValue());
+                if (!listenForChanges) return;
+                receiver.onMusicVolumeSliderChanged(musicVolumeSlider.getValue());
             }
         });
         animateTiles = new CheckBox(UiText.ANIMATE_TILES, skin);
@@ -95,10 +95,8 @@ class MenuTable extends Table {
         animateTiles.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                MainScreen.instance.getBoard().animateTiles = animateTiles.isChecked();
-                if (MainScreen.instance.getState() == MainScreen.State.PAUSE) {
-                    SoundManager.buttonSound();
-                }
+                if (!listenForChanges) return;
+                receiver.onAnimateTilesCheckboxChanged(animateTiles.isChecked());
             }
         });
         highlightTiles = new CheckBox(UiText.HIGHLIGHT_TILES, skin);
@@ -107,18 +105,15 @@ class MenuTable extends Table {
         highlightTiles.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                MainScreen.instance.getBoard().highlightTiles = highlightTiles.isChecked();
-                if (MainScreen.instance.getState() == MainScreen.State.PAUSE) {
-                    SoundManager.buttonSound();
-                }
+                if (!listenForChanges) return;
+                receiver.onHighlightTilesCheckboxChanged(highlightTiles.isChecked());
             }
         });
         final Button pauseContinueButton = new TextButton(UiText.CONTINUE, skin);
         pauseContinueButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainScreen.instance.unpauseGame();
-                SoundManager.buttonSound();
+                receiver.onPauseMenuContinueButtonClicked();
             }
         });
         add(pauseLabel).center().colspan(2);
@@ -137,12 +132,12 @@ class MenuTable extends Table {
         row();
         add(highlightTiles).left().colspan(2).spaceTop(Dimensions.PADDING_LARGE);
         row();
-        if (!CrossFadePurchaseManager.isFullVersion()) {
+        if (CrossFadePurchaseManager.isPurchaseAvailable()) {
             final Button buyButton = new TextButton(UiText.BUY, skin);
             buyButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    MainScreen.instance.purchaseDialog(false);
+                    receiver.onPauseMenuBuyButtonClicked();
                 }
             });
             add(buyButton).center().colspan(2).spaceTop(Dimensions.PADDING_LARGE).height(Dimensions.PAUSE_BUTTON_HEIGHT).minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);

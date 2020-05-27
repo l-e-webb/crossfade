@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.pay.PurchaseManager;
 import com.tangledwebgames.crossfade.game.Levels;
-import com.tangledwebgames.crossfade.sound.SoundManager;
 import com.tangledwebgames.crossfade.ui.UiText;
 
 import java.util.Locale;
@@ -25,12 +24,11 @@ public class CrossFadeGame extends Game {
 			Gdx.input.setCatchKey(Input.Keys.MENU, true);
 		}
         Assets.instance.loadAll();
-		PreferenceWrapper.init();
+		SettingsManager.init();
 		if (APP_TYPE == Application.ApplicationType.Android) {
 			CrossFadePurchaseManager.setPurchaseManager(purchaseManager);
 		}
 		Levels.init();
-		SoundManager.init();
 		UiText.init();
         this.setScreen(new MainScreen());
 	}
