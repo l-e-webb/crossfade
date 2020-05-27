@@ -148,19 +148,19 @@ public class UiEventHandler implements UiReceiver {
 
     @Override
     public void onPurchaseFailedConfirm() {
-        mainController.showPurchaseFailedDialog();
+        mainController.unpauseGame();
         SoundManager.buttonSound();
     }
 
     @Override
     public void onPurchaseSuccessConfirm() {
-        mainController.showPurchaseSuccessDialog();
+        mainController.unpauseGame();
         SoundManager.buttonSound();
     }
 
     @Override
     public void onPurchaseNoRestoreConfirm() {
-        mainController.showPurchaseNoRestoreDialog();
+        mainController.unpauseGame();
         SoundManager.buttonSound();
     }
 
