@@ -29,14 +29,17 @@ public class CrossFadeDialog extends Table {
         row();
     }
 
-    CrossFadeDialog(Skin skin,
-                    Drawable background,
-                    String labelText,
-                    String buttonText,
-                    ClickListener clickListener) {
+    CrossFadeDialog(
+            Skin skin,
+            Drawable background,
+            String labelText,
+            String buttonText,
+            ClickListener clickListener
+    ) {
         this(skin, background);
         setLabelText(labelText);
-        setButtonText(buttonText);;
+        setButtonText(buttonText);
+        ;
         setButtonListener(clickListener);
     }
 

@@ -29,7 +29,10 @@ public class SettingsManager {
 
     static void init() {
         prefs = Gdx.app.getPreferences(PREFERENCES_NAME);
-        isMusicOn = prefs.getBoolean(MUSIC_ON_KEY, CrossFadeGame.APP_TYPE != Application.ApplicationType.WebGL);
+        isMusicOn = prefs.getBoolean(
+                MUSIC_ON_KEY,
+                CrossFadeGame.APP_TYPE != Application.ApplicationType.WebGL
+        );
         musicVolume = prefs.getFloat(MUSIC_VOLUME_KEY, 1);
         isSfxOn = prefs.getBoolean(SFX_ON_KEY, true);
         sfxVolume = prefs.getFloat(SFX_VOLUME_KEY, 1);

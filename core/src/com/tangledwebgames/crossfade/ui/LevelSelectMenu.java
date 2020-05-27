@@ -106,7 +106,8 @@ class LevelSelectMenu extends Table {
                 LevelSelectListItem item = (LevelSelectListItem) child;
                 item.updateBoardGroupPosition();
                 item.updateRecordLabelText();
-            } catch (ClassCastException ignored) {}
+            } catch (ClassCastException ignored) {
+            }
         }
     }
 
@@ -162,7 +163,13 @@ class LevelSelectMenu extends Table {
 
             addListener(new ClickListener() {
                 @Override
-                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                public boolean touchDown(
+                        InputEvent event,
+                        float x,
+                        float y,
+                        int pointer,
+                        int button
+                ) {
                     background(itemBackgroundHighlight);
                     return super.touchDown(event, x, y, pointer, button);
                 }

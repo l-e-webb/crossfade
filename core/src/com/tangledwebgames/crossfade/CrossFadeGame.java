@@ -12,30 +12,30 @@ import java.util.Locale;
 
 public class CrossFadeGame extends Game {
 
-	public static Application.ApplicationType APP_TYPE;
-	public static Locale LOCALE;
-	public PurchaseManager purchaseManager;
+    public static Application.ApplicationType APP_TYPE;
+    public static Locale LOCALE;
+    public PurchaseManager purchaseManager;
 
-	@Override
-	public void create () {
+    @Override
+    public void create() {
         APP_TYPE = Gdx.app.getType();
         LOCALE = Locale.getDefault();
-		if (APP_TYPE == Application.ApplicationType.Android) {
-			Gdx.input.setCatchKey(Input.Keys.MENU, true);
-		}
+        if (APP_TYPE == Application.ApplicationType.Android) {
+            Gdx.input.setCatchKey(Input.Keys.MENU, true);
+        }
         Assets.instance.loadAll();
-		SettingsManager.init();
-		if (APP_TYPE == Application.ApplicationType.Android) {
-			CrossFadePurchaseManager.setPurchaseManager(purchaseManager);
-		}
-		Levels.init();
-		UiText.init();
+        SettingsManager.init();
+        if (APP_TYPE == Application.ApplicationType.Android) {
+            CrossFadePurchaseManager.setPurchaseManager(purchaseManager);
+        }
+        Levels.init();
+        UiText.init();
         this.setScreen(new MainScreen());
-	}
+    }
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		if (purchaseManager != null) purchaseManager.dispose();
-	}
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (purchaseManager != null) purchaseManager.dispose();
+    }
 }

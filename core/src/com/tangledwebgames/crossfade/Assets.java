@@ -51,7 +51,6 @@ public class Assets implements Disposable, AssetErrorListener {
     private AssetManager assetManager;
 
 
-
     private Assets() {
     }
 
@@ -71,7 +70,8 @@ public class Assets implements Disposable, AssetErrorListener {
         assetManager.load(MOVE_SOUND_PATH, Sound.class);
         assetManager.load(BUTTON_SOUND_PATH, Sound.class);
         assetManager.load(WIN_SOUND_PATH, Sound.class);
-        I18NBundleLoader.I18NBundleParameter i18nParam = new I18NBundleLoader.I18NBundleParameter(CrossFadeGame.LOCALE);
+        I18NBundleLoader.I18NBundleParameter i18nParam = new I18NBundleLoader.I18NBundleParameter(
+                CrossFadeGame.LOCALE);
         assetManager.load(BASE_GAME_TEXT_PATH, I18NBundle.class, i18nParam);
 
         assetManager.finishLoading();
@@ -83,7 +83,10 @@ public class Assets implements Disposable, AssetErrorListener {
         tileSmall = assetManager.get(TILE_SMALL_SPRITE_PATH, Texture.class);
         greyBox = assetManager.get(GREY_BOX, Texture.class);
         whiteBox = assetManager.get(WHITE_BOX, Texture.class);
-        sliderBackground = new TextureRegion(assetManager.get(SLIDER_BACKGROUND_PATH, Texture.class));
+        sliderBackground = new TextureRegion(assetManager.get(
+                SLIDER_BACKGROUND_PATH,
+                Texture.class
+        ));
         sliderKnob = new Sprite(assetManager.get(SLIDER_KNOB_PATH, Texture.class));
         backgroundMusic = assetManager.get(BACKGROUND_MUSIC_PATH);
         moveSound = assetManager.get(MOVE_SOUND_PATH);

@@ -58,7 +58,8 @@ class Tile extends Actor {
     @Override
     public void act(float delta) {
         switch (state) {
-            case IDLE: default:
+            case IDLE:
+            default:
                 break;
             case WAITING_TO_FLIP:
                 flipWaitTimer -= delta;
@@ -193,7 +194,8 @@ class Tile extends Actor {
     public Color getColor() {
         boolean displayValue;
         switch (state) {
-            case IDLE: default:
+            case IDLE:
+            default:
                 displayValue = value;
                 break;
             case WAITING_TO_FLIP:

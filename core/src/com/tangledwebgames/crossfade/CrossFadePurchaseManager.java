@@ -51,7 +51,7 @@ public class CrossFadePurchaseManager {
     private static void init() {
         PurchaseManagerConfig pmc = new PurchaseManagerConfig();
         pmc.addOffer(new Offer().setType(OfferType.ENTITLEMENT).setIdentifier(FULL_VERSION_SKU));
-        pm.install(new CrossFadePurchaseObserver(), pmc ,true);
+        pm.install(new CrossFadePurchaseObserver(), pmc, true);
     }
 
     static class CrossFadePurchaseObserver implements PurchaseObserver {

@@ -15,7 +15,7 @@ class WinDialog extends Table {
     private Label winTime;
     private Label winMoves;
     private Label winLevel;
-    
+
     WinDialog(Skin skin, UiReceiver receiver, Drawable background) {
         super();
         //Uncomment to see wireframe.

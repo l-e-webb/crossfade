@@ -77,7 +77,8 @@ public class UiController extends Stage {
         purchaseMenu.setVisible(false);
         dialog.setVisible(false);
         switch (pauseState) {
-            case NOT_PAUSED: default:
+            case NOT_PAUSED:
+            default:
                 break;
             case WIN:
                 winDialog.setVisible(true);
@@ -122,7 +123,8 @@ public class UiController extends Stage {
             case PURCHASE_NO_RESTORE:
                 showNoRestore();
                 break;
-            case WIN: default:
+            case WIN:
+            default:
                 break;
         }
         setVisibleTables();
@@ -153,43 +155,43 @@ public class UiController extends Stage {
     private void showPurchaseSuccess() {
         resetTablesOnPurchase();
         setDialog(
-            UiText.FULL_VERSION_UNLOCKED,
-            UiText.OK,
-            new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    super.clicked(event, x, y);
-                    receiver.onPurchaseSuccessConfirm();
+                UiText.FULL_VERSION_UNLOCKED,
+                UiText.OK,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        receiver.onPurchaseSuccessConfirm();
+                    }
                 }
-            }
         );
     }
 
     private void showPurchaseFailed() {
         setDialog(
-            UiText.PURCHASE_ERROR,
-            UiText.OK,
-            new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    super.clicked(event, x, y);
-                    receiver.onPurchaseFailedConfirm();
+                UiText.PURCHASE_ERROR,
+                UiText.OK,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        receiver.onPurchaseFailedConfirm();
+                    }
                 }
-            }
         );
     }
 
     private void showNoRestore() {
         setDialog(
-            UiText.NO_RESTORE,
-            UiText.OK,
-            new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    super.clicked(event, x, y);
-                    receiver.onPurchaseNoRestoreConfirm();
+                UiText.NO_RESTORE,
+                UiText.OK,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        receiver.onPurchaseNoRestoreConfirm();
+                    }
                 }
-            }
         );
     }
 
@@ -198,22 +200,34 @@ public class UiController extends Stage {
         //Font inits.
         BitmapFont titleFont = Assets.instance.titleFont;
         titleFont.getData().setScale(Dimensions.TITLE_SCALE);
-        titleFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        titleFont.getRegion().getTexture().setFilter(
+                Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear
+        );
         BitmapFont uiFont = Assets.instance.uiFont;
         uiFont.getData().setScale(Dimensions.TEXT_SCALE);
-        uiFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        uiFont.getRegion().getTexture().setFilter(
+                Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear
+        );
         BitmapFont smallFont = Assets.instance.smallFont;
         smallFont.getData().setScale(Dimensions.SMALL_TEXT_SCALE);
-        smallFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        smallFont.getRegion().getTexture().setFilter(
+                Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear
+        );
 
         //Style inits.
         Label.LabelStyle labelStyle = new Label.LabelStyle(uiFont, Dimensions.PRIMARY_COLOR);
         Label.LabelStyle smallStyle = new Label.LabelStyle(smallFont, Dimensions.PRIMARY_COLOR);
         Label.LabelStyle titleStyle = new Label.LabelStyle(titleFont, Dimensions.PRIMARY_COLOR);
-        Label.LabelStyle highlightStyle = new Label.LabelStyle(uiFont, Dimensions.ACTIVE_BUTTON_COLOR);
+        Label.LabelStyle highlightStyle = new Label.LabelStyle(
+                uiFont,
+                Dimensions.ACTIVE_BUTTON_COLOR
+        );
         Label.LabelStyle deemphasisStyle = new Label.LabelStyle(uiFont, Dimensions.DARK_COLOR);
         NinePatchDrawable tile9Patch = new NinePatchDrawable(
-                new NinePatch(Assets.instance.tileSmall, 13, 13 , 13, 13));
+                new NinePatch(Assets.instance.tileSmall, 13, 13, 13, 13));
         NinePatchDrawable box9Patch = new NinePatchDrawable(
                 new NinePatch(Assets.instance.greyBox, 3, 3, 3, 3));
         TextureRegionDrawable whiteBox = new TextureRegionDrawable(Assets.instance.whiteBox);
@@ -246,7 +260,6 @@ public class UiController extends Stage {
         scrollPaneStyle.vScrollKnob = box9Patch.tint(Dimensions.SLIDER_COLOR);
 
 
-
         //Skin init.
         Skin skin = new Skin();
         skin.add("titleStyle", titleStyle);
@@ -260,7 +273,11 @@ public class UiController extends Stage {
         skin.add("default", scrollPaneStyle);
 
         //Main UI
-        mainUiTable = new MainUiTable(skin, receiver, whiteBox.tint(Dimensions.UI_BACKGROUND_COLOR));
+        mainUiTable = new MainUiTable(
+                skin,
+                receiver,
+                whiteBox.tint(Dimensions.UI_BACKGROUND_COLOR)
+        );
 
         //Pause Screen
         pauseMenu = new PauseMenu(skin, receiver, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
@@ -279,7 +296,11 @@ public class UiController extends Stage {
         );
 
         //Purchase table
-        purchaseMenu = new PurchaseMenu(skin, receiver, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
+        purchaseMenu = new PurchaseMenu(
+                skin,
+                receiver,
+                tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR)
+        );
 
         //Dialog
         dialog = new CrossFadeDialog(skin, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
@@ -316,15 +337,30 @@ public class UiController extends Stage {
     public void updateTablePositions() {
         float x = getViewport().getWorldWidth() / 2;
         float y = getViewport().getWorldHeight() / 2;
-        pauseMenu.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, pauseMenu.getPrefHeight());
+        pauseMenu.setSize(
+                MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO,
+                pauseMenu.getPrefHeight()
+        );
         pauseMenu.setPosition(x, y, Align.center);
-        winDialog.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, winDialog.getPrefHeight());
+        winDialog.setSize(
+                MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO,
+                winDialog.getPrefHeight()
+        );
         winDialog.setPosition(x, y, Align.center);
-        levelSelectMenu.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, MainScreen.WORLD_HEIGHT * Dimensions.LEVEL_SELECT_HEIGHT_RATIO);
+        levelSelectMenu.setSize(
+                MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO,
+                MainScreen.WORLD_HEIGHT * Dimensions.LEVEL_SELECT_HEIGHT_RATIO
+        );
         levelSelectMenu.setPosition(x, y, Align.center);
-        purchaseMenu.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, MainScreen.WORLD_HEIGHT * Dimensions.PURCHASE_DIALOG_HEIGHT_RATIO);
+        purchaseMenu.setSize(
+                MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO,
+                MainScreen.WORLD_HEIGHT * Dimensions.PURCHASE_DIALOG_HEIGHT_RATIO
+        );
         purchaseMenu.setPosition(x, y, Align.center);
-        dialog.setSize(MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO, MainScreen.WORLD_HEIGHT * Dimensions.GENERIC_DIALOG_HEIGHT_RATIO);
+        dialog.setSize(
+                MainScreen.WORLD_WIDTH * Dimensions.PAUSE_TABLE_WIDTH_RATIO,
+                MainScreen.WORLD_HEIGHT * Dimensions.GENERIC_DIALOG_HEIGHT_RATIO
+        );
         dialog.setPosition(x, y, Align.center);
     }
 

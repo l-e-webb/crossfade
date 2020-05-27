@@ -25,13 +25,18 @@ class MainUiTable extends Table {
     private TextButton nextButton;
     private TextButton menuButton;
     private TextButton levelSelectButton;
-    
+
     MainUiTable(Skin skin, UiReceiver receiver, Drawable background) {
         super();
         this.highlightStyle = skin.get("highlightStyle", Label.LabelStyle.class);
         this.deemphasisStyle = skin.get("deemphasisStyle", Label.LabelStyle.class);
         //background(background);
-        setBounds(0, MainScreen.WORLD_WIDTH, MainScreen.WORLD_WIDTH, MainScreen.WORLD_HEIGHT - MainScreen.WORLD_WIDTH);
+        setBounds(
+                0,
+                MainScreen.WORLD_WIDTH,
+                MainScreen.WORLD_WIDTH,
+                MainScreen.WORLD_HEIGHT - MainScreen.WORLD_WIDTH
+        );
         //This listener handles events whenever the is paused, preventing any UI
         //elements in this table from receiving events.
         addCaptureListener(event -> {
@@ -128,9 +133,9 @@ class MainUiTable extends Table {
         add(movesGroup).minHeight(0).maxHeight(Dimensions.MAIN_UI_ROW_HEIGHT).uniform();
         add(bestMovesGroup).minHeight(0).maxHeight(Dimensions.MAIN_UI_ROW_HEIGHT).uniform();
         row();
-        
+
     }
-    
+
     void setTimeAndMoves(int time, int moves) {
         timeNum.setText("" + time);
         movesNum.setText("" + moves);

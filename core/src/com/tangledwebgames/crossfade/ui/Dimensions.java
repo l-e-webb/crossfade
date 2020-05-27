@@ -7,7 +7,7 @@ public class Dimensions {
     static final float PADDING_SMALL = 4f;
     static final float PADDING_MEDIUM = 10f;
     static final float PADDING_LARGE = 24f;
-    static final float MAIN_UI_ROW_HEIGHT =65f;
+    static final float MAIN_UI_ROW_HEIGHT = 65f;
     static final float PAUSE_BUTTON_MIN_WIDTH = 220f;
     static final float PAUSE_BUTTON_HEIGHT = 60f;
     static final float CHECKBOX_SIZE = 42f;
@@ -33,6 +33,11 @@ public class Dimensions {
     static final Color BUTTON_COLOR = PRIMARY_COLOR;
     static final Color ACTIVE_BUTTON_COLOR = Color.ORANGE;
     static final Color OFF_CHECKBOX_COLOR = new Color(0.25f, 0.25f, 0.25f, 1);
-    static final Color UI_BACKGROUND_COLOR = new Color(18f/255f, 30f/255f, 80f/255f, 1);
-    static final Color UI_BACKGROUND_COLOR_DOUBLED = new Color(36f/255f, 60f/255f, 160f/255f, 1);
+    static final Color UI_BACKGROUND_COLOR = new Color(18f / 255f, 30f / 255f, 80f / 255f, 1);
+    static final Color UI_BACKGROUND_COLOR_DOUBLED = new Color(
+            36f / 255f,
+            60f / 255f,
+            160f / 255f,
+            1
+    );
 }

@@ -31,7 +31,7 @@ public class UiText {
     static String MENU;
     static String LEVEL_SELECT;
     static String SELECT;
-    static String LEVEL_SELECT_HEADING ;
+    static String LEVEL_SELECT_HEADING;
     static String SANDBOX;
     static String BUY_FULL_VERSION;
     static String CONTENT_UNAVAILABLE;
@@ -45,8 +45,9 @@ public class UiText {
     static String NO_RESTORE;
     static String LOCKED;
 
-    private UiText() {}
-    
+    private UiText() {
+    }
+
     public static void init() {
         TITLE = Assets.instance.gameText.get("TITLE");
         MOVES = Assets.instance.gameText.get("MOVES");

@@ -54,11 +54,20 @@ class PurchaseMenu extends Table {
         row();
         add(textLabel).padBottom(Dimensions.PADDING_LARGE).expand().fill();
         row();
-        add(buyButton).center().height(Dimensions.PAUSE_BUTTON_HEIGHT).minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH).padBottom(Dimensions.PADDING_MEDIUM);
+        add(buyButton).center()
+                .height(Dimensions.PAUSE_BUTTON_HEIGHT)
+                .minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH)
+                .padBottom(Dimensions.PADDING_MEDIUM);
         row();
-        add(restoreButton).center().height(Dimensions.PAUSE_BUTTON_HEIGHT).minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH).padBottom(Dimensions.PADDING_MEDIUM);
+        add(restoreButton).center()
+                .height(Dimensions.PAUSE_BUTTON_HEIGHT)
+                .minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH)
+                .padBottom(Dimensions.PADDING_MEDIUM);
         row();
-        add(cancelButton).center().height(Dimensions.PAUSE_BUTTON_HEIGHT).minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH).padBottom(Dimensions.PADDING_MEDIUM);
+        add(cancelButton).center()
+                .height(Dimensions.PAUSE_BUTTON_HEIGHT)
+                .minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH)
+                .padBottom(Dimensions.PADDING_MEDIUM);
         row();
     }
 

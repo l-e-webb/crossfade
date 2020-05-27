@@ -26,7 +26,7 @@ class PauseMenu extends Table {
     private CheckBox highlightTiles;
     private Skin skin;
     private boolean listenForChanges = true;
-    
+
     PauseMenu(Skin skin, UiReceiver receiver, Drawable background) {
         super();
         //Uncomment to see wireframe.
@@ -53,7 +53,9 @@ class PauseMenu extends Table {
         final Label pauseLabel = new Label(UiText.PAUSED, skin);
         sfxOn = new CheckBox(UiText.SFX, skin);
         sfxOn.getImage().setScaling(Scaling.fit);
-        sfxOn.getImageCell().maxSize(Dimensions.CHECKBOX_SIZE).spaceRight(Dimensions.CHECKBOX_RIGHT_PADDING);
+        sfxOn.getImageCell()
+                .maxSize(Dimensions.CHECKBOX_SIZE)
+                .spaceRight(Dimensions.CHECKBOX_RIGHT_PADDING);
         sfxOn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -72,7 +74,9 @@ class PauseMenu extends Table {
         });
         musicOn = new CheckBox(UiText.MUSIC, skin);
         musicOn.getImage().setScaling(Scaling.fit);
-        musicOn.getImageCell().maxSize(Dimensions.CHECKBOX_SIZE).spaceRight(Dimensions.CHECKBOX_RIGHT_PADDING);
+        musicOn.getImageCell()
+                .maxSize(Dimensions.CHECKBOX_SIZE)
+                .spaceRight(Dimensions.CHECKBOX_RIGHT_PADDING);
         musicOn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -91,7 +95,9 @@ class PauseMenu extends Table {
         });
         animateTiles = new CheckBox(UiText.ANIMATE_TILES, skin);
         animateTiles.getImage().setScaling(Scaling.fit);
-        animateTiles.getImageCell().maxSize(Dimensions.CHECKBOX_SIZE).spaceRight(Dimensions.CHECKBOX_RIGHT_PADDING);
+        animateTiles.getImageCell()
+                .maxSize(Dimensions.CHECKBOX_SIZE)
+                .spaceRight(Dimensions.CHECKBOX_RIGHT_PADDING);
         animateTiles.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -101,7 +107,9 @@ class PauseMenu extends Table {
         });
         highlightTiles = new CheckBox(UiText.HIGHLIGHT_TILES, skin);
         highlightTiles.getImage().setScaling(Scaling.fit);
-        highlightTiles.getImageCell().maxSize(Dimensions.CHECKBOX_SIZE).spaceRight(Dimensions.CHECKBOX_RIGHT_PADDING);
+        highlightTiles.getImageCell()
+                .maxSize(Dimensions.CHECKBOX_SIZE)
+                .spaceRight(Dimensions.CHECKBOX_RIGHT_PADDING);
         highlightTiles.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -110,7 +118,7 @@ class PauseMenu extends Table {
             }
         });
         final Button pauseContinueButton = new TextButton(UiText.CONTINUE, skin);
-        pauseContinueButton.addListener(new ClickListener(){
+        pauseContinueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 receiver.onPauseMenuContinueButtonClicked();
@@ -140,10 +148,16 @@ class PauseMenu extends Table {
                     receiver.onPauseMenuBuyButtonClicked();
                 }
             });
-            add(buyButton).center().colspan(2).spaceTop(Dimensions.PADDING_LARGE).height(Dimensions.PAUSE_BUTTON_HEIGHT).minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);
+            add(buyButton).center().colspan(2)
+                    .spaceTop(Dimensions.PADDING_LARGE)
+                    .height(Dimensions.PAUSE_BUTTON_HEIGHT)
+                    .minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);
             row();
         }
-        add(pauseContinueButton).center().colspan(2).spaceTop(Dimensions.PADDING_LARGE).height(Dimensions.PAUSE_BUTTON_HEIGHT).minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);
+        add(pauseContinueButton).center().colspan(2)
+                .spaceTop(Dimensions.PADDING_LARGE)
+                .height(Dimensions.PAUSE_BUTTON_HEIGHT)
+                .minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);
     }
 
 }

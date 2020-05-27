@@ -54,7 +54,8 @@ public class MainScreen extends MainController {
 
     class InputHandler extends InputAdapter {
 
-        private InputHandler() {}
+        private InputHandler() {
+        }
 
         @Override
         public boolean keyDown(int keycode) {

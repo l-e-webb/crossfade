@@ -24,7 +24,8 @@ public class Levels {
     private static final String USER_RECORD_FILEPATH = "records.json";
     private static final char LIGHT_MARKER = '#';
 
-    private Levels() {}
+    private Levels() {
+    }
 
     public static void init() {
         //Get level strings from file.
@@ -124,7 +125,9 @@ public class Levels {
         return levels != null ? levels.length + 2 : -1;
     }
 
-    public static int getSandboxLevelIndex() { return levels != null ? levels.length + 1 : -1; }
+    public static int getSandboxLevelIndex() {
+        return levels != null ? levels.length + 1 : -1;
+    }
 
     public static boolean[][] getLevel(int i) {
         if (i >= 0 && i <= getHighestLevelIndex()) {

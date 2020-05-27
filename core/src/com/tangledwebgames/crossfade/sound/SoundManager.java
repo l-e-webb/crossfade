@@ -5,7 +5,7 @@ import com.tangledwebgames.crossfade.Assets;
 import com.tangledwebgames.crossfade.SettingsManager;
 
 /**
- *  Handles playing sound effects and music.
+ * Handles playing sound effects and music.
  */
 public class SoundManager {
 
@@ -17,7 +17,8 @@ public class SoundManager {
     private static float sfxVolume;
     private static float musicVolume;
 
-    private SoundManager() {}
+    private SoundManager() {
+    }
 
     public static void updateFromSettings() {
         setMusic(SettingsManager.isMusicOn());
@@ -66,7 +67,8 @@ public class SoundManager {
 
     private static void setMusic(boolean music) {
         SoundManager.music = music;
-        if (music) playMusic(); else stopMusic();
+        if (music) playMusic();
+        else stopMusic();
     }
 
     private static void setSfxVolume(float sfxVolume) {
