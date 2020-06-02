@@ -166,5 +166,4 @@ public class MainController extends ScreenAdapter implements WinListener {
         Assets.instance.dispose();
     }
 
-
 }

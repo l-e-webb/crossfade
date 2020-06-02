@@ -68,3 +68,6 @@ build/
 
 ## Project specific
 records.json
+
+## Google
+google-services.json
