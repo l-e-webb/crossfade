@@ -13,8 +13,7 @@ buildscript {
         classpath 'org.wisepersist:gwt-gradle-plugin:1.0.9'
         classpath 'com.android.tools.build:gradle:3.5.0'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.7'
-
-
+        classpath 'com.nonsense.fake'
     }
 }
 
@@ -41,13 +40,11 @@ allprojects {
 project(":desktop") {
     apply plugin: "java-library"
 
-
     dependencies {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-
     }
 }
 
@@ -85,7 +82,6 @@ project(":html") {
 
 project(":core") {
     apply plugin: "java-library"
-
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
