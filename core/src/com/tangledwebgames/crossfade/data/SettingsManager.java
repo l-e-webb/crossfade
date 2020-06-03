@@ -1,8 +1,9 @@
-package com.tangledwebgames.crossfade;
+package com.tangledwebgames.crossfade.data;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.tangledwebgames.crossfade.CrossFadeGame;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 
 public class SettingsManager {
@@ -27,7 +28,7 @@ public class SettingsManager {
     private static boolean highlightTiles;
     private static boolean isFullVersion;
 
-    static void init() {
+    public static void init() {
         prefs = Gdx.app.getPreferences(PREFERENCES_NAME);
         isMusicOn = prefs.getBoolean(
                 MUSIC_ON_KEY,
@@ -42,7 +43,7 @@ public class SettingsManager {
         SoundManager.updateFromSettings();
     }
 
-    static void flush() {
+    public static void flush() {
         prefs.putBoolean(MUSIC_ON_KEY, isMusicOn);
         prefs.putFloat(MUSIC_VOLUME_KEY, musicVolume);
         prefs.putBoolean(SFX_ON_KEY, isSfxOn);
@@ -57,7 +58,7 @@ public class SettingsManager {
         return isMusicOn;
     }
 
-    static void setIsMusicOn(boolean isMusicOn) {
+    public static void setIsMusicOn(boolean isMusicOn) {
         SettingsManager.isMusicOn = isMusicOn;
         SoundManager.updateFromSettings();
     }
@@ -66,7 +67,7 @@ public class SettingsManager {
         return musicVolume;
     }
 
-    static void setMusicVolume(float musicVolume) {
+    public static void setMusicVolume(float musicVolume) {
         SettingsManager.musicVolume = musicVolume;
         SoundManager.updateFromSettings();
     }
@@ -75,7 +76,7 @@ public class SettingsManager {
         return isSfxOn;
     }
 
-    static void setIsSfxOn(boolean isSfxOn) {
+    public static void setIsSfxOn(boolean isSfxOn) {
         SettingsManager.isSfxOn = isSfxOn;
         SoundManager.updateFromSettings();
     }
@@ -84,7 +85,7 @@ public class SettingsManager {
         return sfxVolume;
     }
 
-    static void setSfxVolume(float sfxVolume) {
+    public static void setSfxVolume(float sfxVolume) {
         SettingsManager.sfxVolume = sfxVolume;
         SoundManager.updateFromSettings();
     }
@@ -93,18 +94,16 @@ public class SettingsManager {
         return animateTiles;
     }
 
-    static void setAnimateTiles(boolean animateTiles) {
+    public static void setAnimateTiles(boolean animateTiles) {
         SettingsManager.animateTiles = animateTiles;
-        MainController.instance.gameController.setAnimateTiles(animateTiles);
     }
 
     public static boolean isHighlightTiles() {
         return highlightTiles;
     }
 
-    static void setHighlightTiles(boolean highlightTiles) {
+    public static void setHighlightTiles(boolean highlightTiles) {
         SettingsManager.highlightTiles = highlightTiles;
-        MainController.instance.gameController.setHighlightTiles(highlightTiles);
     }
 
     public static boolean isFullVersion() {
@@ -114,7 +113,7 @@ public class SettingsManager {
         return isFullVersion;
     }
 
-    static void setIsFullVersion(boolean isFullVersion) {
+    public static void setIsFullVersion(boolean isFullVersion) {
         SettingsManager.isFullVersion = isFullVersion;
     }
 

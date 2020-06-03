@@ -1,56 +1,51 @@
 package com.tangledwebgames.crossfade;
 
+import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 import com.tangledwebgames.crossfade.ui.UiReceiver;
 
 public class UiEventHandler implements UiReceiver {
-
-    private MainController mainController;
-
-    UiEventHandler() {
-        this.mainController = MainController.instance;
-    }
 
     // Main UI
 
     @Override
     public void onPreviousButtonClicked() {
         if (!isMainUiTableEnabled()) return;
-        mainController.goToPreviousLevel();
+        MainController.instance.goToPreviousLevel();
         SoundManager.buttonSound();
     }
 
     @Override
     public void onNextButtonClicked() {
         if (!isMainUiTableEnabled()) return;
-        mainController.goToNextLevel();
+        MainController.instance.goToNextLevel();
         SoundManager.buttonSound();
     }
 
     @Override
     public void onResetButtonClicked() {
         if (!isMainUiTableEnabled()) return;
-        mainController.resetLevel();
+        MainController.instance.resetLevel();
         SoundManager.buttonSound();
     }
 
     @Override
     public void onLevelSelectButtonClicked() {
         if (!isMainUiTableEnabled()) return;
-        mainController.showLevelSelectMenu();
+        MainController.instance.showLevelSelectMenu();
         SoundManager.buttonSound();
     }
 
     @Override
     public void onMenuButtonClicked() {
         if (!isMainUiTableEnabled()) return;
-        mainController.showMainMenu();
+        MainController.instance.showMainMenu();
         SoundManager.buttonSound();
     }
 
     @Override
     public boolean isMainUiTableEnabled() {
-        return mainController.inGame();
+        return MainController.instance.inGame();
     }
 
 
@@ -58,29 +53,29 @@ public class UiEventHandler implements UiReceiver {
 
     @Override
     public void onSfxCheckboxChanged(boolean isChecked) {
-        SettingsManager.setIsSfxOn(isChecked);
+        com.tangledwebgames.crossfade.data.SettingsManager.setIsSfxOn(isChecked);
         SoundManager.buttonSound();
     }
 
     @Override
     public void onSfxVolumeSliderChanged(float value) {
-        SettingsManager.setSfxVolume(value);
+        com.tangledwebgames.crossfade.data.SettingsManager.setSfxVolume(value);
     }
 
     @Override
     public void onMusicCheckboxChanged(boolean isChecked) {
-        SettingsManager.setIsMusicOn(isChecked);
+        com.tangledwebgames.crossfade.data.SettingsManager.setIsMusicOn(isChecked);
         SoundManager.buttonSound();
     }
 
     @Override
     public void onMusicVolumeSliderChanged(float value) {
-        SettingsManager.setMusicVolume(value);
+        com.tangledwebgames.crossfade.data.SettingsManager.setMusicVolume(value);
     }
 
     @Override
     public void onAnimateTilesCheckboxChanged(boolean isChecked) {
-        SettingsManager.setAnimateTiles(isChecked);
+        com.tangledwebgames.crossfade.data.SettingsManager.setAnimateTiles(isChecked);
         SoundManager.buttonSound();
     }
 
@@ -92,13 +87,13 @@ public class UiEventHandler implements UiReceiver {
 
     @Override
     public void onPauseMenuContinueButtonClicked() {
-        mainController.unpauseGame();
+        MainController.instance.unpauseGame();
         SoundManager.buttonSound();
     }
 
     @Override
     public void onPauseMenuBuyButtonClicked() {
-        mainController.showPurchaseDialog(false);
+        MainController.instance.showPurchaseDialog(false);
         SoundManager.buttonSound();
     }
 
@@ -107,7 +102,7 @@ public class UiEventHandler implements UiReceiver {
 
     @Override
     public void onWinContinueButtonClicked() {
-        mainController.goToNextLevel();
+        MainController.instance.goToNextLevel();
         SoundManager.buttonSound();
     }
 
@@ -116,13 +111,13 @@ public class UiEventHandler implements UiReceiver {
 
     @Override
     public void onLevelSelectContinueButtonClicked() {
-        mainController.unpauseGame();
+        MainController.instance.unpauseGame();
         SoundManager.buttonSound();
     }
 
     @Override
     public void onLevelSelected(int level) {
-        mainController.goToLevel(level);
+        MainController.instance.goToLevel(level);
         SoundManager.buttonSound();
     }
 
@@ -142,25 +137,25 @@ public class UiEventHandler implements UiReceiver {
 
     @Override
     public void onPurchaseTableCancelButtonClicked() {
-        mainController.unpauseGame();
+        MainController.instance.unpauseGame();
         SoundManager.buttonSound();
     }
 
     @Override
     public void onPurchaseFailedConfirm() {
-        mainController.unpauseGame();
+        MainController.instance.unpauseGame();
         SoundManager.buttonSound();
     }
 
     @Override
     public void onPurchaseSuccessConfirm() {
-        mainController.unpauseGame();
+        MainController.instance.unpauseGame();
         SoundManager.buttonSound();
     }
 
     @Override
     public void onPurchaseNoRestoreConfirm() {
-        mainController.unpauseGame();
+        MainController.instance.unpauseGame();
         SoundManager.buttonSound();
     }
 

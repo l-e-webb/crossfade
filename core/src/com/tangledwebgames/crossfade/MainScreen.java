@@ -4,33 +4,62 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.tangledwebgames.crossfade.data.AssetManager;
 import com.tangledwebgames.crossfade.game.Board;
+import com.tangledwebgames.crossfade.game.GameController;
 import com.tangledwebgames.crossfade.ui.UiController;
 
-public class MainScreen extends MainController {
+public class MainScreen implements Screen {
 
     public static final float WORLD_WIDTH = 480f;
     public static final float WORLD_HEIGHT = 768f;
 
     private Viewport viewport;
     private ShapeRenderer renderer;
+    private UiController uiController;
+    private GameController gameController;
 
     @Override
     public void show() {
         viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, WORLD_WIDTH, 0);
         renderer = new ShapeRenderer();
-        Board board = new Board(viewport, renderer);
-        UiController uiController = new UiController(viewport);
+        gameController = new Board(viewport, renderer);
+        uiController = new UiController(viewport);
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(new InputHandler());
         multiplexer.addProcessor(uiController);
-        multiplexer.addProcessor(board);
+        multiplexer.addProcessor(gameController);
         Gdx.input.setInputProcessor(multiplexer);
-        init(board, uiController);
+        MainController.init(gameController, uiController);
+        MainController.instance.show();
+    }
+
+    @Override
+    public void resume() {
+        MainController.instance.resume();
+    }
+
+    @Override
+    public void pause() {
+        MainController.instance.pause();
+    }
+
+    @Override
+    public void hide() {
+        MainController.instance.hide();
+    }
+
+    @Override
+    public void dispose() {
+        MainController.instance.dispose();
+        uiController.dispose();
+        gameController.dispose();
+        AssetManager.instance.dispose();
     }
 
     @Override
@@ -52,7 +81,7 @@ public class MainScreen extends MainController {
         gameController.updateSize();
     }
 
-    class InputHandler extends InputAdapter {
+    static class InputHandler extends InputAdapter {
 
         private InputHandler() {
         }
@@ -60,10 +89,10 @@ public class MainScreen extends MainController {
         @Override
         public boolean keyDown(int keycode) {
             if (keycode == Input.Keys.ESCAPE) {
-                togglePause();
+                MainController.instance.togglePause();
                 return true;
             } else if (keycode == Input.Keys.MENU) {
-                showMainMenu();
+                MainController.instance.showMainMenu();
                 return true;
             }
             return false;

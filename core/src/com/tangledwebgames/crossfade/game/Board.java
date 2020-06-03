@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.tangledwebgames.crossfade.data.SettingsManager;
 
 /**
  * Class representing the game board and its current state.
@@ -32,7 +33,7 @@ public class Board extends GameController {
     private BoardGroup boardGroup;
     private Tile[][] tiles;
     private boolean[][] originalState;
-    private int moves;
+    private boolean canWin = true;
 
     public Board(Viewport viewport, ShapeRenderer renderer) {
         super(viewport);
@@ -50,10 +51,6 @@ public class Board extends GameController {
         setDebugAll(debug);
     }
 
-    public int getMoves() {
-        return moves;
-    }
-
     public boolean isWinningState() {
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < WIDTH; j++) {
@@ -61,6 +58,16 @@ public class Board extends GameController {
             }
         }
         return true;
+    }
+
+    public boolean[][] getBoardState() {
+        boolean[][] boardState = new boolean[WIDTH][WIDTH];
+        for (int row = 0; row < WIDTH; row++) {
+            for (int column = 0; column < WIDTH; column++) {
+                boardState[row][column] = getTileValue(row, column);
+            }
+        }
+        return boardState;
     }
 
     boolean getTileValue(int row, int column) {
@@ -81,6 +88,10 @@ public class Board extends GameController {
     }
 
     void selectTile(int row, int column) {
+        selectTile(row, column, SettingsManager.isAnimateTiles());
+    }
+
+    void selectTile(int row, int column, boolean animateTiles) {
         if (row < 0 || row >= WIDTH || column < 0 || column >= WIDTH) return;
         for (int i = 0; i < WIDTH; i++) {
             toggleTile(row, i);
@@ -111,7 +122,7 @@ public class Board extends GameController {
         }
         moves++;
         clearActiveTiles();
-        if (isWinningState() && winListener != null) {
+        if (isWinningState() && winListener != null && canWin) {
             winListener.onWin();
         }
     }
@@ -126,14 +137,12 @@ public class Board extends GameController {
             //Reset board
             originalState = new boolean[WIDTH][WIDTH];
             reset();
+            canWin = false;
             //Create random solvable board by making a random series of moves from a blank board.
             int randomMoves = MathUtils.random(3, WIDTH * WIDTH * 2 / 3);
-            boolean animateTilesTemp = animateTiles;
-            animateTiles = false;
             for (int i = 0; i < randomMoves; i++) {
-                selectTile(MathUtils.random(WIDTH - 1), MathUtils.random(WIDTH - 1));
+                selectTile(MathUtils.random(WIDTH - 1), MathUtils.random(WIDTH - 1), false);
             }
-            animateTiles = animateTilesTemp;
             if (isWinningState()) {
                 //If the randomized level is already a win-state, make another.
                 makeRandomLevel(true);
@@ -146,6 +155,7 @@ public class Board extends GameController {
                     originalState[i][j] = tiles[i][j].value;
                 }
             }
+            canWin = true;
         } else {
             originalState = new boolean[WIDTH][WIDTH];
             for (int i = 0; i < WIDTH; i++) {
@@ -153,14 +163,21 @@ public class Board extends GameController {
                     originalState[i][j] = MathUtils.randomBoolean();
                 }
             }
+            if (isWinningState()) {
+                makeRandomLevel(false);
+                return;
+            }
         }
         reset();
     }
 
     protected void resetBoard() {
-        moves = 0;
-        boardGroup.setTileValues(originalState);
+        setTileValues(originalState);
         updateSize();
+    }
+
+    protected void setTileValues(boolean[][] boardState) {
+        boardGroup.setTileValues(boardState);
     }
 
     public void updateSize() {

@@ -8,6 +8,8 @@ public interface GameState {
 
     int getLevel();
 
+    boolean[][] getBoardState();
+
     boolean isWinningState();
 
 }

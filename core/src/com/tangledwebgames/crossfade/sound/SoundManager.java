@@ -1,8 +1,8 @@
 package com.tangledwebgames.crossfade.sound;
 
 import com.badlogic.gdx.audio.Sound;
-import com.tangledwebgames.crossfade.Assets;
-import com.tangledwebgames.crossfade.SettingsManager;
+import com.tangledwebgames.crossfade.data.AssetManager;
+import com.tangledwebgames.crossfade.data.SettingsManager;
 
 /**
  * Handles playing sound effects and music.
@@ -38,26 +38,26 @@ public class SoundManager {
     }
 
     public static void moveSound() {
-        playSfx(Assets.instance.moveSound, MOVE_SOUND_MOD);
+        playSfx(AssetManager.instance.moveSound, MOVE_SOUND_MOD);
     }
 
     public static void buttonSound() {
-        playSfx(Assets.instance.buttonSound, BUTTON_SOUND_MOD);
+        playSfx(AssetManager.instance.buttonSound, BUTTON_SOUND_MOD);
     }
 
     public static void winSound() {
-        playSfx(Assets.instance.winSound, WIN_SOUND_MOD);
+        playSfx(AssetManager.instance.winSound, WIN_SOUND_MOD);
     }
 
     public static void playMusic() {
-        if (music && Assets.instance.backgroundMusic != null && !Assets.instance.backgroundMusic.isPlaying()) {
-            Assets.instance.backgroundMusic.play();
+        if (music && AssetManager.instance.backgroundMusic != null && !AssetManager.instance.backgroundMusic.isPlaying()) {
+            AssetManager.instance.backgroundMusic.play();
         }
     }
 
     public static void stopMusic() {
-        if (Assets.instance.backgroundMusic != null && Assets.instance.backgroundMusic.isPlaying()) {
-            Assets.instance.backgroundMusic.stop();
+        if (AssetManager.instance.backgroundMusic != null && AssetManager.instance.backgroundMusic.isPlaying()) {
+            AssetManager.instance.backgroundMusic.stop();
         }
     }
 
@@ -80,8 +80,8 @@ public class SoundManager {
     private static void setMusicVolume(float musicVolume) {
         if (0 <= musicVolume && musicVolume <= 1) {
             SoundManager.musicVolume = musicVolume;
-            if (Assets.instance.backgroundMusic != null) {
-                Assets.instance.backgroundMusic.setVolume(musicVolume);
+            if (AssetManager.instance.backgroundMusic != null) {
+                AssetManager.instance.backgroundMusic.setVolume(musicVolume);
             }
         }
     }

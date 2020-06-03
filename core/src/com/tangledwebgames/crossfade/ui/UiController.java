@@ -18,7 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.tangledwebgames.crossfade.Assets;
+import com.tangledwebgames.crossfade.data.AssetManager;
 import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.game.GameState;
 
@@ -198,19 +198,19 @@ public class UiController extends Stage {
     private void initUI() {
 
         //Font inits.
-        BitmapFont titleFont = Assets.instance.titleFont;
+        BitmapFont titleFont = AssetManager.instance.titleFont;
         titleFont.getData().setScale(Dimensions.TITLE_SCALE);
         titleFont.getRegion().getTexture().setFilter(
                 Texture.TextureFilter.Linear,
                 Texture.TextureFilter.Linear
         );
-        BitmapFont uiFont = Assets.instance.uiFont;
+        BitmapFont uiFont = AssetManager.instance.uiFont;
         uiFont.getData().setScale(Dimensions.TEXT_SCALE);
         uiFont.getRegion().getTexture().setFilter(
                 Texture.TextureFilter.Linear,
                 Texture.TextureFilter.Linear
         );
-        BitmapFont smallFont = Assets.instance.smallFont;
+        BitmapFont smallFont = AssetManager.instance.smallFont;
         smallFont.getData().setScale(Dimensions.SMALL_TEXT_SCALE);
         smallFont.getRegion().getTexture().setFilter(
                 Texture.TextureFilter.Linear,
@@ -227,10 +227,10 @@ public class UiController extends Stage {
         );
         Label.LabelStyle deemphasisStyle = new Label.LabelStyle(uiFont, Dimensions.DARK_COLOR);
         NinePatchDrawable tile9Patch = new NinePatchDrawable(
-                new NinePatch(Assets.instance.tileSmall, 13, 13, 13, 13));
+                new NinePatch(AssetManager.instance.tileSmall, 13, 13, 13, 13));
         NinePatchDrawable box9Patch = new NinePatchDrawable(
-                new NinePatch(Assets.instance.greyBox, 3, 3, 3, 3));
-        TextureRegionDrawable whiteBox = new TextureRegionDrawable(Assets.instance.whiteBox);
+                new NinePatch(AssetManager.instance.greyBox, 3, 3, 3, 3));
+        TextureRegionDrawable whiteBox = new TextureRegionDrawable(AssetManager.instance.whiteBox);
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
         buttonStyle.up = tile9Patch.tint(Dimensions.BUTTON_COLOR);
         buttonStyle.down = tile9Patch.tint(Dimensions.ACTIVE_BUTTON_COLOR);
@@ -238,7 +238,7 @@ public class UiController extends Stage {
         buttonStyle.downFontColor = Dimensions.DARK_TEXT_COLOR;
         buttonStyle.font = uiFont;
         TextureRegionDrawable checkbox = new TextureRegionDrawable(
-                Assets.instance.tileSmall
+                AssetManager.instance.tileSmall
         );
         CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle(
                 checkbox.tint(Dimensions.OFF_CHECKBOX_COLOR),
@@ -247,9 +247,9 @@ public class UiController extends Stage {
                 Dimensions.PRIMARY_COLOR
         );
         TextureRegionDrawable sliderBackground = new TextureRegionDrawable(
-                Assets.instance.sliderBackground
+                AssetManager.instance.sliderBackground
         );
-        Sprite sliderKnobSprite = new Sprite(Assets.instance.sliderKnob);
+        Sprite sliderKnobSprite = new Sprite(AssetManager.instance.sliderKnob);
         sliderKnobSprite.setSize(Dimensions.SLIDER_KNOB_WIDTH, Dimensions.SLIDER_KNOB_HEIGHT);
         SpriteDrawable sliderKnob = new SpriteDrawable(sliderKnobSprite);
         Slider.SliderStyle sliderStyle = new Slider.SliderStyle(

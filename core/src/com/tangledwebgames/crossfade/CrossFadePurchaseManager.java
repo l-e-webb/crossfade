@@ -8,6 +8,7 @@ import com.badlogic.gdx.pay.PurchaseManager;
 import com.badlogic.gdx.pay.PurchaseManagerConfig;
 import com.badlogic.gdx.pay.PurchaseObserver;
 import com.badlogic.gdx.pay.Transaction;
+import com.tangledwebgames.crossfade.data.SettingsManager;
 
 import javax.annotation.Nonnull;
 
@@ -29,7 +30,7 @@ public class CrossFadePurchaseManager {
     }
 
     public static boolean isPurchaseAvailable() {
-        return isPurchaseObserverInstalled && !SettingsManager.isFullVersion();
+        return isPurchaseObserverInstalled && !com.tangledwebgames.crossfade.data.SettingsManager.isFullVersion();
     }
 
     public static String getLocalPrice() {
@@ -54,7 +55,7 @@ public class CrossFadePurchaseManager {
         pm.install(new CrossFadePurchaseObserver(), pmc, true);
     }
 
-    static class CrossFadePurchaseObserver implements PurchaseObserver {
+    private static class CrossFadePurchaseObserver implements PurchaseObserver {
 
         @Override
         public void handleInstall() {
@@ -75,7 +76,7 @@ public class CrossFadePurchaseManager {
                     handlePurchase(t);
                 }
             }
-            if (!SettingsManager.isFullVersion()) {
+            if (!com.tangledwebgames.crossfade.data.SettingsManager.isFullVersion()) {
                 MainController.instance.showPurchaseNoRestoreDialog();
             }
         }
@@ -89,7 +90,7 @@ public class CrossFadePurchaseManager {
         public void handlePurchase(Transaction transaction) {
             if (transaction.isPurchased() &&
                     transaction.getIdentifier().equals(FULL_VERSION_SKU)) {
-                SettingsManager.setIsFullVersion(true);
+                com.tangledwebgames.crossfade.data.SettingsManager.setIsFullVersion(true);
                 SettingsManager.flush();
                 MainController.instance.showPurchaseSuccessDialog();
             }

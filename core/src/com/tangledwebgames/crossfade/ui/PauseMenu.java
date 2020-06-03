@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.tangledwebgames.crossfade.CrossFadePurchaseManager;
-import com.tangledwebgames.crossfade.SettingsManager;
+import com.tangledwebgames.crossfade.data.SettingsManager;
 
 class PauseMenu extends Table {
 
