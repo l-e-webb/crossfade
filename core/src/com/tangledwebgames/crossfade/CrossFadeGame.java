@@ -5,7 +5,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.pay.PurchaseManager;
-import com.tangledwebgames.crossfade.data.AssetManager;
+import com.tangledwebgames.crossfade.data.AssetLoader;
 import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.game.Levels;
 import com.tangledwebgames.crossfade.ui.UiText;
@@ -25,7 +25,7 @@ public class CrossFadeGame extends Game {
         if (APP_TYPE == Application.ApplicationType.Android) {
             Gdx.input.setCatchKey(Input.Keys.MENU, true);
         }
-        AssetManager.instance.loadAll();
+        AssetLoader.instance.loadAll();
         SettingsManager.init();
         if (APP_TYPE == Application.ApplicationType.Android) {
             CrossFadePurchaseManager.setPurchaseManager(purchaseManager);

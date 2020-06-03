@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.tangledwebgames.crossfade.data.AssetManager;
+import com.tangledwebgames.crossfade.data.AssetLoader;
 import com.tangledwebgames.crossfade.game.Board;
 import com.tangledwebgames.crossfade.game.GameController;
 import com.tangledwebgames.crossfade.ui.UiController;
@@ -59,7 +59,7 @@ public class MainScreen implements Screen {
         MainController.instance.dispose();
         uiController.dispose();
         gameController.dispose();
-        AssetManager.instance.dispose();
+        AssetLoader.instance.dispose();
     }
 
     @Override

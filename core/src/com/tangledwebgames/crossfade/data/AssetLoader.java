@@ -3,6 +3,7 @@ package com.tangledwebgames.crossfade.data;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.I18NBundleLoader;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -14,11 +15,11 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.tangledwebgames.crossfade.CrossFadeGame;
 
-public class AssetManager implements Disposable, AssetErrorListener {
+public class AssetLoader implements Disposable, AssetErrorListener {
 
-    public static final AssetManager instance = new AssetManager();
+    public static final AssetLoader instance = new AssetLoader();
 
-    private static final String LOG_TAG = AssetManager.class.getSimpleName();
+    private static final String LOG_TAG = AssetLoader.class.getSimpleName();
     private static final String TITLE_FONT_PATH = "titleFont.fnt";
     private static final String UI_FONT_PATH = "font.fnt";
     private static final String SMALL_FONT_PATH = "smallFont.fnt";
@@ -48,14 +49,13 @@ public class AssetManager implements Disposable, AssetErrorListener {
     public Sound buttonSound;
     public Sound winSound;
     public I18NBundle gameText;
-    private com.badlogic.gdx.assets.AssetManager assetManager;
+    private AssetManager assetManager;
 
-
-    private AssetManager() {
+    private AssetLoader() {
     }
 
     public void loadAll() {
-        assetManager = new com.badlogic.gdx.assets.AssetManager();
+        assetManager = new AssetManager();
         assetManager.setErrorListener(this);
         assetManager.load(TITLE_FONT_PATH, BitmapFont.class);
         assetManager.load(UI_FONT_PATH, BitmapFont.class);

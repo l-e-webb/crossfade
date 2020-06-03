@@ -59,7 +59,7 @@ public class MainController extends ScreenAdapter implements WinListener {
     @Override
     public void pause() {
         showMainMenu();
-        com.tangledwebgames.crossfade.data.SettingsManager.flush();
+        SettingsManager.flush();
         GameDataLoader.saveRecords();
         GameDataLoader.saveGameState(gameController.getSavedGameState());
         SoundManager.stopMusic();

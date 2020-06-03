@@ -1,7 +1,7 @@
 package com.tangledwebgames.crossfade.sound;
 
 import com.badlogic.gdx.audio.Sound;
-import com.tangledwebgames.crossfade.data.AssetManager;
+import com.tangledwebgames.crossfade.data.AssetLoader;
 import com.tangledwebgames.crossfade.data.SettingsManager;
 
 /**
@@ -38,26 +38,26 @@ public class SoundManager {
     }
 
     public static void moveSound() {
-        playSfx(AssetManager.instance.moveSound, MOVE_SOUND_MOD);
+        playSfx(AssetLoader.instance.moveSound, MOVE_SOUND_MOD);
     }
 
     public static void buttonSound() {
-        playSfx(AssetManager.instance.buttonSound, BUTTON_SOUND_MOD);
+        playSfx(AssetLoader.instance.buttonSound, BUTTON_SOUND_MOD);
     }
 
     public static void winSound() {
-        playSfx(AssetManager.instance.winSound, WIN_SOUND_MOD);
+        playSfx(AssetLoader.instance.winSound, WIN_SOUND_MOD);
     }
 
     public static void playMusic() {
-        if (music && AssetManager.instance.backgroundMusic != null && !AssetManager.instance.backgroundMusic.isPlaying()) {
-            AssetManager.instance.backgroundMusic.play();
+        if (music && AssetLoader.instance.backgroundMusic != null && !AssetLoader.instance.backgroundMusic.isPlaying()) {
+            AssetLoader.instance.backgroundMusic.play();
         }
     }
 
     public static void stopMusic() {
-        if (AssetManager.instance.backgroundMusic != null && AssetManager.instance.backgroundMusic.isPlaying()) {
-            AssetManager.instance.backgroundMusic.stop();
+        if (AssetLoader.instance.backgroundMusic != null && AssetLoader.instance.backgroundMusic.isPlaying()) {
+            AssetLoader.instance.backgroundMusic.stop();
         }
     }
 
@@ -80,8 +80,8 @@ public class SoundManager {
     private static void setMusicVolume(float musicVolume) {
         if (0 <= musicVolume && musicVolume <= 1) {
             SoundManager.musicVolume = musicVolume;
-            if (AssetManager.instance.backgroundMusic != null) {
-                AssetManager.instance.backgroundMusic.setVolume(musicVolume);
+            if (AssetLoader.instance.backgroundMusic != null) {
+                AssetLoader.instance.backgroundMusic.setVolume(musicVolume);
             }
         }
     }

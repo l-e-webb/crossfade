@@ -53,29 +53,29 @@ public class UiEventHandler implements UiReceiver {
 
     @Override
     public void onSfxCheckboxChanged(boolean isChecked) {
-        com.tangledwebgames.crossfade.data.SettingsManager.setIsSfxOn(isChecked);
+        SettingsManager.setIsSfxOn(isChecked);
         SoundManager.buttonSound();
     }
 
     @Override
     public void onSfxVolumeSliderChanged(float value) {
-        com.tangledwebgames.crossfade.data.SettingsManager.setSfxVolume(value);
+        SettingsManager.setSfxVolume(value);
     }
 
     @Override
     public void onMusicCheckboxChanged(boolean isChecked) {
-        com.tangledwebgames.crossfade.data.SettingsManager.setIsMusicOn(isChecked);
+        SettingsManager.setIsMusicOn(isChecked);
         SoundManager.buttonSound();
     }
 
     @Override
     public void onMusicVolumeSliderChanged(float value) {
-        com.tangledwebgames.crossfade.data.SettingsManager.setMusicVolume(value);
+        SettingsManager.setMusicVolume(value);
     }
 
     @Override
     public void onAnimateTilesCheckboxChanged(boolean isChecked) {
-        com.tangledwebgames.crossfade.data.SettingsManager.setAnimateTiles(isChecked);
+        SettingsManager.setAnimateTiles(isChecked);
         SoundManager.buttonSound();
     }
 

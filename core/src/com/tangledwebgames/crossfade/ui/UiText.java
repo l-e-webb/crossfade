@@ -1,6 +1,6 @@
 package com.tangledwebgames.crossfade.ui;
 
-import com.tangledwebgames.crossfade.data.AssetManager;
+import com.tangledwebgames.crossfade.data.AssetLoader;
 
 /**
  * Data class for storing UI text.
@@ -49,43 +49,43 @@ public class UiText {
     }
 
     public static void init() {
-        TITLE = AssetManager.instance.gameText.get("TITLE");
-        MOVES = AssetManager.instance.gameText.get("MOVES");
-        TIME = AssetManager.instance.gameText.get("TIME");
-        LEVEL = AssetManager.instance.gameText.get("LEVEL");
-        NEXT = AssetManager.instance.gameText.get("NEXT");
-        RESET = AssetManager.instance.gameText.get("RESET");
-        PREVIOUS = AssetManager.instance.gameText.get("PREVIOUS");
-        RANDOM = AssetManager.instance.gameText.get("RANDOM");
-        RANDOM_BUTTON = AssetManager.instance.gameText.get("RANDOM_BUTTON");
-        UNKNOWN_LEVEL = AssetManager.instance.gameText.get("UNKNOWN_LEVEL");
-        PAUSED = AssetManager.instance.gameText.get("PAUSED");
-        WIN_MSG = AssetManager.instance.gameText.get("WIN_MSG");
-        NEW_RECORD = AssetManager.instance.gameText.get("NEW_RECORD");
-        SFX = AssetManager.instance.gameText.get("SFX");
-        SFX_LEVEL = AssetManager.instance.gameText.get("SFX_LEVEL");
-        MUSIC = AssetManager.instance.gameText.get("MUSIC");
-        MUSIC_LEVEL = AssetManager.instance.gameText.get("MUSIC_LEVEL");
-        ANIMATE_TILES = AssetManager.instance.gameText.get("ANIMATE_TILES");
-        HIGHLIGHT_TILES = AssetManager.instance.gameText.get("HIGHLIGHT_TILES");
-        CONTINUE = AssetManager.instance.gameText.get("CONTINUE");
-        BEST = AssetManager.instance.gameText.get("RECORD");
-        MENU = AssetManager.instance.gameText.get("MENU");
-        LEVEL_SELECT = AssetManager.instance.gameText.get("LEVEL_SELECT");
-        SELECT = AssetManager.instance.gameText.get("SELECT");
-        LEVEL_SELECT_HEADING = AssetManager.instance.gameText.get("LEVEL_SELECT_HEADING");
-        SANDBOX = AssetManager.instance.gameText.get("SANDBOX");
-        BUY_FULL_VERSION = AssetManager.instance.gameText.get("BUY_FULL_VERSION");
-        CONTENT_UNAVAILABLE = AssetManager.instance.gameText.get("CONTENT_UNAVAILABLE");
-        RESTORE_PROMPT = AssetManager.instance.gameText.get("RESTORE_PROMPT");
-        BUY = AssetManager.instance.gameText.get("BUY");
-        RESTORE = AssetManager.instance.gameText.get("RESTORE");
-        OK = AssetManager.instance.gameText.get("OK");
-        CANCEL = AssetManager.instance.gameText.get("CANCEL");
-        FULL_VERSION_UNLOCKED = AssetManager.instance.gameText.get("FULL_VERSION_UNLOCKED");
-        PURCHASE_ERROR = AssetManager.instance.gameText.get("PURCHASE_ERROR");
-        LOCKED = AssetManager.instance.gameText.get("LOCKED");
-        NO_RESTORE = AssetManager.instance.gameText.get("NO_RESTORE");
+        TITLE = AssetLoader.instance.gameText.get("TITLE");
+        MOVES = AssetLoader.instance.gameText.get("MOVES");
+        TIME = AssetLoader.instance.gameText.get("TIME");
+        LEVEL = AssetLoader.instance.gameText.get("LEVEL");
+        NEXT = AssetLoader.instance.gameText.get("NEXT");
+        RESET = AssetLoader.instance.gameText.get("RESET");
+        PREVIOUS = AssetLoader.instance.gameText.get("PREVIOUS");
+        RANDOM = AssetLoader.instance.gameText.get("RANDOM");
+        RANDOM_BUTTON = AssetLoader.instance.gameText.get("RANDOM_BUTTON");
+        UNKNOWN_LEVEL = AssetLoader.instance.gameText.get("UNKNOWN_LEVEL");
+        PAUSED = AssetLoader.instance.gameText.get("PAUSED");
+        WIN_MSG = AssetLoader.instance.gameText.get("WIN_MSG");
+        NEW_RECORD = AssetLoader.instance.gameText.get("NEW_RECORD");
+        SFX = AssetLoader.instance.gameText.get("SFX");
+        SFX_LEVEL = AssetLoader.instance.gameText.get("SFX_LEVEL");
+        MUSIC = AssetLoader.instance.gameText.get("MUSIC");
+        MUSIC_LEVEL = AssetLoader.instance.gameText.get("MUSIC_LEVEL");
+        ANIMATE_TILES = AssetLoader.instance.gameText.get("ANIMATE_TILES");
+        HIGHLIGHT_TILES = AssetLoader.instance.gameText.get("HIGHLIGHT_TILES");
+        CONTINUE = AssetLoader.instance.gameText.get("CONTINUE");
+        BEST = AssetLoader.instance.gameText.get("RECORD");
+        MENU = AssetLoader.instance.gameText.get("MENU");
+        LEVEL_SELECT = AssetLoader.instance.gameText.get("LEVEL_SELECT");
+        SELECT = AssetLoader.instance.gameText.get("SELECT");
+        LEVEL_SELECT_HEADING = AssetLoader.instance.gameText.get("LEVEL_SELECT_HEADING");
+        SANDBOX = AssetLoader.instance.gameText.get("SANDBOX");
+        BUY_FULL_VERSION = AssetLoader.instance.gameText.get("BUY_FULL_VERSION");
+        CONTENT_UNAVAILABLE = AssetLoader.instance.gameText.get("CONTENT_UNAVAILABLE");
+        RESTORE_PROMPT = AssetLoader.instance.gameText.get("RESTORE_PROMPT");
+        BUY = AssetLoader.instance.gameText.get("BUY");
+        RESTORE = AssetLoader.instance.gameText.get("RESTORE");
+        OK = AssetLoader.instance.gameText.get("OK");
+        CANCEL = AssetLoader.instance.gameText.get("CANCEL");
+        FULL_VERSION_UNLOCKED = AssetLoader.instance.gameText.get("FULL_VERSION_UNLOCKED");
+        PURCHASE_ERROR = AssetLoader.instance.gameText.get("PURCHASE_ERROR");
+        LOCKED = AssetLoader.instance.gameText.get("LOCKED");
+        NO_RESTORE = AssetLoader.instance.gameText.get("NO_RESTORE");
     }
 
 }

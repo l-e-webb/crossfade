@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.tangledwebgames.crossfade.data.SettingsManager;
-import com.tangledwebgames.crossfade.data.AssetManager;
+import com.tangledwebgames.crossfade.data.AssetLoader;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 
 class Tile extends Actor {
@@ -47,7 +47,7 @@ class Tile extends Actor {
         Rectangle rect = getRenderRect();
         if (useSprites) {
             batch.setColor(getColor());
-            batch.draw(AssetManager.instance.tile, rect.x, rect.y, rect.width, rect.height);
+            batch.draw(AssetLoader.instance.tile, rect.x, rect.y, rect.width, rect.height);
         } else {
             ShapeRenderer renderer = board.renderer;
             renderer.setColor(getColor());

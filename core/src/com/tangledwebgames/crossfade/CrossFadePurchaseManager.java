@@ -30,7 +30,7 @@ public class CrossFadePurchaseManager {
     }
 
     public static boolean isPurchaseAvailable() {
-        return isPurchaseObserverInstalled && !com.tangledwebgames.crossfade.data.SettingsManager.isFullVersion();
+        return isPurchaseObserverInstalled && !SettingsManager.isFullVersion();
     }
 
     public static String getLocalPrice() {
@@ -76,7 +76,7 @@ public class CrossFadePurchaseManager {
                     handlePurchase(t);
                 }
             }
-            if (!com.tangledwebgames.crossfade.data.SettingsManager.isFullVersion()) {
+            if (!SettingsManager.isFullVersion()) {
                 MainController.instance.showPurchaseNoRestoreDialog();
             }
         }
@@ -90,7 +90,7 @@ public class CrossFadePurchaseManager {
         public void handlePurchase(Transaction transaction) {
             if (transaction.isPurchased() &&
                     transaction.getIdentifier().equals(FULL_VERSION_SKU)) {
-                com.tangledwebgames.crossfade.data.SettingsManager.setIsFullVersion(true);
+                SettingsManager.setIsFullVersion(true);
                 SettingsManager.flush();
                 MainController.instance.showPurchaseSuccessDialog();
             }
