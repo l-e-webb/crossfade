@@ -1,6 +1,6 @@
 # CrossFade
 
-A simple puzzle game made by Ashlen ([Tangled Web Games](https://tangledwebgames.itch.io)).
+A simple puzzle game made by Louis Webb ([Tangled Web Games](https://tangledwebgames.itch.io)).
 
 CrossFade takes place on a square grid of tiles.  (A 5 by 5 grid in the current version.)  Each tile is either lit up or off.  You can "move" on a tile by clicking it, and this reverses the on/off value of every tile in that tile's row and column, including the selected tile itself.  The goal is to reduce the board back to a blank state where all tiles are off.
 
