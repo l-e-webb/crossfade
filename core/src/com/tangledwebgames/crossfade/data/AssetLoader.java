@@ -74,6 +74,8 @@ public class AssetLoader implements Disposable, AssetErrorListener {
                 CrossFadeGame.LOCALE);
         assetManager.load(BASE_GAME_TEXT_PATH, I18NBundle.class, i18nParam);
 
+
+
         assetManager.finishLoading();
 
         titleFont = assetManager.get(TITLE_FONT_PATH);

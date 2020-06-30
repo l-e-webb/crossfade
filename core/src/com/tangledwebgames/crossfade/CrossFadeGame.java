@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.pay.PurchaseManager;
+import com.tangledwebgames.crossfade.auth.AuthManager;
 import com.tangledwebgames.crossfade.data.AssetLoader;
 import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.game.Levels;
@@ -17,6 +18,7 @@ public class CrossFadeGame extends Game {
     public static Application.ApplicationType APP_TYPE;
     public static Locale LOCALE;
     public PurchaseManager purchaseManager;
+    public AuthManager authManager;
 
     @Override
     public void create() {
