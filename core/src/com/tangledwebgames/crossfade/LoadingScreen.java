@@ -53,7 +53,7 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
         Levels.init();
         uiController.initFull();
         loaded = true;
-        if (getGame().authManager != null) {
+        if (getGame().authManager.isAuthAvailable()) {
             getGame().authManager.silentSignIn(this);
         } else {
             goToMainScreen();

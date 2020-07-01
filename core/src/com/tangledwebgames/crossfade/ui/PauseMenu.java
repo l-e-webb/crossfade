@@ -155,29 +155,31 @@ class PauseMenu extends Table {
                     .minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);
             row();
         }
-        Button authButton;
-        if (CrossFadeGame.game.authManager.isSignedIn()) {
-            authButton = new TextButton(UiText.SIGN_OUT, skin);
-            authButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    receiver.onSignOutButtonClicked();
-                }
-            });
-        } else {
-            authButton = new TextButton(UiText.SIGN_IN, skin);
-            authButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    receiver.onSignInButtonClicked();
-                }
-            });
+        if (CrossFadeGame.game.authManager.isAuthAvailable()) {
+            Button authButton;
+            if (CrossFadeGame.game.authManager.isSignedIn()) {
+                authButton = new TextButton(UiText.SIGN_OUT, skin);
+                authButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        receiver.onSignOutButtonClicked();
+                    }
+                });
+            } else {
+                authButton = new TextButton(UiText.SIGN_IN, skin);
+                authButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        receiver.onSignInButtonClicked();
+                    }
+                });
+            }
+            add(authButton).center().colspan(2)
+                    .spaceTop(Dimensions.PADDING_LARGE)
+                    .height(Dimensions.PAUSE_BUTTON_HEIGHT)
+                    .minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);
+            row();
         }
-        add(authButton).center().colspan(2)
-                .spaceTop(Dimensions.PADDING_LARGE)
-                .height(Dimensions.PAUSE_BUTTON_HEIGHT)
-                .minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);
-        row();
         add(pauseContinueButton).center().colspan(2)
                 .spaceTop(Dimensions.PADDING_LARGE)
                 .height(Dimensions.PAUSE_BUTTON_HEIGHT)

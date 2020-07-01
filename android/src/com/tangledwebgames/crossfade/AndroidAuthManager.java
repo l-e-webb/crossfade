@@ -128,4 +128,9 @@ public class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateLi
     public void removeChangeListener(AuthChangeListener listener) {
         changeListeners.remove(listener);
     }
+
+    @Override
+    public boolean isAuthAvailable() {
+        return true;
+    }
 }
