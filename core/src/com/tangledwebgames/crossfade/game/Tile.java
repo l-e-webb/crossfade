@@ -9,8 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.data.AssetLoader;
+import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 
 class Tile extends Actor {

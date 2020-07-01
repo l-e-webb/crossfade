@@ -54,13 +54,27 @@ public class AssetLoader implements Disposable, AssetErrorListener {
     private AssetLoader() {
     }
 
-    public void loadAll() {
+    public void loadEssential() {
         assetManager = new AssetManager();
         assetManager.setErrorListener(this);
-        assetManager.load(TITLE_FONT_PATH, BitmapFont.class);
-        assetManager.load(UI_FONT_PATH, BitmapFont.class);
-        assetManager.load(SMALL_FONT_PATH, BitmapFont.class);
+
+
         assetManager.load(TILE_SPRITE_PATH, Texture.class);
+        assetManager.load(UI_FONT_PATH, BitmapFont.class);
+        I18NBundleLoader.I18NBundleParameter i18nParam = new I18NBundleLoader
+                .I18NBundleParameter(CrossFadeGame.LOCALE);
+        assetManager.load(BASE_GAME_TEXT_PATH, I18NBundle.class, i18nParam);
+
+        assetManager.finishLoading();
+
+        tile = assetManager.get(TILE_SPRITE_PATH, Texture.class);
+        uiFont = assetManager.get(UI_FONT_PATH);
+        gameText = assetManager.get(BASE_GAME_TEXT_PATH);
+    }
+
+    public void loadRemainder() {
+        assetManager.load(TITLE_FONT_PATH, BitmapFont.class);
+        assetManager.load(SMALL_FONT_PATH, BitmapFont.class);
         assetManager.load(TILE_SMALL_SPRITE_PATH, Texture.class);
         assetManager.load(GREY_BOX, Texture.class);
         assetManager.load(WHITE_BOX, Texture.class);
@@ -70,18 +84,11 @@ public class AssetLoader implements Disposable, AssetErrorListener {
         assetManager.load(MOVE_SOUND_PATH, Sound.class);
         assetManager.load(BUTTON_SOUND_PATH, Sound.class);
         assetManager.load(WIN_SOUND_PATH, Sound.class);
-        I18NBundleLoader.I18NBundleParameter i18nParam = new I18NBundleLoader.I18NBundleParameter(
-                CrossFadeGame.LOCALE);
-        assetManager.load(BASE_GAME_TEXT_PATH, I18NBundle.class, i18nParam);
+    }
 
-
-
-        assetManager.finishLoading();
-
+    public void onLoadComplete() {
         titleFont = assetManager.get(TITLE_FONT_PATH);
-        uiFont = assetManager.get(UI_FONT_PATH);
         smallFont = assetManager.get(SMALL_FONT_PATH);
-        tile = assetManager.get(TILE_SPRITE_PATH, Texture.class);
         tileSmall = assetManager.get(TILE_SMALL_SPRITE_PATH, Texture.class);
         greyBox = assetManager.get(GREY_BOX, Texture.class);
         whiteBox = assetManager.get(WHITE_BOX, Texture.class);
@@ -94,7 +101,14 @@ public class AssetLoader implements Disposable, AssetErrorListener {
         moveSound = assetManager.get(MOVE_SOUND_PATH);
         buttonSound = assetManager.get(BUTTON_SOUND_PATH);
         winSound = assetManager.get(WIN_SOUND_PATH);
-        gameText = assetManager.get(BASE_GAME_TEXT_PATH);
+    }
+
+    public boolean isFinished() {
+        return assetManager.isFinished();
+    }
+
+    public void update() {
+        assetManager.update();
     }
 
     @Override

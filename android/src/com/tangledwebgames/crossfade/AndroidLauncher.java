@@ -9,10 +9,10 @@ import com.badlogic.gdx.pay.android.googlebilling.PurchaseManagerGoogleBilling;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.tangledwebgames.crossfade.auth.SignInListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.tangledwebgames.crossfade.auth.AuthManager;
+import com.tangledwebgames.crossfade.auth.SignInListener;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,34 +22,44 @@ public class AndroidLauncher extends AndroidApplication implements AuthManager {
 	private static final int RC_SIGN_IN = 318151919;
 
 	private SignInListener listener;
+	private List<AuthUI.IdpConfig> providers;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		CrossFadeGame game = new CrossFadeGame();
-		game.purchaseManager = new PurchaseManagerGoogleBilling(this);
-		initialize(game, config);
-	}
-
-	@Override
-	public void signIn(SignInListener listener) {
-		this.listener = listener;
-
-		List<AuthUI.IdpConfig> providers = Arrays.asList(
+		providers = Arrays.asList(
 				new AuthUI.IdpConfig.EmailBuilder().build(),
 				new AuthUI.IdpConfig.PhoneBuilder().build(),
 				new AuthUI.IdpConfig.GoogleBuilder().build()
 		);
+		CrossFadeGame game = new CrossFadeGame();
+		game.purchaseManager = new PurchaseManagerGoogleBilling(this);
+		game.authManager = this;
+		initialize(game, config);
+	}
 
+	@Override
+	public void silentSignIn(SignInListener listener) {
+		this.listener = listener;
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+			listener.onSuccess();
+			return;
+		}
 		AuthUI.getInstance().silentSignIn(this, providers)
 				.addOnCompleteListener(this, task -> {
 					if (task.isSuccessful()) {
 						listener.onSuccess();
 					} else {
-						launchSignInActivity(providers);
+						listener.onError(SignInListener.SignInError.SILENT_SIGN_IN_FAILURE);
 					}
 				});
+	}
+
+	@Override
+	public void signIn(SignInListener listener) {
+		this.listener = listener;
+		launchSignInActivity(providers);
 	}
 
 	private void launchSignInActivity(List<AuthUI.IdpConfig> providers) {

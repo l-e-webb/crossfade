@@ -11,7 +11,8 @@ import com.badlogic.gdx.utils.Align;
 public class CrossFadeDialog extends Table {
 
     private Label textLabel;
-    private TextButton button;
+    private TextButton confirmButton;
+    private TextButton cancelButton;
 
     CrossFadeDialog(Skin skin, Drawable background) {
         super();
@@ -19,42 +20,54 @@ public class CrossFadeDialog extends Table {
         textLabel = new Label("", skin);
         textLabel.setWrap(true);
         textLabel.setAlignment(Align.center);
-        button = new TextButton("", skin);
-
-        //Layout
-        pad(Dimensions.PADDING_LARGE);
-        add(textLabel).expand().fill().center().padBottom(Dimensions.PADDING_LARGE);
-        row();
-        add(button).center().minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH).height(Dimensions.PAUSE_BUTTON_HEIGHT);
-        row();
-    }
-
-    CrossFadeDialog(
-            Skin skin,
-            Drawable background,
-            String labelText,
-            String buttonText,
-            ClickListener clickListener
-    ) {
-        this(skin, background);
-        setLabelText(labelText);
-        setButtonText(buttonText);
-        ;
-        setButtonListener(clickListener);
+        confirmButton = new TextButton("", skin);
+        cancelButton = new TextButton("", skin);
     }
 
     void setLabelText(String text) {
         textLabel.setText(text);
-        invalidateHierarchy();
+        rebuild();
     }
 
-    void setButtonText(String text) {
-        button.setText(text);
-        invalidateHierarchy();
+    void setButtonText(String confirmText, String cancelText) {
+        confirmButton.setText(confirmText);
+        cancelButton.setText(cancelText);
+        rebuild();
     }
 
-    void setButtonListener(ClickListener listener) {
-        button.clearListeners();
-        button.addListener(listener);
+    void setButtonText(String confirmText) {
+        setButtonText(confirmText, "");
+    }
+
+    void setConfirmButtonListener(ClickListener listener) {
+        confirmButton.clearListeners();
+        confirmButton.addListener(listener);
+    }
+
+    void setCancelButtonListener(ClickListener listener) {
+        cancelButton.clearListeners();
+        cancelButton.addListener(listener);
+    }
+
+    private void rebuild() {
+        clearChildren();
+
+        //Layout
+        boolean includeCancelButton = cancelButton.getText().length() > 0;
+        pad(Dimensions.PADDING_LARGE);
+        add(textLabel)
+                .expand().fill().center()
+                .colspan(includeCancelButton ? 2 : 1)
+                .padBottom(Dimensions.PADDING_LARGE);
+        row();
+        add(confirmButton)
+                .center()
+                .height(Dimensions.PAUSE_BUTTON_HEIGHT);
+        if (includeCancelButton) {
+            add(cancelButton)
+                    .center()
+                    .height(Dimensions.PAUSE_BUTTON_HEIGHT);
+        }
+        row();
     }
 }

@@ -23,7 +23,7 @@ public class Dimensions {
     static final float LEVEL_SELECT_ITEM_PADDING = 7f;
 
     static final float TITLE_SCALE = 0.875f;
-    static final float TEXT_SCALE = 1f;
+    static final float TEXT_SCALE = 0.875f;
     static final float SMALL_TEXT_SCALE = 1f;
 
     static final Color SLIDER_COLOR = Color.FOREST;

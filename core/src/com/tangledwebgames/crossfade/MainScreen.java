@@ -4,22 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.tangledwebgames.crossfade.data.AssetLoader;
 import com.tangledwebgames.crossfade.game.Board;
 import com.tangledwebgames.crossfade.game.GameController;
 import com.tangledwebgames.crossfade.ui.UiController;
 
-public class MainScreen implements Screen {
+public class MainScreen extends AbstractScreen {
 
-    public static final float WORLD_WIDTH = 480f;
-    public static final float WORLD_HEIGHT = 768f;
-
-    private Viewport viewport;
     private ShapeRenderer renderer;
     private UiController uiController;
     private GameController gameController;
@@ -64,9 +57,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        viewport.apply();
+        super.render(delta);
         renderer.setProjectionMatrix(viewport.getCamera().combined);
         gameController.act(delta);
         uiController.act(delta);
@@ -76,7 +67,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+        super.resize(width, height);
         uiController.updateTablePositions();
         gameController.updateSize();
     }
