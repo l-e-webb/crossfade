@@ -146,12 +146,26 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
         if (level == Levels.getSandboxLevelIndex()) return;
 
         int moves = gameController.getMoves();
+        boolean isRecord = false;
+        boolean isFirstTime = false;
         if (level <= Levels.getHighestLevelIndex() &&
                 (Levels.records[level] == 0 ||
                         moves < Levels.records[level])) {
+            isRecord = true;
+            if (Levels.records[level] == 0) {
+                isFirstTime = true;
+            }
             Levels.records[level] = moves;
             uiController.newRecordWinText();
         }
+
+        CrossFadeGame.game.analytics.levelComplete(
+                level,
+                gameController.getTime(),
+                moves,
+                isRecord,
+                isFirstTime
+        );
         SoundManager.winSound();
         showWinMenu();
     }
@@ -160,10 +174,12 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
         if (!SettingsManager.isFullVersion() &&
                 level > Levels.MAX_FREE_LEVEL) {
             showPurchaseDialog(true);
+            CrossFadeGame.game.analytics.hitMaxFreeLevel();
             return;
         } else if (level != gameController.getLevel()) {
             gameController.goToLevel(level);
             uiController.newLevel();
+            CrossFadeGame.game.analytics.levelStart(level);
         }
         unpauseGame();
     }
@@ -179,6 +195,7 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
     void resetLevel() {
         gameController.reset();
         uiController.newLevel();
+        CrossFadeGame.game.analytics.levelStart(gameController.getLevel());
         unpauseGame();
     }
 
@@ -192,6 +209,10 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
         SettingsManager.flush();
         GameDataLoader.saveRecords();
         GameDataLoader.saveGameState(gameController.getSavedGameState());
+    }
+
+    GameState getGameState() {
+        return gameController;
     }
 
     void signOut() {
@@ -216,11 +237,13 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
     @Override
     public void onSignIn() {
         uiController.resetTablesOnAuthChange();
+        CrossFadeGame.game.analytics.login();
     }
 
     @Override
     public void onSignOut() {
         uiController.resetTablesOnAuthChange();
+        CrossFadeGame.game.analytics.signOut();
     }
 
     @Override

@@ -74,6 +74,7 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
 
     @Override
     public void onSuccess() {
+        getGame().analytics.login();
         goToMainScreenNextFrame = true;
     }
 

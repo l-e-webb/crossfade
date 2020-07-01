@@ -57,6 +57,8 @@ public class CrossFadePurchaseManager {
 
     private static class CrossFadePurchaseObserver implements PurchaseObserver {
 
+        boolean isRestoring = false;
+
         @Override
         public void handleInstall() {
             Gdx.app.log(LOG_TAG, "Purchase manager installed");
@@ -71,11 +73,13 @@ public class CrossFadePurchaseManager {
 
         @Override
         public void handleRestore(Transaction[] transactions) {
+            isRestoring = true;
             if (transactions != null && transactions.length > 0) {
                 for (Transaction t : transactions) {
                     handlePurchase(t);
                 }
             }
+            isRestoring = false;
             if (!SettingsManager.isFullVersion()) {
                 MainController.instance.showPurchaseNoRestoreDialog();
             }
@@ -92,6 +96,11 @@ public class CrossFadePurchaseManager {
                     transaction.getIdentifier().equals(FULL_VERSION_SKU)) {
                 SettingsManager.setIsFullVersion(true);
                 SettingsManager.flush();
+                if (isRestoring) {
+                    CrossFadeGame.game.analytics.restoreFullVersion();
+                } else {
+                    CrossFadeGame.game.analytics.purchaseFullVersion();
+                }
                 MainController.instance.showPurchaseSuccessDialog();
             }
         }

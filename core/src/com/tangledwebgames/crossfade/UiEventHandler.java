@@ -1,6 +1,7 @@
 package com.tangledwebgames.crossfade;
 
 import com.tangledwebgames.crossfade.data.SettingsManager;
+import com.tangledwebgames.crossfade.game.GameState;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 import com.tangledwebgames.crossfade.ui.UiReceiver;
 
@@ -11,6 +12,7 @@ public class UiEventHandler implements UiReceiver {
     @Override
     public void onPreviousButtonClicked() {
         if (!isMainUiTableEnabled()) return;
+        checkLogLevelSkipped();
         MainController.instance.goToPreviousLevel();
         SoundManager.buttonSound();
     }
@@ -18,6 +20,7 @@ public class UiEventHandler implements UiReceiver {
     @Override
     public void onNextButtonClicked() {
         if (!isMainUiTableEnabled()) return;
+        checkLogLevelSkipped();
         MainController.instance.goToNextLevel();
         SoundManager.buttonSound();
     }
@@ -128,6 +131,7 @@ public class UiEventHandler implements UiReceiver {
 
     @Override
     public void onLevelSelected(int level) {
+        checkLogLevelSkipped();
         MainController.instance.goToLevel(level);
         SoundManager.buttonSound();
     }
@@ -168,6 +172,17 @@ public class UiEventHandler implements UiReceiver {
     public void onPurchaseNoRestoreConfirm() {
         MainController.instance.unpauseGame();
         SoundManager.buttonSound();
+    }
+
+    private void checkLogLevelSkipped() {
+        GameState gameState = MainController.instance.getGameState();
+        if (!gameState.isWinningState() && gameState.getMoves() > 0) {
+            CrossFadeGame.game.analytics.levelSkipped(
+                    gameState.getLevel(),
+                    gameState.getTime(),
+                    gameState.getMoves()
+            );
+        }
     }
 
 }

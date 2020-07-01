@@ -18,7 +18,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 
-public class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener {
+class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener {
 
     // C R O S S = 3 18 15 19 19
     static final int RC_SIGN_IN = 318151919;

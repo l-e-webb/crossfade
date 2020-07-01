@@ -4,7 +4,7 @@ import com.tangledwebgames.crossfade.auth.AuthChangeListener;
 import com.tangledwebgames.crossfade.auth.AuthManager;
 import com.tangledwebgames.crossfade.auth.SignInListener;
 
-public class DesktopAuthManager implements AuthManager {
+class DesktopAuthManager implements AuthManager {
 
     @Override
     public void silentSignIn(SignInListener signInListener) { }

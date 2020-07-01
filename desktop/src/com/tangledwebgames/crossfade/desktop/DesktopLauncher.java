@@ -12,6 +12,7 @@ public class DesktopLauncher {
 		config.height = (int) MainScreen.WORLD_HEIGHT;
 		CrossFadeGame game = new CrossFadeGame();
 		game.authManager = new DesktopAuthManager();
+		game.analytics = new DesktopAnalytics();
 		new LwjglApplication(game, config);
 	}
 }

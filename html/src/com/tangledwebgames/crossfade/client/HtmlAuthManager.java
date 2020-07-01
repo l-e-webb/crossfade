@@ -4,7 +4,7 @@ import com.tangledwebgames.crossfade.auth.AuthChangeListener;
 import com.tangledwebgames.crossfade.auth.AuthManager;
 import com.tangledwebgames.crossfade.auth.SignInListener;
 
-public class HtmlAuthManager implements AuthManager {
+class HtmlAuthManager implements AuthManager {
 
     @Override
     public boolean isAuthAvailable() {
