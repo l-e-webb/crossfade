@@ -44,6 +44,8 @@ public class UiText {
     static String PURCHASE_ERROR;
     static String NO_RESTORE;
     static String LOCKED;
+    static String SIGN_IN;
+    static String SIGN_OUT;
 
     private UiText() {
     }
@@ -86,6 +88,8 @@ public class UiText {
         PURCHASE_ERROR = AssetLoader.instance.gameText.get("PURCHASE_ERROR");
         LOCKED = AssetLoader.instance.gameText.get("LOCKED");
         NO_RESTORE = AssetLoader.instance.gameText.get("NO_RESTORE");
+        SIGN_IN = AssetLoader.instance.gameText.get("SIGN_IN");
+        SIGN_OUT = AssetLoader.instance.gameText.get("SIGN_OUT");
     }
 
 }

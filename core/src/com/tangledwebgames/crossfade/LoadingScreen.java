@@ -13,6 +13,7 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
 
     private boolean loaded;
     private LoadingUiController uiController;
+    private boolean goToMainScreenNextFrame;
 
     @Override
     public void show() {
@@ -20,6 +21,7 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
         UiText.init();
         AssetLoader.instance.loadRemainder(); // Asynchronous.
         loaded = false;
+        goToMainScreenNextFrame = false;
         viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, WORLD_WIDTH, 0);
         uiController = new LoadingUiController(viewport, this);
         uiController.showLoading();
@@ -34,6 +36,11 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
             onLoadComplete();
         } else {
             AssetLoader.instance.update();
+        }
+
+        if (goToMainScreenNextFrame) {
+            goToMainScreen();
+            return;
         }
 
         uiController.act(delta);
@@ -67,7 +74,7 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
 
     @Override
     public void onSuccess() {
-        goToMainScreen();
+        goToMainScreenNextFrame = true;
     }
 
     @Override

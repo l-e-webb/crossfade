@@ -2,6 +2,8 @@ package com.tangledwebgames.crossfade;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.tangledwebgames.crossfade.auth.AuthChangeListener;
+import com.tangledwebgames.crossfade.auth.SignInListener;
 import com.tangledwebgames.crossfade.data.GameDataLoader;
 import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.game.GameController;
@@ -13,7 +15,7 @@ import com.tangledwebgames.crossfade.sound.SoundManager;
 import com.tangledwebgames.crossfade.ui.PauseState;
 import com.tangledwebgames.crossfade.ui.UiController;
 
-public class MainController extends ScreenAdapter implements WinListener {
+public class MainController extends ScreenAdapter implements WinListener, AuthChangeListener {
 
     private static final long RESTORE_GAME_STATE_CUTOFF = 85000000L; // About 1 day
 
@@ -39,12 +41,17 @@ public class MainController extends ScreenAdapter implements WinListener {
 
     @Override
     public void show() {
+        CrossFadeGame.game.authManager.addChangeListener(this);
+        loadSavedGameState();
+    }
+
+    void loadSavedGameState() {
         SavedGameState savedGame = GameDataLoader.loadSavedGameState();
         if (savedGame == null ||
                 !SettingsManager.isFullVersion() && savedGame.getLevel() > Levels.MAX_FREE_LEVEL) {
             goToLevel(1);
         } else if (TimeUtils.timeSinceMillis(savedGame.getTimeStamp()) < RESTORE_GAME_STATE_CUTOFF
-                        && savedGame.getMoves() != 0) {
+                && savedGame.getMoves() != 0) {
             loadGameState(savedGame);
         } else {
             goToLevel(savedGame.getLevel());
@@ -58,11 +65,13 @@ public class MainController extends ScreenAdapter implements WinListener {
 
     @Override
     public void pause() {
-        showMainMenu();
-        SettingsManager.flush();
-        GameDataLoader.saveRecords();
-        GameDataLoader.saveGameState(gameController.getSavedGameState());
+        saveGameState();
         SoundManager.stopMusic();
+    }
+
+    @Override
+    public void dispose() {
+        CrossFadeGame.game.authManager.removeChangeListener(this);
     }
 
     boolean isPaused() {
@@ -179,4 +188,43 @@ public class MainController extends ScreenAdapter implements WinListener {
         unpauseGame();
     }
 
+    void saveGameState() {
+        SettingsManager.flush();
+        GameDataLoader.saveRecords();
+        GameDataLoader.saveGameState(gameController.getSavedGameState());
+    }
+
+    void signOut() {
+        CrossFadeGame.game.authManager.signOut();
+        unpauseGame();
+    }
+
+    void signIn() {
+        CrossFadeGame.game.authManager.silentSignIn(new SignInListener() {
+            @Override
+            public void onSuccess() {}
+
+            @Override
+            public void onError(SignInError error) {
+                if (error == SignInError.SILENT_SIGN_IN_FAILURE) {
+                    CrossFadeGame.game.authManager.signIn(this);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onSignIn() {
+        uiController.resetTablesOnAuthChange();
+    }
+
+    @Override
+    public void onSignOut() {
+        uiController.resetTablesOnAuthChange();
+    }
+
+    @Override
+    public void onAnonymousSignIn() {
+        uiController.resetTablesOnAuthChange();
+    }
 }

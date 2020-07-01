@@ -138,7 +138,7 @@ public class UiController extends UiStage {
     }
 
     private void showPurchaseSuccess() {
-        resetTablesOnPurchase();
+        resetTablesOnAuthChange();
         setDialog(
                 UiText.FULL_VERSION_UNLOCKED,
                 UiText.OK,
@@ -273,9 +273,10 @@ public class UiController extends UiStage {
         dialog.setPosition(x, y, Align.center);
     }
 
-    void resetTablesOnPurchase() {
+    public void resetTablesOnAuthChange() {
         pauseMenu.initContents(receiver);
         levelSelectMenu.createLevelContents();
+        initPause(pauseState);
     }
 
 }

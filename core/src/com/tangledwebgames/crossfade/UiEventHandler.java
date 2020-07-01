@@ -97,6 +97,17 @@ public class UiEventHandler implements UiReceiver {
         SoundManager.buttonSound();
     }
 
+    @Override
+    public void onSignOutButtonClicked() {
+        SoundManager.buttonSound();
+        MainController.instance.signOut();
+    }
+
+    @Override
+    public void onSignInButtonClicked() {
+        SoundManager.buttonSound();
+        MainController.instance.signIn();
+    }
 
     // Win dialog
 
