@@ -1,7 +1,5 @@
 package com.tangledwebgames.crossfade.analytics;
 
-import java.util.Map;
-
 public interface CrossFadeAnalytics {
 
     void appStart();

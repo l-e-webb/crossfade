@@ -91,7 +91,6 @@ class AndroidAnalytics implements CrossFadeAnalytics {
         firebaseAnalytics.logEvent(RESTORE_FULL_VERSION, null);
     }
 
-
     @Override
     public void hitMaxFreeLevel() {
         firebaseAnalytics.logEvent(HIT_MAX_FREE_LEVEL, null);
