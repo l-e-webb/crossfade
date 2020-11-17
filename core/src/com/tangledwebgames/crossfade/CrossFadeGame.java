@@ -7,6 +7,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.pay.PurchaseManager;
 import com.tangledwebgames.crossfade.analytics.CrossFadeAnalytics;
 import com.tangledwebgames.crossfade.auth.AuthManager;
+import com.tangledwebgames.crossfade.data.GameDataManager;
+import com.tangledwebgames.crossfade.data.GdxGameDataManager;
 
 import java.util.Locale;
 
@@ -19,6 +21,7 @@ public class CrossFadeGame extends Game {
     public PurchaseManager purchaseManager;
     public AuthManager authManager;
     public CrossFadeAnalytics analytics;
+    public GameDataManager dataManager;
 
     @Override
     public void create() {
@@ -29,6 +32,9 @@ public class CrossFadeGame extends Game {
         if (APP_TYPE == Application.ApplicationType.Android) {
             Gdx.input.setCatchKey(Input.Keys.MENU, true);
             CrossFadePurchaseManager.setPurchaseManager(purchaseManager);
+        }
+        if (dataManager == null) {
+            dataManager = new GdxGameDataManager();
         }
         this.setScreen(new LoadingScreen());
     }

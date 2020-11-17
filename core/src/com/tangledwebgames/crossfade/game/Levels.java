@@ -1,6 +1,7 @@
 package com.tangledwebgames.crossfade.game;
 
-import com.tangledwebgames.crossfade.data.GameDataLoader;
+import com.tangledwebgames.crossfade.CrossFadeGame;
+import com.tangledwebgames.crossfade.data.LevelLoader;
 
 /**
  * Stores level data, has only static members.
@@ -19,8 +20,8 @@ public class Levels {
     }
 
     public static void init() {
-        GameDataLoader.loadLevelData();
-        records = GameDataLoader.loadRecords();
+        LevelLoader.loadLevelData();
+        records = CrossFadeGame.game.dataManager.loadRecords();
     }
 
     public static int getHighestLevelIndex() {

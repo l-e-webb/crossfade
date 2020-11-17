@@ -4,7 +4,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.tangledwebgames.crossfade.auth.AuthChangeListener;
 import com.tangledwebgames.crossfade.auth.SignInListener;
-import com.tangledwebgames.crossfade.data.GameDataLoader;
+import com.tangledwebgames.crossfade.data.LevelLoader;
 import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.game.GameController;
 import com.tangledwebgames.crossfade.game.GameState;
@@ -46,7 +46,7 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
     }
 
     void loadSavedGameState() {
-        SavedGameState savedGame = GameDataLoader.loadSavedGameState();
+        SavedGameState savedGame = CrossFadeGame.game.dataManager.loadSavedGameState();
         if (savedGame == null ||
                 !SettingsManager.isFullVersion() && savedGame.getLevel() > Levels.MAX_FREE_LEVEL) {
             goToLevel(1);
@@ -207,8 +207,8 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
 
     void saveGameState() {
         SettingsManager.flush();
-        GameDataLoader.saveRecords();
-        GameDataLoader.saveGameState(gameController.getSavedGameState());
+        CrossFadeGame.game.dataManager.saveRecords();
+        CrossFadeGame.game.dataManager.saveGameState(gameController.getSavedGameState());
     }
 
     GameState getGameState() {

@@ -2,13 +2,13 @@ package com.tangledwebgames.crossfade.game;
 
 public class SavedGameState implements GameState {
 
-    private long timeStamp;
-    private int time;
-    private int moves;
-    private int level;
-    private boolean[][] boardState;
+    public long timeStamp;
+    public int time;
+    public int moves;
+    public int level;
+    public boolean[][] boardState;
 
-    SavedGameState() {
+    public SavedGameState() {
         timeStamp = 0L;
         time = 0;
         moves = 0;
@@ -16,7 +16,7 @@ public class SavedGameState implements GameState {
         boardState = new boolean[0][0];
     }
 
-    SavedGameState(long timeStamp, GameState gameState) {
+    public SavedGameState(long timeStamp, GameState gameState) {
         this(
                 timeStamp,
                 gameState.getTime(),
@@ -26,7 +26,7 @@ public class SavedGameState implements GameState {
         );
     }
 
-    SavedGameState(long timeStamp, int time, int moves, int level, boolean[][] boardState) {
+    public SavedGameState(long timeStamp, int time, int moves, int level, boolean[][] boardState) {
         this.timeStamp = timeStamp;
         this.time = time;
         this.moves = moves;

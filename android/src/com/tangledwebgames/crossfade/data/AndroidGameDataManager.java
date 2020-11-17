@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tangledwebgames.crossfade.data.GameDataManager;
+import com.tangledwebgames.crossfade.game.Levels;
 import com.tangledwebgames.crossfade.game.SavedGameState;
 
 import androidx.annotation.NonNull;
@@ -15,13 +16,16 @@ import androidx.annotation.NonNull;
 public class AndroidGameDataManager implements GameDataManager {
 
     private DatabaseReference userRecordsRef;
-    private int[] userRecords = new int[50];
+    private int[] userRecords;
 
     private DatabaseReference savedGameStateRef;
     private SavedGameState savedGameState;
 
     @Override
     public int[] loadRecords() {
+        if (userRecords == null) {
+            userRecords = new int[Levels.getHighestLevelIndex()];
+        }
         return userRecords;
     }
 
