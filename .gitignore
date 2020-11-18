@@ -67,7 +67,7 @@ build/
 .DS_Store
 
 ## Project specific
-*_record.json
+*_records.json
 saved_game.json
 
 ## Google
