@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.tangledwebgames.crossfade.MainController;
 import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.game.GameState;
 
@@ -277,6 +278,13 @@ public class UiController extends UiStage {
         pauseMenu.initContents(receiver);
         levelSelectMenu.createLevelContents();
         initPause(pauseState);
+    }
+
+    public void resetRecordDisplay() {
+        mainUiTable.resetRecordDisplay(gameState.getLevel());
+        if (pauseState == PauseState.LEVEL_SELECT) {
+            levelSelectMenu.updateAll();
+        }
     }
 
 }

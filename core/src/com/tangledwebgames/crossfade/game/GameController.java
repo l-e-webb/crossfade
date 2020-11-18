@@ -1,8 +1,8 @@
 package com.tangledwebgames.crossfade.game;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.tangledwebgames.crossfade.data.savedgame.SavedGameState;
 
 public abstract class GameController extends Stage implements GameState {
 
@@ -85,7 +85,7 @@ public abstract class GameController extends Stage implements GameState {
     protected abstract void resetBoard();
 
     public SavedGameState getSavedGameState() {
-        return new SavedGameState(TimeUtils.millis(), this);
+        return new SavedGameState(this);
     }
 
     public void setToGameState(GameState state) {

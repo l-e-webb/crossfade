@@ -14,14 +14,12 @@ public class Levels {
     public static boolean[][] trollLevel;
     public static boolean[][] randomLevelPlaceholder;
     public static boolean[][] sandboxLevelPlaceholder;
-    public static int[] records;
 
     private Levels() {
     }
 
     public static void init() {
         LevelLoader.loadLevelData();
-        records = CrossFadeGame.game.dataManager.loadRecords();
     }
 
     public static int getHighestLevelIndex() {

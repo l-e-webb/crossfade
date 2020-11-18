@@ -8,7 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.tangledwebgames.crossfade.CrossFadeGame;
 import com.tangledwebgames.crossfade.MainScreen;
+import com.tangledwebgames.crossfade.data.userdata.UserRecordManager;
 import com.tangledwebgames.crossfade.game.Levels;
 
 class MainUiTable extends Table {
@@ -152,11 +154,16 @@ class MainUiTable extends Table {
         } else if (level == Levels.getTrollLevelIndex()) {
             levelNum.setText(UiText.UNKNOWN_LEVEL);
         }
-        if (level > Levels.getHighestLevelIndex() || Levels.records[level] == 0) {
+        resetRecordDisplay(level);
+    }
+
+    void resetRecordDisplay(int level) {
+        int recordMoves = CrossFadeGame.game.recordManager.getRecordMoves(level);
+        if (level > Levels.getHighestLevelIndex() || recordMoves <= 0) {
             bestMovesNum.setText("-");
             bestMovesNum.setStyle(deemphasisStyle);
         } else {
-            bestMovesNum.setText(Levels.records[level] + "");
+            bestMovesNum.setText(recordMoves + "");
             bestMovesNum.setStyle(highlightStyle);
         }
     }

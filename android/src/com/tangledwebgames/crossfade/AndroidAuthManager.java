@@ -133,4 +133,10 @@ class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener 
     public boolean isAuthAvailable() {
         return true;
     }
+
+    @Override
+    public String getUserId() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return (user != null && !user.isAnonymous()) ? user.getUid() : ANONYMOUS_USER_ID;
+    }
 }

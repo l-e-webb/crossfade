@@ -56,6 +56,7 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
         if (getGame().authManager.isAuthAvailable()) {
             getGame().authManager.silentSignIn(this);
         } else {
+            getGame().recordManager.refreshRecords();
             goToMainScreen();
         }
     }
@@ -75,7 +76,6 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
     @Override
     public void onSuccess() {
         getGame().analytics.login();
-        goToMainScreenNextFrame = true;
     }
 
     @Override

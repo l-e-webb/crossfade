@@ -30,4 +30,9 @@ class DesktopAuthManager implements AuthManager {
 
     @Override
     public void removeChangeListener(AuthChangeListener listener) { }
+
+    @Override
+    public String getUserId() {
+        return DESKTOP_USER_ID;
+    }
 }
