@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.tangledwebgames.crossfade.MainController;
 import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.game.GameState;
 

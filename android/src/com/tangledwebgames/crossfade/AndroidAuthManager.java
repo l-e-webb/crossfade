@@ -3,6 +3,8 @@ package com.tangledwebgames.crossfade;
 import android.app.Activity;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -15,8 +17,6 @@ import com.tangledwebgames.crossfade.auth.SignInListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import androidx.annotation.NonNull;
 
 class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener {
 

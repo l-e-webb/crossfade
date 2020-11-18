@@ -7,8 +7,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.pay.PurchaseManager;
 import com.tangledwebgames.crossfade.analytics.CrossFadeAnalytics;
 import com.tangledwebgames.crossfade.auth.AuthManager;
-import com.tangledwebgames.crossfade.data.userdata.UserRecordManager;
 import com.tangledwebgames.crossfade.data.userdata.GdxUserRecordManager;
+import com.tangledwebgames.crossfade.data.userdata.UserRecordManager;
 
 import java.util.Locale;
 

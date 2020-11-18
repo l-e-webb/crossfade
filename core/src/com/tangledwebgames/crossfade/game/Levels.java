@@ -1,6 +1,5 @@
 package com.tangledwebgames.crossfade.game;
 
-import com.tangledwebgames.crossfade.CrossFadeGame;
 import com.tangledwebgames.crossfade.data.LevelLoader;
 
 /**

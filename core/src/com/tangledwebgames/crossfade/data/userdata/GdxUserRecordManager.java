@@ -5,8 +5,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
 import com.tangledwebgames.crossfade.CrossFadeGame;
-import com.tangledwebgames.crossfade.auth.AuthChangeListener;
-import com.tangledwebgames.crossfade.auth.SignInListener;
 
 /**
  * Generic user record manager using libGDX local storage, which has existing implementations each
@@ -29,22 +27,38 @@ public class GdxUserRecordManager extends UserRecordManager {
     @Override
     public void refreshRecords() {
         String userId = CrossFadeGame.game.authManager.getUserId();
+
+        if (!userRecords.userId.equals(userId)) {
+            // Save prior user's records.
+            saveRecords();
+        }
+
+        UserRecords newRecords = loadRecords(userId);
+        if (consolidateRecords(newRecords)) {
+            saveRecords();
+        }
+    }
+
+    private UserRecords loadRecords(String userId) {
+        UserRecords records = new UserRecords(userId);
         String filePath = userId + "_" + USER_RECORD_FILEPATH;
-        userRecords = new UserRecords(userId);
         if (!Gdx.files.isLocalStorageAvailable()) {
-            return;
+            return records;
         }
         FileHandle recordsFile = Gdx.files.local(filePath);
         if (!recordsFile.exists()) {
-            return;
+            return records;
         }
+
         try {
-            userRecords = new Json().fromJson(UserRecords.class, recordsFile);
+            records = new Json().fromJson(UserRecords.class, recordsFile);
         } catch (SerializationException e) {
             Gdx.app.error(LOG_TAG, "Error deserializing record data JSON.", e);
         } catch (Exception e) {
             Gdx.app.error(LOG_TAG, "Error loading record data.", e);
         }
+
+        return records;
     }
 
     private void saveRecords() {

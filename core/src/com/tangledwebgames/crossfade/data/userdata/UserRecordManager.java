@@ -40,6 +40,7 @@ public abstract class UserRecordManager implements AuthChangeListener {
 
     public void initialize() {
         CrossFadeGame.game.authManager.addChangeListener(this);
+        userRecords = new UserRecords(CrossFadeGame.game.authManager.getUserId());
     }
 
     public UserRecords getUserRecords() {
@@ -71,6 +72,37 @@ public abstract class UserRecordManager implements AuthChangeListener {
 
     public boolean hasBeatenLevel(int level) {
         return getRecord(level) != null;
+    }
+
+    protected boolean consolidateRecords(UserRecords newRecords) {
+        boolean recordsDifferent = false;
+        UserRecords updateNewRecords = RecordUpdater.updateRecord(newRecords);
+        if (updateNewRecords != newRecords) {
+            recordsDifferent = true;
+            newRecords = updateNewRecords;
+        }
+
+        if (userRecords.userId.equals(newRecords.userId)) {
+            // Combine existing and new records.
+            for (LevelRecord record : newRecords.records.values()) {
+                if (isRecord(record.level, record.moves)) {
+                    addRecord(record);
+                    recordsDifferent = true;
+                }
+            }
+            if (userRecords.records.size() > newRecords.records.size()) {
+                recordsDifferent = true;
+            }
+        } else {
+            // Replace existing records with new user's records.
+            userRecords = newRecords;
+            recordsDifferent = true;
+        }
+
+        if (recordsDifferent) {
+            notifyRecordChangeListeners();
+        }
+        return recordsDifferent;
     }
 
     public void addRecordChangeListener(RecordChangeListener listener) {
