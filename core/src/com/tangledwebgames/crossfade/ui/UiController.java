@@ -226,8 +226,7 @@ public class UiController extends UiStage {
     }
 
     private void setDialog(String labelText, String buttonText, ClickListener buttonListener) {
-        dialog.setLabelText(labelText);
-        dialog.setButtonText(buttonText);
+        dialog.setText(labelText, "", buttonText, "");
         dialog.setConfirmButtonListener(buttonListener);
     }
 

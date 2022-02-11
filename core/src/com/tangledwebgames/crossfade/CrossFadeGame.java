@@ -20,6 +20,7 @@ public class CrossFadeGame extends Game {
     public static Locale LOCALE;
     public static final String VERSION = "1.3.2";
 
+    public Boolean debug = false;
     public PurchaseManager purchaseManager;
     public AuthManager authManager;
     public CrossFadeAnalytics analytics;
@@ -30,6 +31,11 @@ public class CrossFadeGame extends Game {
         APP_TYPE = Gdx.app.getType();
         LOCALE = Locale.getDefault();
         game = this;
+        if (debug) {
+            Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        } else {
+            Gdx.app.setLogLevel(Application.LOG_NONE);
+        }
         analytics.appStart();
         if (APP_TYPE == Application.ApplicationType.Android) {
             Gdx.input.setCatchKey(Input.Keys.MENU, true);

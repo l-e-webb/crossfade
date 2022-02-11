@@ -35,7 +35,6 @@ public class LoadingUiController extends UiStage {
         loadingTable = new Table();
         loadingTable.setFillParent(true);
         loadingTable.add(loading).center();
-        loadingTable.row();
         loadingTable.setVisible(false);
         addActor(loadingTable);
     }
@@ -56,13 +55,29 @@ public class LoadingUiController extends UiStage {
     }
 
     public void showLoginPrompt() {
+        showDialog(
+                UiText.LOGIN_PROMPT_HEADER,
+                UiText.LOGIN_PROMPT_BODY,
+                UiText.SIGN_IN,
+                UiText.LOGIN_PROMPT_CANCEL
+        );
+    }
+
+    public void showErrorDialog(Boolean isNetworkError) {
+        showDialog(
+                UiText.LOGIN_PROMPT_ERROR_HEADER,
+                (isNetworkError) ? UiText.LOGIN_PROMPT_NETWORK_ERROR_BODY : UiText.LOGIN_PROMPT_UNKNOWN_ERROR_BODY,
+                UiText.LOGIN_PROMPT_TRY_AGAIN,
+                UiText.LOGIN_PROMPT_CANCEL
+        );
+    }
+
+    private void showDialog(
+            String headerText, String labelText, String confirmText, String cancelText
+    ) {
         hideLoading();
         loginDialog.setVisible(true);
-        setDialogText(
-                "Would you like to log in?",
-                "Okay",
-                "Nah"
-        );
+        loginDialog.setText(headerText, labelText, confirmText, cancelText);
         loginDialog.setConfirmButtonListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -77,11 +92,6 @@ public class LoadingUiController extends UiStage {
                 loadingScreen.onNoLoginButtonClicked();
             }
         });
-    }
-
-    private void setDialogText(String labelText, String confirmText, String cancelText) {
-        loginDialog.setLabelText(labelText);
-        loginDialog.setButtonText(confirmText, cancelText);
     }
 
     public void updatePositions() {

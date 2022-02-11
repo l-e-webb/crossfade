@@ -1,5 +1,7 @@
 package com.tangledwebgames.crossfade.ui;
 
+import static com.tangledwebgames.crossfade.game.Levels.getRandomizedLevelIndex;
+
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -21,8 +23,6 @@ import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.game.Board;
 import com.tangledwebgames.crossfade.game.BoardGroup;
 import com.tangledwebgames.crossfade.game.Levels;
-
-import static com.tangledwebgames.crossfade.game.Levels.getRandomizedLevelIndex;
 
 class LevelSelectMenu extends Table {
 

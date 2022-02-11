@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Align;
 
 public class CrossFadeDialog extends Table {
 
+    private Label headerLabel;
     private Label textLabel;
     private TextButton confirmButton;
     private TextButton cancelButton;
@@ -17,11 +18,32 @@ public class CrossFadeDialog extends Table {
     CrossFadeDialog(Skin skin, Drawable background) {
         super();
         this.background(background);
-        textLabel = new Label("", skin);
+        headerLabel = new Label("", skin);
+        headerLabel.setWrap(true);
+        headerLabel.setAlignment(Align.center);
+        textLabel = new Label("", skin, "smallStyle");
         textLabel.setWrap(true);
         textLabel.setAlignment(Align.center);
         confirmButton = new TextButton("", skin);
         cancelButton = new TextButton("", skin);
+    }
+
+    void setText(
+            String headerText,
+            String labelText,
+            String confirmText,
+            String cancelText
+    ) {
+        headerLabel.setText(headerText);
+        textLabel.setText(labelText);
+        confirmButton.setText(confirmText);
+        cancelButton.setText(cancelText);
+        rebuild();
+    }
+
+    void setHeaderText(String text) {
+        headerLabel.setText(text);
+        rebuild();
     }
 
     void setLabelText(String text) {
@@ -54,11 +76,20 @@ public class CrossFadeDialog extends Table {
 
         //Layout
         boolean includeCancelButton = cancelButton.getText().length() > 0;
+        boolean includeHeader = headerLabel.getText().length() > 0;
+        boolean includeLabel = textLabel.getText().length > 0;
         pad(Dimensions.PADDING_LARGE);
-        add(textLabel)
-                .expand().fill().center()
-                .colspan(includeCancelButton ? 2 : 1)
-                .padBottom(Dimensions.PADDING_LARGE);
+        defaults().space(Dimensions.PADDING_LARGE);
+        if (includeHeader) {
+            row();
+            add(headerLabel)
+                    .growX().center().colspan(includeCancelButton ? 2 : 1);
+        }
+        if (includeLabel) {
+            row();
+            add(textLabel)
+                    .grow().center().colspan(includeCancelButton ? 2 : 1);
+        }
         row();
         add(confirmButton)
                 .center()
@@ -68,6 +99,5 @@ public class CrossFadeDialog extends Table {
                     .center()
                     .height(Dimensions.PAUSE_BUTTON_HEIGHT);
         }
-        row();
     }
 }

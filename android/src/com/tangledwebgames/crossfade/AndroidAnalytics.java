@@ -27,7 +27,7 @@ class AndroidAnalytics implements CrossFadeAnalytics {
     private static final String IS_RECORD = "is_record";
     private static final String IS_FIRST_TIME = "is_first_time";
 
-    private FirebaseAnalytics firebaseAnalytics;
+    private final FirebaseAnalytics firebaseAnalytics;
 
     AndroidAnalytics(FirebaseAnalytics firebaseAnalytics) {
         this.firebaseAnalytics = firebaseAnalytics;

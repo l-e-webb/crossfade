@@ -13,6 +13,10 @@ public abstract class UserRecordManager implements AuthChangeListener {
 
     private static final String LOG_TAG = UserRecordManager.class.getSimpleName();
 
+    protected static String getLevelKey(int level) {
+        return "L_" + level;
+    }
+
     protected UserRecords userRecords;
     private final Set<RecordChangeListener> recordChangeListeners = new HashSet<>();
 
@@ -39,8 +43,8 @@ public abstract class UserRecordManager implements AuthChangeListener {
     }
 
     public void initialize() {
-        CrossFadeGame.game.authManager.addChangeListener(this);
         userRecords = new UserRecords(CrossFadeGame.game.authManager.getUserId());
+        CrossFadeGame.game.authManager.addChangeListener(this);
     }
 
     public UserRecords getUserRecords() {
@@ -49,7 +53,7 @@ public abstract class UserRecordManager implements AuthChangeListener {
 
     @Nullable
     public LevelRecord getRecord(int level) {
-        return userRecords.records.get(level + "");
+        return userRecords.records.get(getLevelKey(level));
     }
 
     public int getRecordMoves(int level) {
@@ -62,7 +66,7 @@ public abstract class UserRecordManager implements AuthChangeListener {
         if (priorRecord != null && priorRecord.moves < record.moves) {
             Gdx.app.log(LOG_TAG, "Overwriting record with fewer moves.");
         }
-        userRecords.records.put(record.level + "", record);
+        userRecords.records.put(getLevelKey(record.level), record);
     }
 
     public boolean isRecord(int level, int moves) {
@@ -77,7 +81,7 @@ public abstract class UserRecordManager implements AuthChangeListener {
     protected boolean consolidateRecords(UserRecords newRecords) {
         boolean recordsDifferent = false;
         UserRecords updateNewRecords = RecordUpdater.updateRecord(newRecords);
-        if (updateNewRecords != newRecords) {
+        if (!updateNewRecords.equals(newRecords)) {
             recordsDifferent = true;
             newRecords = updateNewRecords;
         }

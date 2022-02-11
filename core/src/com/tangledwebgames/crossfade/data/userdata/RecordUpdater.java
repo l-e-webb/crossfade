@@ -8,7 +8,10 @@ class RecordUpdater {
      * @return Updated UserRecords, now consistent with current version.
      */
     static UserRecords updateRecord(UserRecords records) {
-        // No version update has changed levels yet.
-        return records;
+        UserRecords updatedRecords = new UserRecords(records.userId);
+
+        // No version-based changes yet; simply return identical records.
+        updatedRecords.records.putAll(records.records);
+        return updatedRecords;
     }
 }

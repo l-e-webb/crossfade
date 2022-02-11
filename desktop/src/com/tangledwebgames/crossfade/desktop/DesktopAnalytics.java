@@ -2,6 +2,9 @@ package com.tangledwebgames.crossfade.desktop;
 
 import com.tangledwebgames.crossfade.analytics.CrossFadeAnalytics;
 
+/**
+ * Empty methods; desktop version does not implement analytics.
+ */
 class DesktopAnalytics implements CrossFadeAnalytics {
 
     @Override

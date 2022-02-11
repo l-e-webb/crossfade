@@ -19,30 +19,30 @@ public class AndroidUserRecordManager extends UserRecordManager implements Value
 
     private static final String LOG_TAG = AndroidUserRecordManager.class.getSimpleName();
 
-    private static final String USER_DATA_KEY = "userData";
+    private static final String USER_DATA_KEY = "users";
     private static final String RECORDS_KEY = "records";
 
     private DatabaseReference userDataRef;
 
     @Override
     public void saveRecord(LevelRecord record) {
-        Gdx.app.log(LOG_TAG, "Saving record."); // TODO: remove log
+        Gdx.app.log(LOG_TAG, "Saving record.");
         addRecord(record);
         if (userDataRef != null) {
-            Gdx.app.log(LOG_TAG, "Updating record in database."); // TODO: remove log
-            userDataRef.child(RECORDS_KEY).child(record.level + "").setValue(record);
+            Gdx.app.log(LOG_TAG, "Updating record in database.");
+            userDataRef.child(RECORDS_KEY).child(getLevelKey(record.level)).setValue(record);
         }
     }
 
     @Override
     public void refreshRecords() {
-        Gdx.app.log(LOG_TAG, "Refreshing records."); // TODO: remove log
+        Gdx.app.log(LOG_TAG, "Refreshing records.");
         unplugDataRef();
         FirebaseUser user = getFirebaseUser();
 
         // If user is anonymous
         if (user == null || user.isAnonymous()) {
-            Gdx.app.log(LOG_TAG, "Refreshing for anonymous user."); // TODO: remove log
+            Gdx.app.log(LOG_TAG, "Refreshing for anonymous user.");
              if (userRecords == null || !userRecords.userId.equals(AuthManager.ANONYMOUS_USER_ID)) {
                  userRecords = new UserRecords(AuthManager.ANONYMOUS_USER_ID);
                  notifyRecordChangeListeners();
@@ -51,9 +51,9 @@ public class AndroidUserRecordManager extends UserRecordManager implements Value
         }
 
 
-        Gdx.app.log(LOG_TAG, "Refreshing record for user: " + user.getUid()); // TODO: remove log
+        Gdx.app.log(LOG_TAG, "Refreshing record for user: " + user.getUid());
         if (!userRecords.userId.equals(user.getUid())) {
-            Gdx.app.log(LOG_TAG, "Removing prior user record in refresh."); // TODO: remove log
+            Gdx.app.log(LOG_TAG, "Removing prior user record in refresh.");
             userRecords = new UserRecords(user.getUid());
             notifyRecordChangeListeners();
         }
@@ -63,7 +63,7 @@ public class AndroidUserRecordManager extends UserRecordManager implements Value
 
     @Override
     public void onDataChange(@NonNull DataSnapshot snapshot) {
-        Gdx.app.log(LOG_TAG, "onDataChange callback fired, data key: " + snapshot.getKey()); // TODO: remove log
+        Gdx.app.log(LOG_TAG, "onDataChange callback fired, data key: " + snapshot.getKey());
         FirebaseUser currentUser = getFirebaseUser();
         if (!currentUser.getUid().equals(snapshot.getKey())) {
             // Data change is not for current user.
@@ -72,23 +72,28 @@ public class AndroidUserRecordManager extends UserRecordManager implements Value
             return;
         }
 
-        UserRecords fetchedRecords = snapshot.getValue(UserRecords.class);
+        UserRecords fetchedRecords = null;
+        try {
+            fetchedRecords = snapshot.getValue(UserRecords.class);
+        } catch (Exception e) {
+            Gdx.app.error(LOG_TAG, "Error parsing user records", e);
+        }
         if (fetchedRecords == null) {
             initializeNewUserData(currentUser);
         } else if (consolidateRecords(fetchedRecords)) {
-            Gdx.app.log(LOG_TAG, "Updating database after consolidation."); // TODO: remove log
             // Update database if consolidation causes changes.
+            Gdx.app.debug(LOG_TAG, "Updating database after consolidation.");
             userDataRef.setValue(userRecords);
         }
     }
 
     @Override
     public void onCancelled(@NonNull DatabaseError error) {
-        Gdx.app.log(LOG_TAG, "Database error fetching user data: " + error.getMessage());
+        Gdx.app.error(LOG_TAG, "Database error fetching user data: " + error.getMessage());
     }
 
     private void initializeNewUserData(FirebaseUser user) {
-        Gdx.app.log(LOG_TAG, "Initializing for new user: " + user.getUid()); // TODO: remove log
+        Gdx.app.debug(LOG_TAG, "Initializing for new user: " + user.getUid());
         userRecords = new UserRecords(user.getUid());
         unplugDataRef();
         userDataRef = getUserDataReference(user);
