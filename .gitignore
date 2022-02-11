@@ -68,3 +68,7 @@ build/
 
 ## Project specific
 records.json
+saved_game.json
+
+## Google
+google-services.json

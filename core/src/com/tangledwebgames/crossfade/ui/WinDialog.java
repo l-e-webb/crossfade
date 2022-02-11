@@ -7,18 +7,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.game.Levels;
-import com.tangledwebgames.crossfade.sound.SoundManager;
 
-class WinTable extends Table {
+class WinDialog extends Table {
 
     private Label winMessage;
     private Label winTime;
     private Label winMoves;
     private Label winLevel;
-    
-    WinTable(Skin skin, Drawable background) {
+
+    WinDialog(Skin skin, UiReceiver receiver, Drawable background) {
         super();
         //Uncomment to see wireframe.
         //setDebug(true);
@@ -32,9 +30,7 @@ class WinTable extends Table {
         winContinueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainScreen.instance.unpauseGame();
-                MainScreen.instance.goToNextLevel();
-                SoundManager.buttonSound();
+                receiver.onWinContinueButtonClicked();
             }
         });
         add(winMessage).spaceBottom(Dimensions.PADDING_LARGE);

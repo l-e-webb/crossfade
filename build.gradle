@@ -11,8 +11,9 @@ buildscript {
 
     dependencies {
         classpath 'org.wisepersist:gwt-gradle-plugin:1.0.9'
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:3.4.1'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.7'
+        classpath 'com.google.gms:google-services:4.3.3'
     }
 }
 
@@ -45,7 +46,6 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-
     }
 }
 
@@ -58,6 +58,10 @@ project(":android") {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         api "com.badlogicgames.gdxpay:gdx-pay-android-googlebilling:$gdxPayVersion"
+        implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
+        implementation 'com.google.firebase:firebase-analytics:17.4.3'
+        implementation 'com.google.firebase:firebase-auth:19.3.1'
+        implementation 'com.google.firebase:firebase-database:19.3.1'
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"

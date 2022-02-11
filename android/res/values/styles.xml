@@ -7,6 +7,10 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowFullscreen">true</item>
+
+        <item name="android:colorPrimary">#10f010</item>
+        <item name="android:colorPrimaryDark">#108810</item>
+        <item name="android:colorAccent">#ffa500</item>
     </style>
 
 </resources>

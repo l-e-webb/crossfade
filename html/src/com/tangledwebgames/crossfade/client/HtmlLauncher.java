@@ -23,7 +23,10 @@ public class HtmlLauncher extends GwtApplication {
 
     @Override
     public ApplicationListener createApplicationListener () {
-        return new CrossFadeGame();
+        CrossFadeGame game = new CrossFadeGame();
+        game.authManager = new HtmlAuthManager();
+        game.analytics = new HtmlAnalytics();
+        return game;
     }
 
     @Override

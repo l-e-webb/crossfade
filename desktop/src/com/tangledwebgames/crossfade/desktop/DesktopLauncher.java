@@ -10,6 +10,9 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = (int) MainScreen.WORLD_WIDTH;
 		config.height = (int) MainScreen.WORLD_HEIGHT;
-		new LwjglApplication(new CrossFadeGame(), config);
+		CrossFadeGame game = new CrossFadeGame();
+		game.authManager = new DesktopAuthManager();
+		game.analytics = new DesktopAnalytics();
+		new LwjglApplication(game, config);
 	}
 }

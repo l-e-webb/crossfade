@@ -48,7 +48,7 @@ public class BoardGroup extends Group {
 
     public void updateSize(float x, float y, float boardSize) {
         float tilePadding = boardSize * Board.TILE_PADDING_RATIO;
-        float actualSize = boardSize- tilePadding;
+        float actualSize = boardSize - tilePadding;
         updateSize(x, y, actualSize, tilePadding);
     }
 }
