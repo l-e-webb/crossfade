@@ -11,6 +11,7 @@ import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.tangledwebgames.crossfade.android.R;
 import com.tangledwebgames.crossfade.auth.AuthChangeListener;
 import com.tangledwebgames.crossfade.auth.AuthManager;
 import com.tangledwebgames.crossfade.auth.SignInListener;
@@ -80,6 +81,7 @@ class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener 
                 .setAvailableProviders(providers)
                 .enableAnonymousUsersAutoUpgrade()
                 .setIsSmartLockEnabled(true, false)
+                .setTheme(R.style.GdxTheme)
                 .build();
         activity.startActivityForResult(intent, RC_SIGN_IN);
     }
