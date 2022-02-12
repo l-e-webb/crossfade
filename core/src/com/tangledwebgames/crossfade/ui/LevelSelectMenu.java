@@ -1,5 +1,7 @@
 package com.tangledwebgames.crossfade.ui;
 
+import static com.tangledwebgames.crossfade.game.Levels.getRandomizedLevelIndex;
+
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,13 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
+import com.tangledwebgames.crossfade.CrossFadeGame;
 import com.tangledwebgames.crossfade.MainScreen;
 import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.game.Board;
 import com.tangledwebgames.crossfade.game.BoardGroup;
 import com.tangledwebgames.crossfade.game.Levels;
-
-import static com.tangledwebgames.crossfade.game.Levels.getRandomizedLevelIndex;
 
 class LevelSelectMenu extends Table {
 
@@ -208,9 +209,10 @@ class LevelSelectMenu extends Table {
             if (!SettingsManager.isFullVersion() && level > Levels.MAX_FREE_LEVEL) {
                 return;
             }
+            int record = CrossFadeGame.game.recordManager.getRecordMoves(level);
             String recordLabelText;
-            if (level <= Levels.getHighestLevelIndex() && Levels.records[level] > 0) {
-                recordLabelText = "" + Levels.records[level];
+            if (level <= Levels.getHighestLevelIndex() && record > 0) {
+                recordLabelText = "" + record;
                 recordNumLabel.setStyle(skin.get("highlightStyle", Label.LabelStyle.class));
             } else {
                 recordLabelText = "-";

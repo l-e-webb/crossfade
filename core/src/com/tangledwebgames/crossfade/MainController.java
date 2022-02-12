@@ -2,28 +2,37 @@ package com.tangledwebgames.crossfade;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.tangledwebgames.crossfade.analytics.CrossFadeAnalytics;
 import com.tangledwebgames.crossfade.auth.AuthChangeListener;
+import com.tangledwebgames.crossfade.auth.AuthManager;
 import com.tangledwebgames.crossfade.auth.SignInListener;
-import com.tangledwebgames.crossfade.data.GameDataLoader;
 import com.tangledwebgames.crossfade.data.SettingsManager;
+import com.tangledwebgames.crossfade.data.savedgame.SavedGameManager;
+import com.tangledwebgames.crossfade.data.savedgame.SavedGameState;
+import com.tangledwebgames.crossfade.data.userdata.RecordChangeListener;
+import com.tangledwebgames.crossfade.data.userdata.UserRecordManager;
 import com.tangledwebgames.crossfade.game.GameController;
 import com.tangledwebgames.crossfade.game.GameState;
 import com.tangledwebgames.crossfade.game.Levels;
-import com.tangledwebgames.crossfade.game.SavedGameState;
 import com.tangledwebgames.crossfade.game.WinListener;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 import com.tangledwebgames.crossfade.ui.PauseState;
 import com.tangledwebgames.crossfade.ui.UiController;
 
-public class MainController extends ScreenAdapter implements WinListener, AuthChangeListener {
+public class MainController extends ScreenAdapter
+        implements WinListener, AuthChangeListener, RecordChangeListener {
 
     private static final long RESTORE_GAME_STATE_CUTOFF = 85000000L; // About 1 day
 
     static MainController instance;
 
     private boolean isPaused = true;
-    private GameController gameController;
-    private UiController uiController;
+    private final GameController gameController;
+    private final UiController uiController;
+
+    private final CrossFadeAnalytics analytics;
+    private final AuthManager authManager;
+    private final UserRecordManager recordManager;
 
     static void init(GameController gameController, UiController uiController) {
         instance = new MainController(gameController, uiController);
@@ -35,18 +44,23 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
     ) {
         this.gameController = gameController;
         this.uiController = uiController;
+        analytics = CrossFadeGame.game.analytics;
+        authManager = CrossFadeGame.game.authManager;
+        recordManager = CrossFadeGame.game.recordManager;
+        authManager.addChangeListener(this);
         gameController.setWinListener(this);
+        recordManager.addRecordChangeListener(this);
         uiController.init(gameController, new UiEventHandler());
     }
 
     @Override
     public void show() {
-        CrossFadeGame.game.authManager.addChangeListener(this);
         loadSavedGameState();
     }
 
     void loadSavedGameState() {
-        SavedGameState savedGame = GameDataLoader.loadSavedGameState();
+        SavedGameManager.loadSavedGameState();
+        SavedGameState savedGame = SavedGameManager.getSavedGameState();
         if (savedGame == null ||
                 !SettingsManager.isFullVersion() && savedGame.getLevel() > Levels.MAX_FREE_LEVEL) {
             goToLevel(1);
@@ -71,7 +85,8 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
 
     @Override
     public void dispose() {
-        CrossFadeGame.game.authManager.removeChangeListener(this);
+        authManager.removeChangeListener(this);
+        recordManager.removeRecordChangeListener(this);
     }
 
     boolean isPaused() {
@@ -148,18 +163,16 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
         int moves = gameController.getMoves();
         boolean isRecord = false;
         boolean isFirstTime = false;
-        if (level <= Levels.getHighestLevelIndex() &&
-                (Levels.records[level] == 0 ||
-                        moves < Levels.records[level])) {
-            isRecord = true;
-            if (Levels.records[level] == 0) {
-                isFirstTime = true;
+        if (level <= Levels.getHighestLevelIndex()) {
+            isRecord = recordManager.isRecord(level, moves);
+            isFirstTime = !recordManager.hasBeatenLevel(level);
+            if (isRecord) {
+                uiController.newRecordWinText();
+                recordManager.saveRecord(level, moves);
             }
-            Levels.records[level] = moves;
-            uiController.newRecordWinText();
         }
 
-        CrossFadeGame.game.analytics.levelComplete(
+        analytics.levelComplete(
                 level,
                 gameController.getTime(),
                 moves,
@@ -174,12 +187,12 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
         if (!SettingsManager.isFullVersion() &&
                 level > Levels.MAX_FREE_LEVEL) {
             showPurchaseDialog(true);
-            CrossFadeGame.game.analytics.hitMaxFreeLevel();
+            analytics.hitMaxFreeLevel();
             return;
         } else if (level != gameController.getLevel()) {
             gameController.goToLevel(level);
             uiController.newLevel();
-            CrossFadeGame.game.analytics.levelStart(level);
+            analytics.levelStart(level);
         }
         unpauseGame();
     }
@@ -195,7 +208,7 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
     void resetLevel() {
         gameController.reset();
         uiController.newLevel();
-        CrossFadeGame.game.analytics.levelStart(gameController.getLevel());
+        analytics.levelStart(gameController.getLevel());
         unpauseGame();
     }
 
@@ -207,8 +220,7 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
 
     void saveGameState() {
         SettingsManager.flush();
-        GameDataLoader.saveRecords();
-        GameDataLoader.saveGameState(gameController.getSavedGameState());
+        SavedGameManager.saveGameState(gameController.getSavedGameState());
     }
 
     GameState getGameState() {
@@ -216,19 +228,19 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
     }
 
     void signOut() {
-        CrossFadeGame.game.authManager.signOut();
+        authManager.signOut();
         unpauseGame();
     }
 
     void signIn() {
-        CrossFadeGame.game.authManager.silentSignIn(new SignInListener() {
+        authManager.silentSignIn(new SignInListener() {
             @Override
             public void onSuccess() {}
 
             @Override
             public void onError(SignInError error) {
                 if (error == SignInError.SILENT_SIGN_IN_FAILURE) {
-                    CrossFadeGame.game.authManager.signIn(this);
+                    authManager.signIn(this);
                 }
             }
         });
@@ -237,17 +249,22 @@ public class MainController extends ScreenAdapter implements WinListener, AuthCh
     @Override
     public void onSignIn() {
         uiController.resetTablesOnAuthChange();
-        CrossFadeGame.game.analytics.login();
+        analytics.login();
     }
 
     @Override
     public void onSignOut() {
         uiController.resetTablesOnAuthChange();
-        CrossFadeGame.game.analytics.signOut();
+        analytics.signOut();
     }
 
     @Override
     public void onAnonymousSignIn() {
         uiController.resetTablesOnAuthChange();
+    }
+
+    @Override
+    public void onRecordChange() {
+        uiController.resetRecordDisplay();
     }
 }

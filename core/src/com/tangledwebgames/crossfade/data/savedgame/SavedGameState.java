@@ -1,14 +1,22 @@
-package com.tangledwebgames.crossfade.game;
+package com.tangledwebgames.crossfade.data.savedgame;
+
+import com.badlogic.gdx.utils.TimeUtils;
+import com.tangledwebgames.crossfade.CrossFadeGame;
+import com.tangledwebgames.crossfade.game.GameState;
 
 public class SavedGameState implements GameState {
 
-    private long timeStamp;
-    private int time;
-    private int moves;
-    private int level;
-    private boolean[][] boardState;
+    public String version;
+    public String userId;
+    public long timeStamp;
+    public int time;
+    public int moves;
+    public int level;
+    public boolean[][] boardState;
 
-    SavedGameState() {
+    public SavedGameState() {
+        version = "";
+        userId = "";
         timeStamp = 0L;
         time = 0;
         moves = 0;
@@ -16,9 +24,8 @@ public class SavedGameState implements GameState {
         boardState = new boolean[0][0];
     }
 
-    SavedGameState(long timeStamp, GameState gameState) {
+    public SavedGameState(GameState gameState) {
         this(
-                timeStamp,
                 gameState.getTime(),
                 gameState.getMoves(),
                 gameState.getLevel(),
@@ -26,13 +33,17 @@ public class SavedGameState implements GameState {
         );
     }
 
-    SavedGameState(long timeStamp, int time, int moves, int level, boolean[][] boardState) {
-        this.timeStamp = timeStamp;
+    public SavedGameState(int time, int moves, int level, boolean[][] boardState) {
+        version = CrossFadeGame.VERSION;
+        userId = CrossFadeGame.game.authManager.getUserId();
+        this.timeStamp = TimeUtils.millis();
         this.time = time;
         this.moves = moves;
         this.level = level;
         this.boardState = boardState;
     }
+
+    public String getVersion() { return version; }
 
     public long getTimeStamp() {
         return timeStamp;

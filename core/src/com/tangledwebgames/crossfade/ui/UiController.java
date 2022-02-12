@@ -226,8 +226,7 @@ public class UiController extends UiStage {
     }
 
     private void setDialog(String labelText, String buttonText, ClickListener buttonListener) {
-        dialog.setLabelText(labelText);
-        dialog.setButtonText(buttonText);
+        dialog.setText(labelText, "", buttonText, "");
         dialog.setConfirmButtonListener(buttonListener);
     }
 
@@ -277,6 +276,13 @@ public class UiController extends UiStage {
         pauseMenu.initContents(receiver);
         levelSelectMenu.createLevelContents();
         initPause(pauseState);
+    }
+
+    public void resetRecordDisplay() {
+        mainUiTable.resetRecordDisplay(gameState.getLevel());
+        if (pauseState == PauseState.LEVEL_SELECT) {
+            levelSelectMenu.updateAll();
+        }
     }
 
 }

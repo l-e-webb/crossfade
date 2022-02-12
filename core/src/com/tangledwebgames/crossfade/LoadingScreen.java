@@ -1,6 +1,7 @@
 package com.tangledwebgames.crossfade;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.tangledwebgames.crossfade.auth.SignInListener;
 import com.tangledwebgames.crossfade.data.AssetLoader;
@@ -11,14 +12,19 @@ import com.tangledwebgames.crossfade.ui.UiText;
 
 public class LoadingScreen extends AbstractScreen implements SignInListener {
 
+    private static final String LOG_TAG = LoadingScreen.class.getSimpleName();
+
     private boolean loaded;
     private LoadingUiController uiController;
     private boolean goToMainScreenNextFrame;
 
     @Override
     public void show() {
+        Gdx.app.log(LOG_TAG, "Loading essential assets loading completed.");
         AssetLoader.instance.loadEssential(); // Waits until complete.
+        Gdx.app.log(LOG_TAG, "Essential assets loaded.");
         UiText.init();
+        Gdx.app.log(LOG_TAG, "Loading additional assets.");
         AssetLoader.instance.loadRemainder(); // Asynchronous.
         loaded = false;
         goToMainScreenNextFrame = false;
@@ -33,6 +39,7 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
         super.render(delta);
 
         if (AssetLoader.instance.isFinished() && !loaded) {
+            Gdx.app.log(LOG_TAG, "Asset loading completed.");
             onLoadComplete();
         } else {
             AssetLoader.instance.update();
@@ -54,8 +61,11 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
         uiController.initFull();
         loaded = true;
         if (getGame().authManager.isAuthAvailable()) {
+            Gdx.app.log(LOG_TAG, "Beginning auth flow.");
             getGame().authManager.silentSignIn(this);
         } else {
+            Gdx.app.log(LOG_TAG, "Skipping auth flow.");
+            getGame().recordManager.refreshRecords();
             goToMainScreen();
         }
     }
@@ -75,7 +85,9 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
     @Override
     public void onSuccess() {
         getGame().analytics.login();
-        goToMainScreenNextFrame = true;
+        uiController.addAction(Actions.run(
+                () -> { goToMainScreen(); }
+        ));
     }
 
     @Override
@@ -86,10 +98,10 @@ public class LoadingScreen extends AbstractScreen implements SignInListener {
                 uiController.showLoginPrompt();
                 break;
             case NETWORK_ERROR:
-                uiController.showLoginPrompt(); // TODO: Make specific
+                uiController.showErrorDialog(true);
                 break;
             case UNKNOWN:
-                uiController.showLoginPrompt(); // TODO: Make specific
+                uiController.showErrorDialog(false);
                 break;
         }
     }

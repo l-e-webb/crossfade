@@ -4,6 +4,9 @@ import com.tangledwebgames.crossfade.auth.AuthChangeListener;
 import com.tangledwebgames.crossfade.auth.AuthManager;
 import com.tangledwebgames.crossfade.auth.SignInListener;
 
+/**
+ * Empty methods; desktop version does not implement authentication.
+ */
 class DesktopAuthManager implements AuthManager {
 
     @Override
@@ -30,4 +33,9 @@ class DesktopAuthManager implements AuthManager {
 
     @Override
     public void removeChangeListener(AuthChangeListener listener) { }
+
+    @Override
+    public String getUserId() {
+        return DESKTOP_USER_ID;
+    }
 }

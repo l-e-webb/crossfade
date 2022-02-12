@@ -3,6 +3,9 @@ package com.tangledwebgames.crossfade;
 import android.app.Activity;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+
+import com.badlogic.gdx.Gdx;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -16,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-
 class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener {
+
+    private static final String LOG_TAG = AndroidAuthManager.class.getSimpleName();
 
     // C R O S S = 3 18 15 19 19
     static final int RC_SIGN_IN = 318151919;
@@ -28,9 +31,10 @@ class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener 
             new AuthUI.IdpConfig.GoogleBuilder().build()
     );
 
-    private Activity activity;
+    private final Activity activity;
+    private final List<AuthChangeListener> changeListeners;
+
     private SignInListener listener;
-    private List<AuthChangeListener> changeListeners;
 
     AndroidAuthManager(Activity activity) {
         this.activity = activity;
@@ -40,15 +44,24 @@ class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener 
     @Override
     public void silentSignIn(SignInListener listener) {
         this.listener = listener;
+
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            Gdx.app.log(LOG_TAG, "User already logged in.");
+            for (AuthChangeListener changeListener : changeListeners) {
+                changeListener.onSignIn();
+            }
             listener.onSuccess();
             return;
         }
+
+        Gdx.app.log(LOG_TAG, "Attempting silent sign-in.");
         AuthUI.getInstance().silentSignIn(activity, providers)
                 .addOnCompleteListener(activity, task -> {
                     if (task.isSuccessful()) {
+                        Gdx.app.log(LOG_TAG, "Silent sign-in successful.");
                         listener.onSuccess();
                     } else {
+                        Gdx.app.log(LOG_TAG, "Silent sign-in failed.");
                         listener.onError(SignInListener.SignInError.SILENT_SIGN_IN_FAILURE);
                     }
                 });
@@ -57,6 +70,7 @@ class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener 
     @Override
     public void signIn(SignInListener listener) {
         this.listener = listener;
+        Gdx.app.log(LOG_TAG, "Attempting firebase UI sign-in.");
         launchSignInActivity();
     }
 
@@ -76,9 +90,11 @@ class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener 
         IdpResponse response = IdpResponse.fromResultIntent(data);
 
         if (resultCode == Activity.RESULT_OK) {
+            Gdx.app.log(LOG_TAG, "Sign in activity completed with success.");
             listener.onSuccess();
         } else {
             if (response == null) {
+                Gdx.app.log(LOG_TAG, "Sign in activity completed with no response.");
                 listener.onError(SignInListener.SignInError.CANCEL);
                 return;
             }
@@ -87,8 +103,10 @@ class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener 
                 errorCode = response.getError().getErrorCode();
             } catch (Exception ignored) {}
             if (errorCode == ErrorCodes.NO_NETWORK) {
+                Gdx.app.log(LOG_TAG, "Sign in activity completed connectivity error.");
                 listener.onError(SignInListener.SignInError.NETWORK_ERROR);
             } else {
+                Gdx.app.log(LOG_TAG, "Sign in activity completed with unknown error.");
                 listener.onError(SignInListener.SignInError.UNKNOWN);
             }
         }
@@ -96,6 +114,7 @@ class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener 
 
     @Override
     public void signOut() {
+        Gdx.app.log(LOG_TAG, "Beginning sign-out.");
         AuthUI.getInstance().signOut(activity);
     }
 
@@ -132,5 +151,11 @@ class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener 
     @Override
     public boolean isAuthAvailable() {
         return true;
+    }
+
+    @Override
+    public String getUserId() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return (user != null && !user.isAnonymous()) ? user.getUid() : ANONYMOUS_USER_ID;
     }
 }

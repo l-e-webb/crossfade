@@ -46,6 +46,13 @@ public class UiText {
     static String LOCKED;
     static String SIGN_IN;
     static String SIGN_OUT;
+    static String LOGIN_PROMPT_HEADER;
+    static String LOGIN_PROMPT_BODY;
+    static String LOGIN_PROMPT_CANCEL;
+    static String LOGIN_PROMPT_ERROR_HEADER;
+    static String LOGIN_PROMPT_NETWORK_ERROR_BODY;
+    static String LOGIN_PROMPT_UNKNOWN_ERROR_BODY;
+    static String LOGIN_PROMPT_TRY_AGAIN;
 
     private UiText() {
     }
@@ -90,6 +97,13 @@ public class UiText {
         NO_RESTORE = AssetLoader.instance.gameText.get("NO_RESTORE");
         SIGN_IN = AssetLoader.instance.gameText.get("SIGN_IN");
         SIGN_OUT = AssetLoader.instance.gameText.get("SIGN_OUT");
+        LOGIN_PROMPT_HEADER = AssetLoader.instance.gameText.get("LOGIN_PROMPT_HEADER");
+        LOGIN_PROMPT_BODY = AssetLoader.instance.gameText.get("LOGIN_PROMPT_BODY");
+        LOGIN_PROMPT_CANCEL = AssetLoader.instance.gameText.get("LOGIN_PROMPT_CANCEL");
+        LOGIN_PROMPT_ERROR_HEADER = AssetLoader.instance.gameText.get("LOGIN_PROMPT_ERROR_HEADER");
+        LOGIN_PROMPT_NETWORK_ERROR_BODY = AssetLoader.instance.gameText.get("LOGIN_PROMPT_NETWORK_ERROR_BODY");
+        LOGIN_PROMPT_UNKNOWN_ERROR_BODY = AssetLoader.instance.gameText.get("LOGIN_PROMPT_UNKNOWN_ERROR_BODY");
+        LOGIN_PROMPT_TRY_AGAIN = AssetLoader.instance.gameText.get("LOGIN_PROMPT_TRY_AGAIN");
     }
 
 }
