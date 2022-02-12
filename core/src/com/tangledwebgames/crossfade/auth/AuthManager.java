@@ -4,6 +4,7 @@ public interface AuthManager {
 
     String ANONYMOUS_USER_ID = "anonymous";
     String DESKTOP_USER_ID = "desktop";
+    String HTML_USER_ID = "html";
 
     void silentSignIn(SignInListener signInListener);
     void signIn(SignInListener signInListener);

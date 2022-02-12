@@ -21,6 +21,11 @@ class HtmlAuthManager implements AuthManager {
     public void signOut() { }
 
     @Override
+    public String getUserId() {
+        return HTML_USER_ID;
+    }
+
+    @Override
     public boolean isSignedIn() {
         return false;
     }
