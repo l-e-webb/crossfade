@@ -13,7 +13,7 @@ import com.tangledwebgames.crossfade.data.AndroidUserManager;
 
 public class AndroidLauncher extends AndroidApplication {
 
-	private AndroidAuthManager authManager;
+	private AndroidFirebaseAuthManager authManager;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		CrossFadeGame game = new CrossFadeGame();
 		game.purchaseManager = new PurchaseManagerGoogleBilling(this);
-		authManager = new AndroidAuthManager(this);
+		authManager = new AndroidFirebaseAuthManager(this);
 		game.authManager = authManager;
 		FirebaseAuth.getInstance().addAuthStateListener(authManager);
 		game.analytics = new AndroidAnalytics(FirebaseAnalytics.getInstance(this));

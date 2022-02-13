@@ -18,9 +18,9 @@ import com.tangledwebgames.crossfade.auth.SignInListener;
 import java.util.Arrays;
 import java.util.List;
 
-class AndroidAuthManager extends AuthManager implements FirebaseAuth.AuthStateListener {
+class AndroidFirebaseAuthManager extends AuthManager implements FirebaseAuth.AuthStateListener {
 
-    private static final String LOG_TAG = AndroidAuthManager.class.getSimpleName();
+    private static final String LOG_TAG = AndroidFirebaseAuthManager.class.getSimpleName();
 
     // C R O S S = 3 18 15 19 19
     static final int RC_SIGN_IN = 318151919;
@@ -34,7 +34,7 @@ class AndroidAuthManager extends AuthManager implements FirebaseAuth.AuthStateLi
 
     private SignInListener listener;
 
-    AndroidAuthManager(Activity activity) {
+    AndroidFirebaseAuthManager(Activity activity) {
         this.activity = activity;
     }
 

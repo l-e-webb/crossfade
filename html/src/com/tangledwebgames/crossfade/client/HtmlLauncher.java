@@ -8,6 +8,8 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.tangledwebgames.crossfade.CrossFadeGame;
 import com.tangledwebgames.crossfade.MainScreen;
+import com.tangledwebgames.crossfade.auth.AuthManager;
+import com.tangledwebgames.crossfade.auth.AuthManagerEmpty;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -24,7 +26,7 @@ public class HtmlLauncher extends GwtApplication {
     @Override
     public ApplicationListener createApplicationListener () {
         CrossFadeGame game = new CrossFadeGame();
-        game.authManager = new HtmlAuthManager();
+        game.authManager = new AuthManagerEmpty(AuthManager.HTML_USER_ID);
         game.analytics = new HtmlAnalytics();
         return game;
     }
