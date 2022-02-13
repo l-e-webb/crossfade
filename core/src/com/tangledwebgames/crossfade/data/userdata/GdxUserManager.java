@@ -11,9 +11,9 @@ import com.tangledwebgames.crossfade.CrossFadeGame;
  * distribution platform. Only persists records from the most recent logged in user. Saving records
  * for a new user will erase prior ones.
  */
-public class GdxUserRecordManager extends UserRecordManager {
+public class GdxUserManager extends UserManager {
 
-    private static final String LOG_TAG = GdxUserRecordManager.class.getSimpleName();
+    private static final String LOG_TAG = GdxUserManager.class.getSimpleName();
 
     private static final String USER_RECORD_FILEPATH = "records.json";
 
@@ -25,7 +25,15 @@ public class GdxUserRecordManager extends UserRecordManager {
     }
 
     @Override
-    public void refreshRecords() {
+    public void saveHasFullVersion(boolean hasFullVersion) {
+        if (checkUpdateFullVersion(hasFullVersion)) {
+            saveRecords();
+            notifyFullVersionChangeListeners();
+        }
+    }
+
+    @Override
+    public void refreshUser() {
         String userId = CrossFadeGame.game.authManager.getUserId();
 
         if (!userRecords.userId.equals(userId)) {

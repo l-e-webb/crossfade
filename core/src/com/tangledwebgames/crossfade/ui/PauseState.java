@@ -8,5 +8,8 @@ public enum PauseState {
     PURCHASE_FAILED,
     PURCHASE_NO_RESTORE,
     WIN,
-    NOT_PAUSED
+    NOT_PAUSED,
+    LOG_IN_SUCCESS,
+    LOG_IN_FAILED,
+    LOG_OUT_SUCCESS
 }

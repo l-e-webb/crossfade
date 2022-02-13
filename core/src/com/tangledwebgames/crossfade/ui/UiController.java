@@ -80,6 +80,9 @@ public class UiController extends UiStage {
             case PURCHASE_FAILED:
             case PURCHASE_SUCCESS:
             case PURCHASE_NO_RESTORE:
+            case LOG_IN_FAILED:
+            case LOG_IN_SUCCESS:
+            case LOG_OUT_SUCCESS:
                 dialog.setVisible(true);
                 break;
         }
@@ -107,6 +110,15 @@ public class UiController extends UiStage {
                 break;
             case PURCHASE_NO_RESTORE:
                 showNoRestore();
+                break;
+            case LOG_IN_FAILED:
+                showLoginFailedDialog(false);
+                break;
+            case LOG_IN_SUCCESS:
+                showLoginSuccess();
+                break;
+            case LOG_OUT_SUCCESS:
+                showLogoutSuccess();
                 break;
             case WIN:
             default:
@@ -180,6 +192,65 @@ public class UiController extends UiStage {
         );
     }
 
+    private void showLoginSuccess() {
+        setDialog(
+                UiText.LOGIN_PROMPT_SUCCESS,
+                UiText.OK,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        receiver.onLoginSuccessConfirm();
+                    }
+                }
+        );
+    }
+
+    public void showLoginFailedDialog(boolean networkError) {
+        if (networkError) {
+            showLoginFailed(UiText.LOGIN_PROMPT_NETWORK_ERROR_BODY);
+        } else {
+            showLoginFailed(UiText.LOGIN_PROMPT_UNKNOWN_ERROR_BODY);
+        }
+    }
+
+    private void showLoginFailed(String errorBody) {
+        setDialog(
+                UiText.LOGIN_PROMPT_ERROR_HEADER,
+                errorBody,
+                UiText.LOGIN_PROMPT_TRY_AGAIN,
+                UiText.LOGIN_PROMPT_CANCEL,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        receiver.onLoginTryAgain();
+                    }
+                },
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        receiver.onLoginCancel();
+                    }
+                }
+        );
+    }
+
+    private void showLogoutSuccess() {
+        setDialog(
+                UiText.LOGOUT_SUCCESS,
+                UiText.OK,
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        receiver.onLogoutConfirm();
+                    }
+                }
+        );
+    }
+
     private void initUI() {
         //Main UI
         mainUiTable = new MainUiTable(
@@ -228,6 +299,19 @@ public class UiController extends UiStage {
     private void setDialog(String labelText, String buttonText, ClickListener buttonListener) {
         dialog.setText(labelText, "", buttonText, "");
         dialog.setConfirmButtonListener(buttonListener);
+    }
+
+    private void setDialog(
+            String headerText,
+            String labelText,
+            String confirmButtonText,
+            String cancelButtonText,
+            ClickListener confirmButtonListener,
+            ClickListener cancelButtonListener
+    ) {
+        dialog.setText(headerText, labelText, confirmButtonText, cancelButtonText);
+        dialog.setConfirmButtonListener(confirmButtonListener);
+        dialog.setCancelButtonListener(cancelButtonListener);
     }
 
     public void newLevel() {

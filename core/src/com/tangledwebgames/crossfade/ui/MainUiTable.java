@@ -157,7 +157,7 @@ class MainUiTable extends Table {
     }
 
     void resetRecordDisplay(int level) {
-        int recordMoves = CrossFadeGame.game.recordManager.getRecordMoves(level);
+        int recordMoves = CrossFadeGame.game.userManager.getRecordMoves(level);
         if (level > Levels.getHighestLevelIndex() || recordMoves <= 0) {
             bestMovesNum.setText("-");
             bestMovesNum.setStyle(deemphasisStyle);

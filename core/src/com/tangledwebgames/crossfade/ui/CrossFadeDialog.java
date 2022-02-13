@@ -93,11 +93,15 @@ public class CrossFadeDialog extends Table {
         row();
         add(confirmButton)
                 .center()
-                .height(Dimensions.PAUSE_BUTTON_HEIGHT);
+                .height(Dimensions.PAUSE_BUTTON_HEIGHT)
+                .fillX()
+                .uniformX();
         if (includeCancelButton) {
             add(cancelButton)
                     .center()
-                    .height(Dimensions.PAUSE_BUTTON_HEIGHT);
+                    .height(Dimensions.PAUSE_BUTTON_HEIGHT)
+                    .fillX()
+                    .uniformX();
         }
     }
 }

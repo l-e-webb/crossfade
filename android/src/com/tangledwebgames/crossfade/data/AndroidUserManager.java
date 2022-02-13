@@ -12,15 +12,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tangledwebgames.crossfade.auth.AuthManager;
 import com.tangledwebgames.crossfade.data.userdata.LevelRecord;
-import com.tangledwebgames.crossfade.data.userdata.UserRecordManager;
+import com.tangledwebgames.crossfade.data.userdata.UserManager;
 import com.tangledwebgames.crossfade.data.userdata.UserRecords;
 
-public class AndroidUserRecordManager extends UserRecordManager implements ValueEventListener {
+public class AndroidUserManager extends UserManager implements ValueEventListener {
 
-    private static final String LOG_TAG = AndroidUserRecordManager.class.getSimpleName();
+    private static final String LOG_TAG = AndroidUserManager.class.getSimpleName();
 
     private static final String USER_DATA_KEY = "users";
     private static final String RECORDS_KEY = "records";
+    private static final String HAS_FULL_VERSION_KEY = "hasFullVersion";
 
     private DatabaseReference userDataRef;
 
@@ -35,7 +36,15 @@ public class AndroidUserRecordManager extends UserRecordManager implements Value
     }
 
     @Override
-    public void refreshRecords() {
+    public void saveHasFullVersion(boolean hasFullVersion) {
+        if (checkUpdateFullVersion(hasFullVersion) && userDataRef != null) {
+            Gdx.app.log(LOG_TAG, "Updating full version state in database to " + hasFullVersion);
+            userDataRef.child(HAS_FULL_VERSION_KEY).setValue(hasFullVersion);
+        }
+    }
+
+    @Override
+    public void refreshUser() {
         Gdx.app.log(LOG_TAG, "Refreshing records.");
         unplugDataRef();
         FirebaseUser user = getFirebaseUser();
@@ -46,6 +55,7 @@ public class AndroidUserRecordManager extends UserRecordManager implements Value
              if (userRecords == null || !userRecords.userId.equals(AuthManager.ANONYMOUS_USER_ID)) {
                  userRecords = new UserRecords(AuthManager.ANONYMOUS_USER_ID);
                  notifyRecordChangeListeners();
+                 notifyFullVersionChangeListeners();
              }
              return;
         }
@@ -56,6 +66,7 @@ public class AndroidUserRecordManager extends UserRecordManager implements Value
             Gdx.app.log(LOG_TAG, "Removing prior user record in refresh.");
             userRecords = new UserRecords(user.getUid());
             notifyRecordChangeListeners();
+            notifyFullVersionChangeListeners();
         }
         userDataRef = getUserDataReference(user);
         userDataRef.addValueEventListener(this);
@@ -68,7 +79,7 @@ public class AndroidUserRecordManager extends UserRecordManager implements Value
         if (!currentUser.getUid().equals(snapshot.getKey())) {
             // Data change is not for current user.
             Gdx.app.log(LOG_TAG, "Received data update for non current user. Current user ID: " + currentUser.getUid() + " ; update user ID: " + snapshot.getKey());
-            refreshRecords();
+            refreshUser();
             return;
         }
 

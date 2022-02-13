@@ -12,15 +12,13 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.tangledwebgames.crossfade.android.R;
-import com.tangledwebgames.crossfade.auth.AuthChangeListener;
 import com.tangledwebgames.crossfade.auth.AuthManager;
 import com.tangledwebgames.crossfade.auth.SignInListener;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener {
+class AndroidAuthManager extends AuthManager implements FirebaseAuth.AuthStateListener {
 
     private static final String LOG_TAG = AndroidAuthManager.class.getSimpleName();
 
@@ -33,23 +31,24 @@ class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener 
     );
 
     private final Activity activity;
-    private final List<AuthChangeListener> changeListeners;
 
     private SignInListener listener;
 
     AndroidAuthManager(Activity activity) {
         this.activity = activity;
-        changeListeners = new ArrayList<>();
     }
 
     @Override
     public void silentSignIn(SignInListener listener) {
         this.listener = listener;
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
             Gdx.app.log(LOG_TAG, "User already logged in.");
-            for (AuthChangeListener changeListener : changeListeners) {
-                changeListener.onSignIn();
+            if (user.isAnonymous()) {
+                notifyAnonymousSignIn();
+            } else {
+                notifySignIn();
             }
             listener.onSuccess();
             return;
@@ -129,25 +128,15 @@ class AndroidAuthManager implements AuthManager, FirebaseAuth.AuthStateListener 
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        for (AuthChangeListener listener : changeListeners) {
-            if (user == null) {
-                listener.onSignOut();
-            } else if (user.isAnonymous()) {
-                listener.onAnonymousSignIn();
+        if (user != null) {
+            if (user.isAnonymous()) {
+                notifyAnonymousSignIn();
             } else {
-                listener.onSignIn();
+                notifySignIn();
             }
+        } else {
+            notifySignOut();
         }
-    }
-
-    @Override
-    public void addChangeListener(AuthChangeListener listener) {
-        if (!changeListeners.contains(listener)) changeListeners.add(listener);
-    }
-
-    @Override
-    public void removeChangeListener(AuthChangeListener listener) {
-        changeListeners.remove(listener);
     }
 
     @Override

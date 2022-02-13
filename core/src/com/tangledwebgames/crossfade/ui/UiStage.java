@@ -60,12 +60,15 @@ public class UiStage extends Stage {
         Label.LabelStyle deemphasisStyle = new Label.LabelStyle(uiFont, Dimensions.DARK_COLOR);
         tile9Patch = new NinePatchDrawable(
                 new NinePatch(AssetLoader.instance.tileSmall, 13, 13, 13, 13));
+        NinePatchDrawable button9Patch = new NinePatchDrawable(tile9Patch);
+        button9Patch.setLeftWidth(26);
+        button9Patch.setRightWidth(26);
         box9Patch = new NinePatchDrawable(
                 new NinePatch(AssetLoader.instance.greyBox, 3, 3, 3, 3));
         whiteBox = new TextureRegionDrawable(AssetLoader.instance.whiteBox);
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.up = tile9Patch.tint(Dimensions.BUTTON_COLOR);
-        buttonStyle.down = tile9Patch.tint(Dimensions.ACTIVE_BUTTON_COLOR);
+        buttonStyle.up = button9Patch.tint(Dimensions.BUTTON_COLOR);
+        buttonStyle.down = button9Patch.tint(Dimensions.ACTIVE_BUTTON_COLOR);
         buttonStyle.fontColor = Dimensions.DARK_TEXT_COLOR;
         buttonStyle.downFontColor = Dimensions.DARK_TEXT_COLOR;
         buttonStyle.font = uiFont;

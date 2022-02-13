@@ -9,6 +9,7 @@ public class UserRecords {
 
     public String userId;
     public Map<String, LevelRecord> records = new HashMap<>();
+    public boolean hasFullVersion = false;
 
     public UserRecords() {
         this(AuthManager.ANONYMOUS_USER_ID);
@@ -22,9 +23,16 @@ public class UserRecords {
     public boolean equals(Object obj) {
         if (obj instanceof UserRecords) {
             UserRecords other = (UserRecords) obj;
-            return other.userId.equals(userId) && records.equals(other.records);
+            return other.userId.equals(userId) && records.equals(other.records) && hasFullVersion == other.hasFullVersion;
         } else {
             return false;
         }
+    }
+
+    public UserRecords duplicate() {
+        UserRecords userRecords = new UserRecords(userId);
+        userRecords.records.putAll(records);
+        userRecords.hasFullVersion = hasFullVersion;
+        return userRecords;
     }
 }

@@ -9,7 +9,7 @@ import com.badlogic.gdx.pay.android.googlebilling.PurchaseManagerGoogleBilling;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tangledwebgames.crossfade.android.BuildConfig;
-import com.tangledwebgames.crossfade.data.AndroidUserRecordManager;
+import com.tangledwebgames.crossfade.data.AndroidUserManager;
 
 public class AndroidLauncher extends AndroidApplication {
 
@@ -25,7 +25,7 @@ public class AndroidLauncher extends AndroidApplication {
 		game.authManager = authManager;
 		FirebaseAuth.getInstance().addAuthStateListener(authManager);
 		game.analytics = new AndroidAnalytics(FirebaseAnalytics.getInstance(this));
-		game.recordManager = new AndroidUserRecordManager();
+		game.userManager = new AndroidUserManager();
 		game.debug = BuildConfig.DEBUG;
 		initialize(game, config);
 	}

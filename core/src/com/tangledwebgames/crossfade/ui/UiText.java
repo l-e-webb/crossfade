@@ -53,6 +53,8 @@ public class UiText {
     static String LOGIN_PROMPT_NETWORK_ERROR_BODY;
     static String LOGIN_PROMPT_UNKNOWN_ERROR_BODY;
     static String LOGIN_PROMPT_TRY_AGAIN;
+    static String LOGIN_PROMPT_SUCCESS;
+    static String LOGOUT_SUCCESS;
 
     private UiText() {
     }
@@ -104,6 +106,8 @@ public class UiText {
         LOGIN_PROMPT_NETWORK_ERROR_BODY = AssetLoader.instance.gameText.get("LOGIN_PROMPT_NETWORK_ERROR_BODY");
         LOGIN_PROMPT_UNKNOWN_ERROR_BODY = AssetLoader.instance.gameText.get("LOGIN_PROMPT_UNKNOWN_ERROR_BODY");
         LOGIN_PROMPT_TRY_AGAIN = AssetLoader.instance.gameText.get("LOGIN_PROMPT_TRY_AGAIN");
+        LOGIN_PROMPT_SUCCESS = AssetLoader.instance.gameText.get("LOGIN_PROMPT_SUCCESS");
+        LOGOUT_SUCCESS = AssetLoader.instance.gameText.get("LOGOUT_SUCCESS");
     }
 
 }

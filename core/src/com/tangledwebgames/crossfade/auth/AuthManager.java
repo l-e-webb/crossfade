@@ -1,20 +1,51 @@
 package com.tangledwebgames.crossfade.auth;
 
-public interface AuthManager {
+import java.util.HashSet;
+import java.util.Set;
 
-    String ANONYMOUS_USER_ID = "anonymous";
-    String DESKTOP_USER_ID = "desktop";
-    String HTML_USER_ID = "html";
+public abstract class AuthManager {
 
-    void silentSignIn(SignInListener signInListener);
-    void signIn(SignInListener signInListener);
-    void signOut();
+    public static String ANONYMOUS_USER_ID = "anonymous";
+    public static String DESKTOP_USER_ID = "desktop";
+    public static String HTML_USER_ID = "html";
 
-    String getUserId();
-    boolean isAuthAvailable();
-    boolean isSignedIn();
+    private final Set<AuthChangeListener> listeners = new HashSet<>();
 
-    void addChangeListener(AuthChangeListener listener);
-    void removeChangeListener(AuthChangeListener listener);
+    public abstract void silentSignIn(SignInListener signInListener);
+    public abstract void signIn(SignInListener signInListener);
+    public abstract void signOut();
 
+    public abstract String getUserId();
+    public abstract boolean isAuthAvailable();
+    public abstract boolean isSignedIn();
+
+
+    public void signInAnonymous() {
+        notifyAnonymousSignIn();
+    }
+
+    public void addChangeListener(AuthChangeListener listener) {
+        listeners.add(listener);
+    }
+    public void removeChangeListener(AuthChangeListener listener) {
+        listeners.remove(listener);
+    }
+
+    protected void notifySignIn() {
+        for (AuthChangeListener listener : listeners) {
+            listener.onSignIn();
+        }
+    }
+
+    protected void notifySignOut() {
+        for (AuthChangeListener listener : listeners) {
+            listener.onSignOut();
+        }
+    }
+
+    protected void notifyAnonymousSignIn() {
+        for (AuthChangeListener listener : listeners) {
+            listener.onAnonymousSignIn();
+        }
+    }
 }

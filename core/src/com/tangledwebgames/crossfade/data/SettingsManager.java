@@ -16,7 +16,6 @@ public class SettingsManager {
     private static final String SFX_VOLUME_KEY = "sfx_volume";
     private static final String ANIMATE_TILES_KEY = "animate_tiles";
     private static final String HIGHLIGHT_TILES_KEY = "highlight_tiles";
-    private static final String FULL_VERSION_KEY = "full_version";
 
     private static final String PREFERENCES_NAME = "crossfade_preferences";
 
@@ -26,7 +25,6 @@ public class SettingsManager {
     private static float sfxVolume;
     private static boolean animateTiles;
     private static boolean highlightTiles;
-    private static boolean isFullVersion;
 
     public static void init() {
         prefs = Gdx.app.getPreferences(PREFERENCES_NAME);
@@ -39,7 +37,6 @@ public class SettingsManager {
         sfxVolume = prefs.getFloat(SFX_VOLUME_KEY, 1);
         animateTiles = prefs.getBoolean(ANIMATE_TILES_KEY, true);
         highlightTiles = prefs.getBoolean(HIGHLIGHT_TILES_KEY, true);
-        isFullVersion = prefs.getBoolean(FULL_VERSION_KEY, false);
         SoundManager.updateFromSettings();
     }
 
@@ -50,7 +47,6 @@ public class SettingsManager {
         prefs.putFloat(SFX_VOLUME_KEY, sfxVolume);
         prefs.putBoolean(ANIMATE_TILES_KEY, animateTiles);
         prefs.putBoolean(HIGHLIGHT_TILES_KEY, highlightTiles);
-        prefs.putBoolean(FULL_VERSION_KEY, isFullVersion);
         prefs.flush();
     }
 
@@ -105,16 +101,4 @@ public class SettingsManager {
     public static void setHighlightTiles(boolean highlightTiles) {
         SettingsManager.highlightTiles = highlightTiles;
     }
-
-    public static boolean isFullVersion() {
-        if (CrossFadeGame.APP_TYPE != Application.ApplicationType.Android) {
-            return true;
-        }
-        return isFullVersion;
-    }
-
-    public static void setIsFullVersion(boolean isFullVersion) {
-        SettingsManager.isFullVersion = isFullVersion;
-    }
-
 }

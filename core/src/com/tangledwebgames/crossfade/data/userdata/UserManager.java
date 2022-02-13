@@ -9,34 +9,35 @@ import java.util.Set;
 
 import jdk.internal.jline.internal.Nullable;
 
-public abstract class UserRecordManager implements AuthChangeListener {
+public abstract class UserManager implements AuthChangeListener {
 
-    private static final String LOG_TAG = UserRecordManager.class.getSimpleName();
+    private static final String LOG_TAG = UserManager.class.getSimpleName();
 
     protected static String getLevelKey(int level) {
         return "L_" + level;
     }
 
     protected UserRecords userRecords;
-    private final Set<RecordChangeListener> recordChangeListeners = new HashSet<>();
+    private final Set<UserDataChangeListener> userDataChangeListeners = new HashSet<>();
 
     @Override
     public void onSignIn() {
-        refreshRecords();
+        refreshUser();
     }
 
     @Override
     public void onSignOut() {
-        refreshRecords();
+        refreshUser();
     }
 
     @Override
     public void onAnonymousSignIn() {
-        refreshRecords();
+        refreshUser();
     }
 
-    public abstract void refreshRecords();
+    public abstract void refreshUser();
     public abstract void saveRecord(LevelRecord record);
+    public abstract void saveHasFullVersion(boolean hasFullVersion);
 
     public void saveRecord(int level, int moves) {
         saveRecord(new LevelRecord(level, moves));
@@ -49,6 +50,18 @@ public abstract class UserRecordManager implements AuthChangeListener {
 
     public UserRecords getUserRecords() {
         return userRecords;
+    }
+
+    public boolean hasFullVersion() {
+        return userRecords.hasFullVersion;
+    }
+
+    protected boolean checkUpdateFullVersion(boolean hasFullVersion) {
+        if (userRecords.hasFullVersion != hasFullVersion) {
+            userRecords.hasFullVersion = hasFullVersion;
+            return true;
+        }
+        return false;
     }
 
     @Nullable
@@ -80,6 +93,7 @@ public abstract class UserRecordManager implements AuthChangeListener {
 
     protected boolean consolidateRecords(UserRecords newRecords) {
         boolean recordsDifferent = false;
+        boolean fullVersionDifferent = false;
         UserRecords updateNewRecords = RecordUpdater.updateRecord(newRecords);
         if (!updateNewRecords.equals(newRecords)) {
             recordsDifferent = true;
@@ -97,30 +111,43 @@ public abstract class UserRecordManager implements AuthChangeListener {
             if (userRecords.records.size() > newRecords.records.size()) {
                 recordsDifferent = true;
             }
+            if (userRecords.hasFullVersion != newRecords.hasFullVersion) {
+                userRecords.hasFullVersion = newRecords.hasFullVersion;
+                fullVersionDifferent = true;
+            }
         } else {
             // Replace existing records with new user's records.
             userRecords = newRecords;
             recordsDifferent = true;
+            fullVersionDifferent = true;
         }
 
         if (recordsDifferent) {
             notifyRecordChangeListeners();
         }
-        return recordsDifferent;
+        if (fullVersionDifferent) {
+            notifyFullVersionChangeListeners();
+        }
+        return recordsDifferent || fullVersionDifferent;
     }
 
-    public void addRecordChangeListener(RecordChangeListener listener) {
-        recordChangeListeners.add(listener);
+    public void addUserDataChangeListener(UserDataChangeListener listener) {
+        userDataChangeListeners.add(listener);
     }
 
-    public void removeRecordChangeListener(RecordChangeListener listener) {
-        recordChangeListeners.remove(listener);
+    public void removeUserDataChangeListener(UserDataChangeListener listener) {
+        userDataChangeListeners.remove(listener);
     }
 
-    protected void notifyRecordChangeListeners() {
-        for (RecordChangeListener listener : recordChangeListeners) {
-            listener.onRecordChange();
+    protected void notifyFullVersionChangeListeners() {
+        for (UserDataChangeListener listener : userDataChangeListeners) {
+            listener.onFullVersionChange();
         }
     }
 
+    protected void notifyRecordChangeListeners() {
+        for (UserDataChangeListener listener : userDataChangeListeners) {
+            listener.onRecordChange();
+        }
+    }
 }

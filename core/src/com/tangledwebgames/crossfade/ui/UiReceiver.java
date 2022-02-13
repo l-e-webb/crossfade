@@ -30,14 +30,19 @@ public interface UiReceiver {
 
     void onLevelSelected(int level);
 
-    //Purchase table
+    // Purchase table
     void onPurchaseTableBuyButtonClicked();
     void onPurchaseTableRestoreButtonClicked();
     void onPurchaseTableCancelButtonClicked();
 
-    //Dialog
+    // Purchase outcome dialog
     void onPurchaseFailedConfirm();
     void onPurchaseSuccessConfirm();
     void onPurchaseNoRestoreConfirm();
 
+    // Login dialog
+    void onLoginSuccessConfirm();
+    void onLoginTryAgain();
+    void onLoginCancel();
+    void onLogoutConfirm();
 }

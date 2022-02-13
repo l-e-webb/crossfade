@@ -1,10 +1,9 @@
 package com.tangledwebgames.crossfade.client;
 
-import com.tangledwebgames.crossfade.auth.AuthChangeListener;
 import com.tangledwebgames.crossfade.auth.AuthManager;
 import com.tangledwebgames.crossfade.auth.SignInListener;
 
-class HtmlAuthManager implements AuthManager {
+class HtmlAuthManager extends AuthManager {
 
     @Override
     public boolean isAuthAvailable() {
@@ -29,10 +28,4 @@ class HtmlAuthManager implements AuthManager {
     public boolean isSignedIn() {
         return false;
     }
-
-    @Override
-    public void addChangeListener(AuthChangeListener listener) { }
-
-    @Override
-    public void removeChangeListener(AuthChangeListener listener) { }
 }

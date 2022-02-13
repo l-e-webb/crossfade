@@ -72,9 +72,22 @@ class PurchaseMenu extends Table {
     }
 
     void update(boolean fromAttemptToAccessUnavailableContent) {
-        buyButton.setText(UiText.BUY + " (" + CrossFadePurchaseManager.getLocalPrice() + ")");
-        String mainText = fromAttemptToAccessUnavailableContent ?
-                UiText.CONTENT_UNAVAILABLE : CrossFadePurchaseManager.getLocalDescription();
+        String localPrice = CrossFadePurchaseManager.getLocalPrice();
+        String buyText = UiText.BUY;
+        if (localPrice != null) {
+            buyText += "(" + localPrice + ")";
+        }
+        buyButton.setText(buyText);
+
+        String description = CrossFadePurchaseManager.getLocalDescription();
+        String mainText;
+        if (fromAttemptToAccessUnavailableContent) {
+            mainText = UiText.CONTENT_UNAVAILABLE;
+        } else if (description != null) {
+            mainText = description;
+        } else {
+            mainText = "";
+        };
         mainText += " " + UiText.RESTORE_PROMPT;
         textLabel.setText(mainText);
         invalidateHierarchy();

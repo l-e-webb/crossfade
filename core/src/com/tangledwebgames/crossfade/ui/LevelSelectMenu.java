@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.tangledwebgames.crossfade.CrossFadeGame;
 import com.tangledwebgames.crossfade.MainScreen;
-import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.game.Board;
 import com.tangledwebgames.crossfade.game.BoardGroup;
 import com.tangledwebgames.crossfade.game.Levels;
@@ -126,7 +125,7 @@ class LevelSelectMenu extends Table {
             setTouchable(Touchable.enabled);
             this.level = level;
 
-            if (SettingsManager.isFullVersion() || level <= Levels.MAX_FREE_LEVEL) {
+            if (CrossFadeGame.game.userManager.hasFullVersion() || level <= Levels.MAX_FREE_LEVEL) {
                 Label levelLabel = new Label(UiText.LEVEL + ":", skin);
                 String levelNumLabelText = "";
                 if (level <= Levels.getHighestLevelIndex()) {
@@ -206,10 +205,10 @@ class LevelSelectMenu extends Table {
         }
 
         void updateRecordLabelText() {
-            if (!SettingsManager.isFullVersion() && level > Levels.MAX_FREE_LEVEL) {
+            if (!CrossFadeGame.game.userManager.hasFullVersion() && level > Levels.MAX_FREE_LEVEL) {
                 return;
             }
-            int record = CrossFadeGame.game.recordManager.getRecordMoves(level);
+            int record = CrossFadeGame.game.userManager.getRecordMoves(level);
             String recordLabelText;
             if (level <= Levels.getHighestLevelIndex() && record > 0) {
                 recordLabelText = "" + record;

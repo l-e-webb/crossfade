@@ -140,13 +140,13 @@ public class UiEventHandler implements UiReceiver {
 
     @Override
     public void onPurchaseTableBuyButtonClicked() {
-        CrossFadePurchaseManager.buyFullVersion();
+        CrossFadePurchaseManager.buyFullVersion(MainController.instance);
         SoundManager.buttonSound();
     }
 
     @Override
     public void onPurchaseTableRestoreButtonClicked() {
-        CrossFadePurchaseManager.restore();
+        CrossFadePurchaseManager.restore(MainController.instance);
         SoundManager.buttonSound();
     }
 
@@ -170,6 +170,30 @@ public class UiEventHandler implements UiReceiver {
 
     @Override
     public void onPurchaseNoRestoreConfirm() {
+        MainController.instance.unpauseGame();
+        SoundManager.buttonSound();
+    }
+
+    @Override
+    public void onLoginSuccessConfirm() {
+        MainController.instance.unpauseGame();
+        SoundManager.buttonSound();
+    }
+
+    @Override
+    public void onLoginTryAgain() {
+        MainController.instance.signIn();
+        SoundManager.buttonSound();
+    }
+
+    @Override
+    public void onLoginCancel() {
+        MainController.instance.unpauseGame();
+        SoundManager.buttonSound();
+    }
+
+    @Override
+    public void onLogoutConfirm() {
         MainController.instance.unpauseGame();
         SoundManager.buttonSound();
     }
