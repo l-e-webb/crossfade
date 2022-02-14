@@ -175,6 +175,12 @@ public class UiEventHandler implements UiReceiver {
     }
 
     @Override
+    public void onPurchaseUnavailableConfirm() {
+        MainController.instance.unpauseGame();
+        SoundManager.buttonSound();
+    }
+
+    @Override
     public void onLoginSuccessConfirm() {
         MainController.instance.unpauseGame();
         SoundManager.buttonSound();

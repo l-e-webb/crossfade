@@ -43,18 +43,19 @@ public class UiText {
     static String FULL_VERSION_UNLOCKED;
     static String PURCHASE_ERROR;
     static String NO_RESTORE;
+    static String PURCHASE_UNAVAILABLE_ERROR_BODY;
     static String LOCKED;
     static String SIGN_IN;
     static String SIGN_OUT;
     static String LOGIN_PROMPT_HEADER;
     static String LOGIN_PROMPT_BODY;
     static String LOGIN_PROMPT_CANCEL;
-    static String LOGIN_PROMPT_ERROR_HEADER;
     static String LOGIN_PROMPT_NETWORK_ERROR_BODY;
     static String LOGIN_PROMPT_UNKNOWN_ERROR_BODY;
     static String LOGIN_PROMPT_TRY_AGAIN;
     static String LOGIN_PROMPT_SUCCESS;
     static String LOGOUT_SUCCESS;
+    static String GENERIC_ERROR_HEADER;
 
     private UiText() {
     }
@@ -95,6 +96,7 @@ public class UiText {
         CANCEL = AssetLoader.instance.gameText.get("CANCEL");
         FULL_VERSION_UNLOCKED = AssetLoader.instance.gameText.get("FULL_VERSION_UNLOCKED");
         PURCHASE_ERROR = AssetLoader.instance.gameText.get("PURCHASE_ERROR");
+        PURCHASE_UNAVAILABLE_ERROR_BODY = AssetLoader.instance.gameText.get("PURCHASE_UNAVAILABLE_ERROR_BODY");
         LOCKED = AssetLoader.instance.gameText.get("LOCKED");
         NO_RESTORE = AssetLoader.instance.gameText.get("NO_RESTORE");
         SIGN_IN = AssetLoader.instance.gameText.get("SIGN_IN");
@@ -102,12 +104,12 @@ public class UiText {
         LOGIN_PROMPT_HEADER = AssetLoader.instance.gameText.get("LOGIN_PROMPT_HEADER");
         LOGIN_PROMPT_BODY = AssetLoader.instance.gameText.get("LOGIN_PROMPT_BODY");
         LOGIN_PROMPT_CANCEL = AssetLoader.instance.gameText.get("LOGIN_PROMPT_CANCEL");
-        LOGIN_PROMPT_ERROR_HEADER = AssetLoader.instance.gameText.get("LOGIN_PROMPT_ERROR_HEADER");
         LOGIN_PROMPT_NETWORK_ERROR_BODY = AssetLoader.instance.gameText.get("LOGIN_PROMPT_NETWORK_ERROR_BODY");
         LOGIN_PROMPT_UNKNOWN_ERROR_BODY = AssetLoader.instance.gameText.get("LOGIN_PROMPT_UNKNOWN_ERROR_BODY");
         LOGIN_PROMPT_TRY_AGAIN = AssetLoader.instance.gameText.get("LOGIN_PROMPT_TRY_AGAIN");
         LOGIN_PROMPT_SUCCESS = AssetLoader.instance.gameText.get("LOGIN_PROMPT_SUCCESS");
         LOGOUT_SUCCESS = AssetLoader.instance.gameText.get("LOGOUT_SUCCESS");
+        GENERIC_ERROR_HEADER = AssetLoader.instance.gameText.get("GENERIC_ERROR_HEADER");
     }
 
 }

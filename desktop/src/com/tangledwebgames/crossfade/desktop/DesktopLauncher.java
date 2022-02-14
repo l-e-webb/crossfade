@@ -15,6 +15,7 @@ public class DesktopLauncher {
 		CrossFadeGame game = new CrossFadeGame();
 		game.authManager = new AuthManagerEmpty(AuthManager.DESKTOP_USER_ID);
 		game.analytics = new DesktopAnalytics();
+		game.onConfigComplete();
 		new LwjglApplication(game, config);
 	}
 }

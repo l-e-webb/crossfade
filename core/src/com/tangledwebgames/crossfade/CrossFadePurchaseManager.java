@@ -18,8 +18,10 @@ public class CrossFadePurchaseManager {
         void onFullVersionRestored();
         void onRestoreError();
         void onRestoreFailure();
+        void onRestoreUnavailable();
         void onSuccessfulPurchase();
         void onPurchaseError();
+        void onPurchaseUnavailable();
         void onPurchaseCanceled();
     }
 
@@ -43,11 +45,19 @@ public class CrossFadePurchaseManager {
         }
 
         @Override
+        public void onRestoreUnavailable() {
+        }
+
+        @Override
         public void onSuccessfulPurchase() {
         }
 
         @Override
         public void onPurchaseError() {
+        }
+
+        @Override
+        public void onPurchaseUnavailable() {
         }
 
         @Override
@@ -150,12 +160,22 @@ public class CrossFadePurchaseManager {
 
     static void buyFullVersion(PurchaseEventListener listener) {
         Gdx.app.log(LOG_TAG, "Initiating full version purchase.");
+        if (!isPurchaseAvailable()) {
+            Gdx.app.log(LOG_TAG, "Unable to purchase full version. Purchase services unavailable.");
+            listener.onPurchaseUnavailable();
+            return;
+        }
         CrossFadePurchaseManager.purchaseEventListener = listener;
         pm.purchase(FULL_VERSION_SKU);
     }
 
     static void restore(PurchaseEventListener listener) {
         Gdx.app.log(LOG_TAG, "Initiating full version restoration.");
+        if (!isPurchaseAvailable()) {
+            Gdx.app.log(LOG_TAG, "Unable to restore full version. Purchase services unavailable.");
+            listener.onRestoreUnavailable();
+            return;
+        }
         CrossFadePurchaseManager.purchaseEventListener = listener;
         pm.purchaseRestore();
     }

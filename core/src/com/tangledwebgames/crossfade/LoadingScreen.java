@@ -15,6 +15,7 @@ public class LoadingScreen extends AbstractScreen {
 
     private static final String LOG_TAG = LoadingScreen.class.getSimpleName();
 
+    private boolean loginStarted;
     private boolean loaded;
     private LoadingUiController uiController;
 
@@ -67,11 +68,11 @@ public class LoadingScreen extends AbstractScreen {
         Gdx.app.log(LOG_TAG, "Loading additional assets.");
         AssetLoader.instance.loadRemainder(); // Asynchronous.
         loaded = false;
+        loginStarted = false;
         viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, WORLD_WIDTH, 0);
         uiController = new LoadingUiController(viewport, this);
         uiController.showLoading();
         Gdx.input.setInputProcessor(uiController);
-        getGame().authManager.addChangeListener(authChangeListener);
     }
 
     @Override
@@ -79,10 +80,13 @@ public class LoadingScreen extends AbstractScreen {
         super.render(delta);
 
         if (AssetLoader.instance.isFinished() && !loaded) {
-            Gdx.app.log(LOG_TAG, "Asset loading completed.");
             onLoadComplete();
         } else {
             AssetLoader.instance.update();
+        }
+
+        if (loaded && getGame().configComplete && !loginStarted) {
+            beginLogIn();
         }
 
         uiController.act(delta);
@@ -90,11 +94,17 @@ public class LoadingScreen extends AbstractScreen {
     }
 
     private void onLoadComplete() {
+        Gdx.app.log(LOG_TAG, "Asset loading completed.");
         AssetLoader.instance.onLoadComplete();
         SettingsManager.init();
         Levels.init();
         uiController.initFull();
         loaded = true;
+
+    }
+
+    private void beginLogIn() {
+        getGame().authManager.addChangeListener(authChangeListener);
         if (getGame().authManager.isAuthAvailable()) {
             Gdx.app.log(LOG_TAG, "Beginning auth flow.");
             getGame().authManager.silentSignIn(signInListener);
@@ -102,6 +112,7 @@ public class LoadingScreen extends AbstractScreen {
             Gdx.app.log(LOG_TAG, "Skipping auth flow.");
             getGame().authManager.signInAnonymous();
         }
+        loginStarted = true;
     }
 
     private void goToMainScreen() {

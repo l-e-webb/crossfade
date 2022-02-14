@@ -74,8 +74,12 @@ public class GdxUserManager extends UserManager {
             return;
         }
         FileHandle recordsFile = Gdx.files.local(userRecords.userId + "_" + USER_RECORD_FILEPATH);
+        UserRecords recordsToSave = userRecords.duplicate();
+        // Full version state should not be saved locally. If this user has the full version, it
+        // will be automatically restored when their records are loaded.
+        recordsToSave.hasFullVersion = false;
         try {
-            new Json().toJson(userRecords, recordsFile);
+            new Json().toJson(recordsToSave, recordsFile);
         } catch (SerializationException e) {
             Gdx.app.error(LOG_TAG, "Error serializing record data as JSON.", e);
         } catch (RuntimeException e) {

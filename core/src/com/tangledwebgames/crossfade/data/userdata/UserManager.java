@@ -3,6 +3,7 @@ package com.tangledwebgames.crossfade.data.userdata;
 import com.badlogic.gdx.Gdx;
 import com.tangledwebgames.crossfade.CrossFadeGame;
 import com.tangledwebgames.crossfade.auth.AuthChangeListener;
+import com.tangledwebgames.crossfade.auth.AuthManager;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -45,6 +46,10 @@ public abstract class UserManager implements AuthChangeListener {
 
     public void initialize() {
         userRecords = new UserRecords(CrossFadeGame.game.authManager.getUserId());
+        if (userRecords.userId.equals(AuthManager.DESKTOP_USER_ID) ||
+                userRecords.userId.equals(AuthManager.HTML_USER_ID)) {
+           userRecords.hasFullVersion = true;
+        }
         CrossFadeGame.game.authManager.addChangeListener(this);
     }
 

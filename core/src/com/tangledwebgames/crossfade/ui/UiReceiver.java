@@ -39,6 +39,7 @@ public interface UiReceiver {
     void onPurchaseFailedConfirm();
     void onPurchaseSuccessConfirm();
     void onPurchaseNoRestoreConfirm();
+    void onPurchaseUnavailableConfirm();
 
     // Login dialog
     void onLoginSuccessConfirm();

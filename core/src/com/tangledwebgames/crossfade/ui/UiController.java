@@ -80,6 +80,7 @@ public class UiController extends UiStage {
             case PURCHASE_FAILED:
             case PURCHASE_SUCCESS:
             case PURCHASE_NO_RESTORE:
+            case PURCHASE_UNAVAILABLE:
             case LOG_IN_FAILED:
             case LOG_IN_SUCCESS:
             case LOG_OUT_SUCCESS:
@@ -110,6 +111,9 @@ public class UiController extends UiStage {
                 break;
             case PURCHASE_NO_RESTORE:
                 showNoRestore();
+                break;
+            case PURCHASE_UNAVAILABLE:
+                showPurchaseUnavailable();
                 break;
             case LOG_IN_FAILED:
                 showLoginFailedDialog(false);
@@ -192,6 +196,23 @@ public class UiController extends UiStage {
         );
     }
 
+    private void showPurchaseUnavailable() {
+        setDialog(
+                UiText.GENERIC_ERROR_HEADER,
+                UiText.PURCHASE_UNAVAILABLE_ERROR_BODY,
+                UiText.OK,
+                "",
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        receiver.onPurchaseUnavailableConfirm();
+                    }
+                },
+                new ClickListener()
+        );
+    }
+
     private void showLoginSuccess() {
         setDialog(
                 UiText.LOGIN_PROMPT_SUCCESS,
@@ -216,7 +237,7 @@ public class UiController extends UiStage {
 
     private void showLoginFailed(String errorBody) {
         setDialog(
-                UiText.LOGIN_PROMPT_ERROR_HEADER,
+                UiText.GENERIC_ERROR_HEADER,
                 errorBody,
                 UiText.LOGIN_PROMPT_TRY_AGAIN,
                 UiText.LOGIN_PROMPT_CANCEL,

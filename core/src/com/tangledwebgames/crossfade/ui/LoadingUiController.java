@@ -65,7 +65,7 @@ public class LoadingUiController extends UiStage {
 
     public void showErrorDialog(Boolean isNetworkError) {
         showDialog(
-                UiText.LOGIN_PROMPT_ERROR_HEADER,
+                UiText.GENERIC_ERROR_HEADER,
                 (isNetworkError) ? UiText.LOGIN_PROMPT_NETWORK_ERROR_BODY : UiText.LOGIN_PROMPT_UNKNOWN_ERROR_BODY,
                 UiText.LOGIN_PROMPT_TRY_AGAIN,
                 UiText.LOGIN_PROMPT_CANCEL

@@ -1,5 +1,6 @@
 package com.tangledwebgames.crossfade;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.tangledwebgames.crossfade.analytics.CrossFadeAnalytics;
@@ -183,10 +184,8 @@ public class MainController extends ScreenAdapter implements
     }
 
     void goToLevel(int level) {
-        if (!userManager.hasFullVersion() &&
-                level > Levels.MAX_FREE_LEVEL) {
-            showPurchaseDialog(true);
-            analytics.hitMaxFreeLevel();
+        if (isLockedLevel(level)) {
+            hitMaxFreeLevel();
             return;
         } else if (level != gameController.getLevel()) {
             gameController.goToLevel(level);
@@ -202,6 +201,11 @@ public class MainController extends ScreenAdapter implements
 
     void goToPreviousLevel() {
         goToLevel(gameController.getLevel() - 1);
+    }
+
+    private void hitMaxFreeLevel() {
+        analytics.hitMaxFreeLevel();
+        showPurchaseDialog(true);
     }
 
     void resetLevel() {
@@ -280,8 +284,7 @@ public class MainController extends ScreenAdapter implements
 
     @Override
     public void onFullVersionChange() {
-        boolean hasFullVersion = userManager.hasFullVersion();
-        if (!hasFullVersion && getGameState().getLevel() > Levels.MAX_FREE_LEVEL) {
+        if (isLockedLevel(getGameState().getLevel())) {
             goToLevel(1);
         }
         uiController.resetTablesOnAuthChange();
@@ -303,6 +306,11 @@ public class MainController extends ScreenAdapter implements
     }
 
     @Override
+    public void onRestoreUnavailable() {
+        pauseGame(PauseState.PURCHASE_UNAVAILABLE);
+    }
+
+    @Override
     public void onSuccessfulPurchase() {
         pauseGame(PauseState.PURCHASE_SUCCESS);
     }
@@ -313,7 +321,19 @@ public class MainController extends ScreenAdapter implements
     }
 
     @Override
+    public void onPurchaseUnavailable() {
+        pauseGame(PauseState.PURCHASE_UNAVAILABLE);
+    }
+
+    @Override
     public void onPurchaseCanceled() {
         unpauseGame();
+    }
+
+    private boolean isLockedLevel(int level) {
+        if (CrossFadeGame.APP_TYPE == Application.ApplicationType.Android) {
+            return !userManager.hasFullVersion() && level > Levels.MAX_FREE_LEVEL;
+        }
+        return false;
     }
 }
