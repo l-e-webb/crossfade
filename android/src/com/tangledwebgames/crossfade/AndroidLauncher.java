@@ -12,7 +12,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.tangledwebgames.crossfade.android.BuildConfig;
-import com.tangledwebgames.crossfade.data.AndroidUserManager;
 
 public class AndroidLauncher extends AndroidApplication {
 
@@ -28,7 +27,7 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		game = new CrossFadeGame();
 		game.purchaseManager = new PurchaseManagerGoogleBilling(this);
-		game.analytics = new AndroidAnalytics(FirebaseAnalytics.getInstance(this));
+		game.analytics.add(new AndroidFirebaseAnalytics(FirebaseAnalytics.getInstance(this)));
 		game.debug = BuildConfig.DEBUG;
 		initialize(game, config);
 		initializeFirebaseRemoteConfig();
@@ -74,7 +73,7 @@ public class AndroidLauncher extends AndroidApplication {
 			authManager = new AndroidFirebaseAuthManager(this);
 			game.authManager = authManager;
 			FirebaseAuth.getInstance().addAuthStateListener(authManager);
-			game.userManager = new AndroidUserManager();
+			game.userManager = new AndroidFirebaseUserManager();
 		}
 		onConfigComplete();
 	}

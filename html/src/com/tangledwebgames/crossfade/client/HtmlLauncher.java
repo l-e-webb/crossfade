@@ -27,7 +27,6 @@ public class HtmlLauncher extends GwtApplication {
     public ApplicationListener createApplicationListener () {
         CrossFadeGame game = new CrossFadeGame();
         game.authManager = new AuthManagerEmpty(AuthManager.HTML_USER_ID);
-        game.analytics = new HtmlAnalytics();
         game.onConfigComplete();
         return game;
     }

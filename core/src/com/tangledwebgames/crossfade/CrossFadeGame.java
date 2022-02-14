@@ -5,8 +5,9 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.pay.PurchaseManager;
+import com.tangledwebgames.crossfade.analytics.AnalyticsLogger;
+import com.tangledwebgames.crossfade.analytics.AnalyticsMultiplexer;
 import com.tangledwebgames.crossfade.analytics.AuthChangeLogger;
-import com.tangledwebgames.crossfade.analytics.CrossFadeAnalytics;
 import com.tangledwebgames.crossfade.auth.AuthManager;
 import com.tangledwebgames.crossfade.auth.AuthManagerEmpty;
 import com.tangledwebgames.crossfade.data.userdata.GdxUserManager;
@@ -22,12 +23,13 @@ public class CrossFadeGame extends Game {
     public static Locale LOCALE;
     public static final String VERSION = "1.4.0";
 
+    public final AnalyticsMultiplexer analytics = new AnalyticsMultiplexer();
+
     public boolean debug = false;
     public boolean configComplete = false;
     public boolean created = false;
     public PurchaseManager purchaseManager;
     public AuthManager authManager;
-    public CrossFadeAnalytics analytics;
     public UserManager userManager;
 
     @Override
@@ -41,6 +43,7 @@ public class CrossFadeGame extends Game {
         } else {
             Gdx.app.setLogLevel(Application.LOG_NONE);
         }
+        analytics.add(new AnalyticsLogger());
         analytics.appStart();
 
         // If config is already complete before create() was called.

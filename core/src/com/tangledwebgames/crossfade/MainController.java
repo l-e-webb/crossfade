@@ -2,6 +2,7 @@ package com.tangledwebgames.crossfade;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.tangledwebgames.crossfade.analytics.CrossFadeAnalytics;
 import com.tangledwebgames.crossfade.auth.AuthChangeListener;
@@ -188,9 +189,22 @@ public class MainController extends ScreenAdapter implements
             hitMaxFreeLevel();
             return;
         } else if (level != gameController.getLevel()) {
+            final int l = level;
             gameController.goToLevel(level);
             uiController.newLevel();
-            analytics.levelStart(level);
+
+            // Only track level start events if the user stays on the level for at least one second.
+            // This prevents spammed events if the user rapidly advances by clicking "next" or "previous."
+            uiController.addAction(
+                    Actions.sequence(
+                            Actions.delay(1f),
+                            Actions.run(() -> {
+                                if (getGameState().getLevel() == l) {
+                                    analytics.levelStart(l);
+                                }
+                            })
+                    )
+            );
         }
         unpauseGame();
     }

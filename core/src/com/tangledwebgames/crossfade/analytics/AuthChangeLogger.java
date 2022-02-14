@@ -16,7 +16,7 @@ public class AuthChangeLogger implements AuthChangeListener {
 
     @Override
     public void onSignOut() {
-        CrossFadeGame.game.analytics.signOut();
+        CrossFadeGame.game.analytics.logOut();
         Gdx.app.log(LOG_TAG, "User logged out.");
     }
 

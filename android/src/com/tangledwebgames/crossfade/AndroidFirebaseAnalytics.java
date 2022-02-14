@@ -5,7 +5,7 @@ import android.os.Bundle;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tangledwebgames.crossfade.analytics.CrossFadeAnalytics;
 
-class AndroidAnalytics implements CrossFadeAnalytics {
+class AndroidFirebaseAnalytics implements CrossFadeAnalytics {
 
     // Events
     private static final String APP_START = FirebaseAnalytics.Event.APP_OPEN;
@@ -29,7 +29,7 @@ class AndroidAnalytics implements CrossFadeAnalytics {
 
     private final FirebaseAnalytics firebaseAnalytics;
 
-    AndroidAnalytics(FirebaseAnalytics firebaseAnalytics) {
+    AndroidFirebaseAnalytics(FirebaseAnalytics firebaseAnalytics) {
         this.firebaseAnalytics = firebaseAnalytics;
     }
 
@@ -49,7 +49,7 @@ class AndroidAnalytics implements CrossFadeAnalytics {
     }
 
     @Override
-    public void signOut() {
+    public void logOut() {
         firebaseAnalytics.logEvent(SIGN_OUT, null);
     }
 

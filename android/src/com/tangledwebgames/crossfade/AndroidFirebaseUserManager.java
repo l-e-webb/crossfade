@@ -1,4 +1,4 @@
-package com.tangledwebgames.crossfade.data;
+package com.tangledwebgames.crossfade;
 
 import androidx.annotation.NonNull;
 
@@ -15,9 +15,9 @@ import com.tangledwebgames.crossfade.data.userdata.LevelRecord;
 import com.tangledwebgames.crossfade.data.userdata.UserManager;
 import com.tangledwebgames.crossfade.data.userdata.UserRecords;
 
-public class AndroidUserManager extends UserManager implements ValueEventListener {
+public class AndroidFirebaseUserManager extends UserManager implements ValueEventListener {
 
-    private static final String LOG_TAG = AndroidUserManager.class.getSimpleName();
+    private static final String LOG_TAG = AndroidFirebaseUserManager.class.getSimpleName();
 
     private static final String USER_DATA_KEY = "users";
     private static final String RECORDS_KEY = "records";
