@@ -13,6 +13,7 @@ public class DesktopLauncher {
 		config.width = (int) MainScreen.WORLD_WIDTH;
 		config.height = (int) MainScreen.WORLD_HEIGHT;
 		CrossFadeGame game = new CrossFadeGame();
+		game.debug = true;
 		game.authManager = new AuthManagerEmpty(AuthManager.DESKTOP_USER_ID);
 		game.onConfigComplete();
 		new LwjglApplication(game, config);
