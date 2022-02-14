@@ -121,6 +121,7 @@ public class MainController extends ScreenAdapter implements
         uiController.initPause(PauseState.NOT_PAUSED);
         if (getGameState().isWinningState()) {
             gameController.reset();
+            uiController.newLevel();
         }
     }
 

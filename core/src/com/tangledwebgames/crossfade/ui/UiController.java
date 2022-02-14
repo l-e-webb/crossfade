@@ -389,5 +389,4 @@ public class UiController extends UiStage {
             levelSelectMenu.updateAll();
         }
     }
-
 }
