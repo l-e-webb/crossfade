@@ -42,6 +42,7 @@ public class LoadingUiController extends UiStage {
     public void initFull() {
         initStyle();
         loginDialog = new CrossFadeDialog(skin, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
+        loginDialog.setVisible(false);
         addActor(loginDialog);
         updatePositions();
     }

@@ -61,7 +61,7 @@ public class LoadingScreen extends AbstractScreen {
 
     @Override
     public void show() {
-        Gdx.app.log(LOG_TAG, "Loading essential assets loading completed.");
+        Gdx.app.log(LOG_TAG, "Loading essential assets .");
         AssetLoader.instance.loadEssential(); // Waits until complete.
         Gdx.app.log(LOG_TAG, "Essential assets loaded.");
         UiText.init();

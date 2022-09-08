@@ -17,6 +17,8 @@ import java.util.Locale;
 
 public class CrossFadeGame extends Game {
 
+    private static final String LOG_TAG = CrossFadeGame.class.getSimpleName();
+
     public static CrossFadeGame game;
 
     public static Application.ApplicationType APP_TYPE;
@@ -66,12 +68,14 @@ public class CrossFadeGame extends Game {
 
         // Init auth manager
         if (authManager == null) {
+            Gdx.app.log(LOG_TAG, "No auth manager set. Using empty one.");
             authManager = new AuthManagerEmpty();
         }
         authManager.addChangeListener(new AuthChangeLogger());
 
         // Init user manager
         if (userManager == null) {
+            Gdx.app.log(LOG_TAG, "No user manager set. Using local storage.");
             userManager = new GdxUserManager();
         }
         userManager.initialize();
@@ -79,7 +83,10 @@ public class CrossFadeGame extends Game {
         // Init purchase manager
         if (APP_TYPE == Application.ApplicationType.Android) {
             Gdx.input.setCatchKey(Input.Keys.MENU, true);
+            Gdx.app.log(LOG_TAG, "Initializing purchase manager.");
             CrossFadePurchaseManager.setPurchaseManager(purchaseManager);
         }
+
+        Gdx.app.log(LOG_TAG, "Game config complete.");
     }
 }
