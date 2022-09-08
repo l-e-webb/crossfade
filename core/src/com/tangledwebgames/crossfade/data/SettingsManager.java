@@ -8,6 +8,13 @@ import com.tangledwebgames.crossfade.sound.SoundManager;
 
 public class SettingsManager {
 
+    public static final boolean IS_MUSIC_ON_DEFAULT = false;
+    public static final float MUSIC_VOLUME_DEFAULT = 1f;
+    public static final boolean IS_SFX_ON_DEFAULT = true;
+    public static final float SFX_VOLUME_DEFAULT = 1f;
+    public static final boolean ANIMATE_TILES_DEFAULT = true;
+    public static final boolean HIGHLIGHT_TILES_DEFAULT = true;
+
     private static Preferences prefs;
 
     private static final String MUSIC_ON_KEY = "music_on";
@@ -28,15 +35,12 @@ public class SettingsManager {
 
     public static void init() {
         prefs = Gdx.app.getPreferences(PREFERENCES_NAME);
-        isMusicOn = prefs.getBoolean(
-                MUSIC_ON_KEY,
-                CrossFadeGame.APP_TYPE != Application.ApplicationType.WebGL
-        );
-        musicVolume = prefs.getFloat(MUSIC_VOLUME_KEY, 1);
-        isSfxOn = prefs.getBoolean(SFX_ON_KEY, true);
-        sfxVolume = prefs.getFloat(SFX_VOLUME_KEY, 1);
-        animateTiles = prefs.getBoolean(ANIMATE_TILES_KEY, true);
-        highlightTiles = prefs.getBoolean(HIGHLIGHT_TILES_KEY, true);
+        isMusicOn = prefs.getBoolean(MUSIC_ON_KEY, IS_MUSIC_ON_DEFAULT);
+        musicVolume = prefs.getFloat(MUSIC_VOLUME_KEY, MUSIC_VOLUME_DEFAULT);
+        isSfxOn = prefs.getBoolean(SFX_ON_KEY, IS_SFX_ON_DEFAULT);
+        sfxVolume = prefs.getFloat(SFX_VOLUME_KEY, SFX_VOLUME_DEFAULT);
+        animateTiles = prefs.getBoolean(ANIMATE_TILES_KEY, ANIMATE_TILES_DEFAULT);
+        highlightTiles = prefs.getBoolean(HIGHLIGHT_TILES_KEY, HIGHLIGHT_TILES_DEFAULT);
         SoundManager.updateFromSettings();
     }
 
