@@ -24,6 +24,7 @@ public class CrossFadeGame extends Game {
     public static Application.ApplicationType APP_TYPE;
     public static Locale LOCALE;
     public static final String VERSION = "1.4.0";
+    public static final String PRIVACY_POLICY_URL = "https://wikipedia.org";
 
     public final AnalyticsMultiplexer analytics = new AnalyticsMultiplexer();
 

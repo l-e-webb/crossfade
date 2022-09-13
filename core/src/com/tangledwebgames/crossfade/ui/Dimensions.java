@@ -30,14 +30,10 @@ public class Dimensions {
     static final Color PRIMARY_COLOR = new Color(0.05f, 0.95f, 0.05f, 1);
     static final Color DARK_COLOR = new Color(0.08f, 0.2f, 0.08f, 1);
     static final Color DARK_TEXT_COLOR = Color.BLACK;
+    static final Color LINK_TEXT_COLOR = new Color(0x00a0ffff);
     static final Color BUTTON_COLOR = PRIMARY_COLOR;
     static final Color ACTIVE_BUTTON_COLOR = Color.ORANGE;
     static final Color OFF_CHECKBOX_COLOR = new Color(0.25f, 0.25f, 0.25f, 1);
-    static final Color UI_BACKGROUND_COLOR = new Color(18f / 255f, 30f / 255f, 80f / 255f, 1);
-    static final Color UI_BACKGROUND_COLOR_DOUBLED = new Color(
-            36f / 255f,
-            60f / 255f,
-            160f / 255f,
-            1
-    );
+    static final Color UI_BACKGROUND_COLOR = new Color(0x121d50ff);
+    static final Color UI_BACKGROUND_COLOR_DOUBLED = new Color(0x243ca0ff);
 }

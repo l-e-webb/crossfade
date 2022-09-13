@@ -17,6 +17,8 @@ public interface UiReceiver {
     void onMusicVolumeSliderChanged(float value);
     void onAnimateTilesCheckboxChanged(boolean isChecked);
     void onHighlightTilesCheckboxChanged(boolean isChecked);
+    void onShareUsageDataCheckboxChanged(boolean isChecked);
+    void onPauseMenuPrivacyPolicyClicked();
     void onPauseMenuContinueButtonClicked();
     void onPauseMenuBuyButtonClicked();
     void onSignOutButtonClicked();

@@ -25,6 +25,7 @@ class PauseMenu extends Table {
     private Slider musicVolumeSlider;
     private CheckBox animateTiles;
     private CheckBox highlightTiles;
+    private CheckBox sharingUsageData;
     private Skin skin;
     private boolean listenForChanges = true;
 
@@ -46,6 +47,7 @@ class PauseMenu extends Table {
         musicVolumeSlider.setValue(SettingsManager.getMusicVolume());
         animateTiles.setChecked(SettingsManager.isAnimateTiles());
         highlightTiles.setChecked(SettingsManager.isHighlightTiles());
+        sharingUsageData.setChecked(SettingsManager.isSharingUsageData());
         listenForChanges = true;
     }
 
@@ -99,6 +101,8 @@ class PauseMenu extends Table {
         animateTiles.getImageCell()
                 .maxSize(Dimensions.CHECKBOX_SIZE)
                 .spaceRight(Dimensions.CHECKBOX_RIGHT_PADDING);
+        animateTiles.getLabelCell().growX();
+        animateTiles.getLabel().setWrap(true);
         animateTiles.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -111,11 +115,35 @@ class PauseMenu extends Table {
         highlightTiles.getImageCell()
                 .maxSize(Dimensions.CHECKBOX_SIZE)
                 .spaceRight(Dimensions.CHECKBOX_RIGHT_PADDING);
+        highlightTiles.getLabelCell().growX();
+        highlightTiles.getLabel().setWrap(true);
         highlightTiles.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (!listenForChanges) return;
                 receiver.onHighlightTilesCheckboxChanged(highlightTiles.isChecked());
+            }
+        });
+        sharingUsageData = new CheckBox(UiText.DATA_PRIVACY_SETTINGS_ITEM, skin);
+        sharingUsageData.getImage().setScaling(Scaling.fit);
+        sharingUsageData.getImageCell()
+                .maxSize(Dimensions.CHECKBOX_SIZE)
+                .spaceRight(Dimensions.CHECKBOX_RIGHT_PADDING);
+        sharingUsageData.getLabelCell().growX();
+        sharingUsageData.getLabel().setWrap(true);
+        sharingUsageData.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (!listenForChanges) return;
+                receiver.onShareUsageDataCheckboxChanged(sharingUsageData.isChecked());
+            }
+        });
+        final Label privacyPolicyLink = new Label(UiText.DATA_PRIVACY_POLICY, skin, "linkStyle");
+        privacyPolicyLink.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!listenForChanges) return;
+                receiver.onPauseMenuPrivacyPolicyClicked();
             }
         });
         final Button pauseContinueButton = new TextButton(UiText.CONTINUE, skin);
@@ -125,6 +153,8 @@ class PauseMenu extends Table {
                 receiver.onPauseMenuContinueButtonClicked();
             }
         });
+
+        row();
         add(pauseLabel).center().colspan(2);
         row();
         add(sfxOn).left().colspan(2).spaceTop(Dimensions.PADDING_LARGE);
@@ -137,9 +167,13 @@ class PauseMenu extends Table {
         add(musicLevelLabel).left();
         add(musicVolumeSlider).growX().padLeft(Dimensions.SLIDER_PADDING_LEFT);
         row();
-        add(animateTiles).left().colspan(2).spaceTop(Dimensions.PADDING_LARGE);
+        add(animateTiles).growX().colspan(2).spaceTop(Dimensions.PADDING_LARGE);
         row();
-        add(highlightTiles).left().colspan(2).spaceTop(Dimensions.PADDING_LARGE);
+        add(highlightTiles).growX().colspan(2).spaceTop(Dimensions.PADDING_LARGE);
+        row();
+        add(sharingUsageData).growX().colspan(2).spaceTop(Dimensions.PADDING_LARGE);
+        row();
+        add(privacyPolicyLink).center().colspan(2).spaceTop(Dimensions.PADDING_MEDIUM);
         row();
         if (CrossFadePurchaseManager.isPurchaseAvailable()) {
             final Button buyButton = new TextButton(UiText.BUY, skin);

@@ -165,13 +165,7 @@ public class LoadingScreen extends AbstractScreen {
     }
 
     public void onPrivacyPolicyClick() {
-        Gdx.app.log(LOG_TAG, "Navigating to privacy policy.");
-        // Placeholder URL
-        boolean success = Gdx.net.openURI("https://www.wikipedia.org");
-        if (!success) {
-            Gdx.app.log(LOG_TAG, "Failed to resolve uri");
-        }
-
+        Gdx.net.openURI(CrossFadeGame.PRIVACY_POLICY_URL);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.tangledwebgames.crossfade;
 
+import com.badlogic.gdx.Gdx;
 import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.game.GameState;
 import com.tangledwebgames.crossfade.sound.SoundManager;
@@ -86,6 +87,17 @@ public class UiEventHandler implements UiReceiver {
     public void onHighlightTilesCheckboxChanged(boolean isChecked) {
         SettingsManager.setHighlightTiles(isChecked);
         SoundManager.buttonSound();
+    }
+
+    @Override
+    public void onShareUsageDataCheckboxChanged(boolean isChecked) {
+        SettingsManager.setIsSharingUsageData(isChecked);
+        SoundManager.buttonSound();
+    }
+
+    @Override
+    public void onPauseMenuPrivacyPolicyClicked() {
+        Gdx.net.openURI(CrossFadeGame.PRIVACY_POLICY_URL);
     }
 
     @Override
