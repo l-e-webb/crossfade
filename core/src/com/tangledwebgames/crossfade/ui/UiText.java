@@ -56,6 +56,12 @@ public class UiText {
     static String LOGIN_PROMPT_SUCCESS;
     static String LOGOUT_SUCCESS;
     static String GENERIC_ERROR_HEADER;
+    static String DATA_PRIVACY_HEADER;
+    static String DATA_PRIVACY_BODY;
+    static String DATA_PRIVACY_AGREE;
+    static String DATA_PRIVACY_DISAGREE;
+    static String DATA_PRIVACY_POLICY;
+    static String DATA_PRIVACY_SETTINGS_ITEM;
 
     private UiText() {
     }
@@ -110,6 +116,12 @@ public class UiText {
         LOGIN_PROMPT_SUCCESS = AssetLoader.instance.gameText.get("LOGIN_PROMPT_SUCCESS");
         LOGOUT_SUCCESS = AssetLoader.instance.gameText.get("LOGOUT_SUCCESS");
         GENERIC_ERROR_HEADER = AssetLoader.instance.gameText.get("GENERIC_ERROR_HEADER");
+        DATA_PRIVACY_HEADER = AssetLoader.instance.gameText.get("DATA_PRIVACY_HEADER");
+        DATA_PRIVACY_BODY = AssetLoader.instance.gameText.get("DATA_PRIVACY_BODY");
+        DATA_PRIVACY_AGREE = AssetLoader.instance.gameText.get("DATA_PRIVACY_AGREE");
+        DATA_PRIVACY_DISAGREE = AssetLoader.instance.gameText.get("DATA_PRIVACY_DISAGREE");
+        DATA_PRIVACY_POLICY = AssetLoader.instance.gameText.get("DATA_PRIVACY_POLICY");
+        DATA_PRIVACY_SETTINGS_ITEM = AssetLoader.instance.gameText.get("DATA_PRIVACY_SETTINGS_ITEM");
     }
 
 }

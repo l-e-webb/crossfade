@@ -3,6 +3,7 @@ package com.tangledwebgames.crossfade.ui;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -16,6 +17,7 @@ public class LoadingUiController extends UiStage {
     LoadingScreen loadingScreen;
     Table loadingTable;
     CrossFadeDialog loginDialog;
+    CrossFadeDialog dataSharingDialog;
 
     public LoadingUiController(Viewport viewport, LoadingScreen loadingScreen) {
         super(viewport);
@@ -42,9 +44,17 @@ public class LoadingUiController extends UiStage {
     public void initFull() {
         initStyle();
         loginDialog = new CrossFadeDialog(skin, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
-        loginDialog.setVisible(false);
         addActor(loginDialog);
+        dataSharingDialog = new CrossFadeDialog(
+                skin,
+                tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR),
+                true
+        );
+        buildDataSharingDialog();
+        addActor(dataSharingDialog);
         updatePositions();
+        hideLoginDialog();
+        hideDataSharingDialog();
     }
 
     public void showLoading() {
@@ -73,10 +83,59 @@ public class LoadingUiController extends UiStage {
         );
     }
 
+    public void hideLoginDialog() {
+        loginDialog.setVisible(false);
+    }
+
+    public void showDataSharingDialog() {
+        hideLoading();
+        hideLoginDialog();
+        dataSharingDialog.setVisible(true);
+    }
+
+    public void hideDataSharingDialog() {
+        dataSharingDialog.setVisible(false);
+    }
+
+    private void buildDataSharingDialog() {
+        dataSharingDialog.setText(
+                UiText.DATA_PRIVACY_HEADER,
+                UiText.DATA_PRIVACY_BODY,
+                UiText.DATA_PRIVACY_AGREE,
+                UiText.DATA_PRIVACY_DISAGREE
+        );
+        Label privacyPolicy = new Label(UiText.DATA_PRIVACY_POLICY, skin, "linkStyle");
+        privacyPolicy.setTouchable(Touchable.enabled);
+        dataSharingDialog.row();
+        dataSharingDialog.add(privacyPolicy);
+        dataSharingDialog.setConfirmButtonListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                loadingScreen.onDataSharingDialogAgree();
+            }
+        });
+        dataSharingDialog.setCancelButtonListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                loadingScreen.onDataShoringDialogDisagree();
+            }
+        });
+        privacyPolicy.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                loadingScreen.onPrivacyPolicyClick();
+            }
+        });
+    }
+
     private void showDialog(
             String headerText, String labelText, String confirmText, String cancelText
     ) {
         hideLoading();
+        hideDataSharingDialog();
         loginDialog.setVisible(true);
         loginDialog.setText(headerText, labelText, confirmText, cancelText);
         loginDialog.setConfirmButtonListener(new ClickListener() {
@@ -107,5 +166,18 @@ public class LoadingUiController extends UiStage {
                 worldHeight / 2,
                 Align.center
         );
+        dataSharingDialog.setSize(
+                worldWidth * Dimensions.PAUSE_TABLE_WIDTH_RATIO,
+                getViewport().getWorldHeight() * Dimensions.GENERIC_DIALOG_HEIGHT_RATIO
+        );
+        dataSharingDialog.setPosition(
+                worldWidth / 2,
+                worldHeight / 2,
+                Align.center
+        );
+    }
+
+    public boolean isDataSharingDialogVisible() {
+        return dataSharingDialog != null && dataSharingDialog.isVisible();
     }
 }

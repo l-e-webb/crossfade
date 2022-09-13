@@ -1,9 +1,7 @@
 package com.tangledwebgames.crossfade.data;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.tangledwebgames.crossfade.CrossFadeGame;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 
 public class SettingsManager {
@@ -14,6 +12,7 @@ public class SettingsManager {
     public static final float SFX_VOLUME_DEFAULT = 1f;
     public static final boolean ANIMATE_TILES_DEFAULT = true;
     public static final boolean HIGHLIGHT_TILES_DEFAULT = true;
+    public static final boolean SHARE_USAGE_DATA_DEFAULT = false;
 
     private static Preferences prefs;
 
@@ -23,6 +22,8 @@ public class SettingsManager {
     private static final String SFX_VOLUME_KEY = "sfx_volume";
     private static final String ANIMATE_TILES_KEY = "animate_tiles";
     private static final String HIGHLIGHT_TILES_KEY = "highlight_tiles";
+    private static final String SHARE_USAGE_DATA_KEY = "share_data";
+    private static final String SHARE_DATA_DIALOG_SHOWN_KEY = "share_data_dialog_shown";
 
     private static final String PREFERENCES_NAME = "crossfade_preferences";
 
@@ -32,6 +33,8 @@ public class SettingsManager {
     private static float sfxVolume;
     private static boolean animateTiles;
     private static boolean highlightTiles;
+    private static boolean isSharingUsageData;
+    private static boolean isDataSharingDialogShown;
 
     public static void init() {
         prefs = Gdx.app.getPreferences(PREFERENCES_NAME);
@@ -41,6 +44,8 @@ public class SettingsManager {
         sfxVolume = prefs.getFloat(SFX_VOLUME_KEY, SFX_VOLUME_DEFAULT);
         animateTiles = prefs.getBoolean(ANIMATE_TILES_KEY, ANIMATE_TILES_DEFAULT);
         highlightTiles = prefs.getBoolean(HIGHLIGHT_TILES_KEY, HIGHLIGHT_TILES_DEFAULT);
+        isSharingUsageData = prefs.getBoolean(SHARE_USAGE_DATA_KEY, SHARE_USAGE_DATA_DEFAULT);
+        isDataSharingDialogShown = prefs.getBoolean(SHARE_DATA_DIALOG_SHOWN_KEY, false);
         SoundManager.updateFromSettings();
     }
 
@@ -51,6 +56,8 @@ public class SettingsManager {
         prefs.putFloat(SFX_VOLUME_KEY, sfxVolume);
         prefs.putBoolean(ANIMATE_TILES_KEY, animateTiles);
         prefs.putBoolean(HIGHLIGHT_TILES_KEY, highlightTiles);
+        prefs.putBoolean(SHARE_USAGE_DATA_KEY, isSharingUsageData);
+        prefs.putBoolean(SHARE_DATA_DIALOG_SHOWN_KEY, isDataSharingDialogShown);
         prefs.flush();
     }
 
@@ -104,5 +111,21 @@ public class SettingsManager {
 
     public static void setHighlightTiles(boolean highlightTiles) {
         SettingsManager.highlightTiles = highlightTiles;
+    }
+
+    public static boolean isSharingUsageData() {
+        return isSharingUsageData;
+    }
+
+    public static void setIsSharingUsageData(boolean isSharingUsageData) {
+        SettingsManager.isSharingUsageData = isSharingUsageData;
+    }
+
+    public static boolean isIsDataSharingDialogShown() {
+        return isDataSharingDialogShown;
+    }
+
+    public static void setIsDataSharingDialogShown(boolean isDataSharingDialogShown) {
+        SettingsManager.isDataSharingDialogShown = isDataSharingDialogShown;
     }
 }

@@ -85,12 +85,29 @@ public class LoadingScreen extends AbstractScreen {
             AssetLoader.instance.update();
         }
 
-        if (loaded && getGame().configComplete && !loginStarted) {
+        if (shouldShowDataSharingDialog()) {
+            uiController.showDataSharingDialog();
+        } else if (shouldBeginLogin()) {
             beginLogIn();
         }
 
         uiController.act(delta);
         uiController.draw();
+    }
+
+    private boolean shouldBeginLogin() {
+        return loaded &&
+                getGame().configComplete &&
+                !loginStarted &&
+                SettingsManager.isIsDataSharingDialogShown();
+    }
+
+    private boolean shouldShowDataSharingDialog() {
+        return loaded &&
+                getGame().configComplete &&
+                !loginStarted &&
+                !SettingsManager.isIsDataSharingDialogShown() &&
+                !uiController.isDataSharingDialogVisible();
     }
 
     private void onLoadComplete() {
@@ -100,7 +117,6 @@ public class LoadingScreen extends AbstractScreen {
         Levels.init();
         uiController.initFull();
         loaded = true;
-
     }
 
     private void beginLogIn() {
@@ -130,6 +146,32 @@ public class LoadingScreen extends AbstractScreen {
 
     public void onNoLoginButtonClicked() {
         getGame().authManager.signInAnonymous();
+    }
+
+    public void onDataSharingDialogAgree() {
+        Gdx.app.log(LOG_TAG, "Starting usage data sharing.");
+        SettingsManager.setIsSharingUsageData(true);
+        SettingsManager.setIsDataSharingDialogShown(true);
+        SettingsManager.flush();
+        uiController.hideDataSharingDialog();
+    }
+
+    public void onDataShoringDialogDisagree() {
+        Gdx.app.log(LOG_TAG, "No usage data sharing.");
+        SettingsManager.setIsSharingUsageData(false);
+        SettingsManager.setIsDataSharingDialogShown(true);
+        SettingsManager.flush();
+        uiController.hideDataSharingDialog();
+    }
+
+    public void onPrivacyPolicyClick() {
+        Gdx.app.log(LOG_TAG, "Navigating to privacy policy.");
+        // Placeholder URL
+        boolean success = Gdx.net.openURI("https://www.wikipedia.org");
+        if (!success) {
+            Gdx.app.log(LOG_TAG, "Failed to resolve uri");
+        }
+
     }
 
     @Override

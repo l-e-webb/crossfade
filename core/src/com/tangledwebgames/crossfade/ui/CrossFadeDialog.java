@@ -15,9 +15,16 @@ public class CrossFadeDialog extends Table {
     private TextButton confirmButton;
     private TextButton cancelButton;
 
+    public boolean buttonsOnSeparateLines;
+
     CrossFadeDialog(Skin skin, Drawable background) {
+        this(skin, background, false);
+    }
+
+    CrossFadeDialog(Skin skin, Drawable background, boolean buttonsOnSeparateLines) {
         super();
         this.background(background);
+        this.buttonsOnSeparateLines = buttonsOnSeparateLines;
         headerLabel = new Label("", skin);
         headerLabel.setWrap(true);
         headerLabel.setAlignment(Align.center);
@@ -71,10 +78,19 @@ public class CrossFadeDialog extends Table {
         cancelButton.addListener(listener);
     }
 
+    private int numColumns() {
+        if (buttonsOnSeparateLines || cancelButton.getText().length() > 0) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
     private void rebuild() {
         clearChildren();
 
         //Layout
+        int numColumns = numColumns();
         boolean includeCancelButton = cancelButton.getText().length() > 0;
         boolean includeHeader = headerLabel.getText().length() > 0;
         boolean includeLabel = textLabel.getText().length > 0;
@@ -83,12 +99,12 @@ public class CrossFadeDialog extends Table {
         if (includeHeader) {
             row();
             add(headerLabel)
-                    .growX().center().colspan(includeCancelButton ? 2 : 1);
+                    .growX().center().colspan(numColumns);
         }
         if (includeLabel) {
             row();
             add(textLabel)
-                    .grow().center().colspan(includeCancelButton ? 2 : 1);
+                    .grow().center().colspan(numColumns);
         }
         row();
         add(confirmButton)
@@ -97,6 +113,9 @@ public class CrossFadeDialog extends Table {
                 .fillX()
                 .uniformX();
         if (includeCancelButton) {
+            if (buttonsOnSeparateLines) {
+                row();
+            }
             add(cancelButton)
                     .center()
                     .height(Dimensions.PAUSE_BUTTON_HEIGHT)

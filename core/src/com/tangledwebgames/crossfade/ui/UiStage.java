@@ -58,6 +58,7 @@ public class UiStage extends Stage {
                 Dimensions.ACTIVE_BUTTON_COLOR
         );
         Label.LabelStyle deemphasisStyle = new Label.LabelStyle(uiFont, Dimensions.DARK_COLOR);
+        Label.LabelStyle linkStyle = new Label.LabelStyle(uiFont, Dimensions.ACTIVE_BUTTON_COLOR);
         tile9Patch = new NinePatchDrawable(
                 new NinePatch(AssetLoader.instance.tileSmall, 13, 13, 13, 13));
         NinePatchDrawable button9Patch = new NinePatchDrawable(tile9Patch);
@@ -101,6 +102,7 @@ public class UiStage extends Stage {
         skin.add("smallStyle", smallStyle);
         skin.add("highlightStyle", highlightStyle);
         skin.add("deemphasisStyle", deemphasisStyle);
+        skin.add("linkStyle", linkStyle);
         skin.add("default", labelStyle);
         skin.add("default", buttonStyle);
         skin.add("default", checkBoxStyle);
