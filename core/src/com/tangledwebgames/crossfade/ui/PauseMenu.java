@@ -34,7 +34,6 @@ class PauseMenu extends Table {
         //Uncomment to see wireframe.
         //setDebug(true);
         background(background);
-        pad(Dimensions.PADDING_LARGE);
         this.skin = skin;
         initContents(receiver);
     }
@@ -53,6 +52,7 @@ class PauseMenu extends Table {
 
     void initContents(UiReceiver receiver) {
         clear();
+        pad(Dimensions.PADDING_LARGE);
         final Label pauseLabel = new Label(UiText.PAUSED, skin);
         sfxOn = new CheckBox(UiText.SFX, skin);
         sfxOn.getImage().setScaling(Scaling.fit);
@@ -153,6 +153,7 @@ class PauseMenu extends Table {
                 receiver.onPauseMenuContinueButtonClicked();
             }
         });
+        final Label versionCode = new Label("Version " + CrossFadeGame.VERSION, skin, "smallDeemphasisStyle");
 
         row();
         add(pauseLabel).center().colspan(2);
@@ -218,6 +219,8 @@ class PauseMenu extends Table {
                 .spaceTop(Dimensions.PADDING_LARGE)
                 .height(Dimensions.PAUSE_BUTTON_HEIGHT)
                 .minWidth(Dimensions.PAUSE_BUTTON_MIN_WIDTH);
+        row();
+        add(versionCode).colspan(2).spaceTop(Dimensions.PADDING_MEDIUM);
     }
 
 }

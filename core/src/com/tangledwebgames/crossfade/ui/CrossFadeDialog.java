@@ -79,7 +79,7 @@ public class CrossFadeDialog extends Table {
     }
 
     private int numColumns() {
-        if (buttonsOnSeparateLines || cancelButton.getText().length() > 0) {
+        if (buttonsOnSeparateLines || cancelButton.getText().length() == 0) {
             return 1;
         } else {
             return 2;
