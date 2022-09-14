@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.tangledwebgames.crossfade.sound.SoundManager;
 
+import java.util.HashSet;
+
 public class SettingsManager {
 
     public static final boolean IS_MUSIC_ON_DEFAULT = false;
@@ -35,6 +37,8 @@ public class SettingsManager {
     private static boolean highlightTiles;
     private static boolean isSharingUsageData;
     private static boolean isDataSharingDialogShown;
+
+    private static final HashSet<DataSharingPermissionListener> dataSharingPermissionListeners = new HashSet<>();
 
     public static void init() {
         prefs = Gdx.app.getPreferences(PREFERENCES_NAME);
@@ -119,6 +123,7 @@ public class SettingsManager {
 
     public static void setIsSharingUsageData(boolean isSharingUsageData) {
         SettingsManager.isSharingUsageData = isSharingUsageData;
+        notifyDataSharingPermissionListeners(isSharingUsageData);
     }
 
     public static boolean isIsDataSharingDialogShown() {
@@ -127,5 +132,23 @@ public class SettingsManager {
 
     public static void setIsDataSharingDialogShown(boolean isDataSharingDialogShown) {
         SettingsManager.isDataSharingDialogShown = isDataSharingDialogShown;
+    }
+
+    public static void addDataSharingPermissionListener(DataSharingPermissionListener listener) {
+        dataSharingPermissionListeners.add(listener);
+    }
+
+    public static void removeDataSharingPermissionListener(DataSharingPermissionListener listener) {
+        dataSharingPermissionListeners.remove(listener);
+    }
+
+    public static void clearDataSharingPermissionListeners() {
+        dataSharingPermissionListeners.clear();
+    }
+
+    private static void notifyDataSharingPermissionListeners(boolean isSharingUsageData) {
+        for (DataSharingPermissionListener listener : dataSharingPermissionListeners) {
+            listener.onDataSharingPermissionChanged(isSharingUsageData);
+        }
     }
 }

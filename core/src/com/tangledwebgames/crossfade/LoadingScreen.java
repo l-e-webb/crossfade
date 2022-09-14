@@ -79,7 +79,10 @@ public class LoadingScreen extends AbstractScreen {
     public void render(float delta) {
         super.render(delta);
 
-        if (AssetLoader.instance.isFinished() && !loaded) {
+        if (!loaded &&
+                AssetLoader.instance.isFinished() &&
+                !CrossFadePurchaseManager.isInitializing()
+        ) {
             onLoadComplete();
         } else {
             AssetLoader.instance.update();
@@ -132,6 +135,9 @@ public class LoadingScreen extends AbstractScreen {
     }
 
     private void goToMainScreen() {
+        if (!getGame().userManager.hasFullVersion()) {
+            CrossFadePurchaseManager.restoreSilently();
+        }
         uiController.addAction(Actions.run(
                 () -> {
                     getGame().authManager.removeChangeListener(authChangeListener);
@@ -141,10 +147,12 @@ public class LoadingScreen extends AbstractScreen {
     }
 
     public void onLoginButtonClicked() {
+        uiController.hideLoginDialog();
         getGame().authManager.signIn(signInListener);
     }
 
     public void onNoLoginButtonClicked() {
+        uiController.hideLoginDialog();
         getGame().authManager.signInAnonymous();
     }
 

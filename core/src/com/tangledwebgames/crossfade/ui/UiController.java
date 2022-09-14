@@ -154,7 +154,6 @@ public class UiController extends UiStage {
     }
 
     private void showPurchaseSuccess() {
-        resetTablesOnAuthChange();
         setDialog(
                 UiText.FULL_VERSION_UNLOCKED,
                 UiText.OK,

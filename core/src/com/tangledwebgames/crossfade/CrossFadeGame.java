@@ -10,6 +10,7 @@ import com.tangledwebgames.crossfade.analytics.AnalyticsMultiplexer;
 import com.tangledwebgames.crossfade.analytics.AuthChangeLogger;
 import com.tangledwebgames.crossfade.auth.AuthManager;
 import com.tangledwebgames.crossfade.auth.AuthManagerEmpty;
+import com.tangledwebgames.crossfade.data.SettingsManager;
 import com.tangledwebgames.crossfade.data.userdata.GdxUserManager;
 import com.tangledwebgames.crossfade.data.userdata.UserManager;
 
@@ -62,6 +63,7 @@ public class CrossFadeGame extends Game {
     public void dispose() {
         super.dispose();
         if (purchaseManager != null) purchaseManager.dispose();
+        SettingsManager.clearDataSharingPermissionListeners();
     }
 
     public void onConfigComplete() {

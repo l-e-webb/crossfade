@@ -78,6 +78,7 @@ public class CrossFadePurchaseManager {
         public void handleInstallError(Throwable e) {
             Gdx.app.error(LOG_TAG, e.getMessage());
             isPurchaseObserverInstalled = false;
+            pm = null;
         }
 
         @Override
@@ -182,6 +183,10 @@ public class CrossFadePurchaseManager {
 
     static void restoreSilently() {
         restore(emptyEventListener);
+    }
+
+    public static boolean isInitializing() {
+        return !isPurchaseObserverInstalled && pm != null;
     }
 
     public static boolean isPurchaseAvailable() {

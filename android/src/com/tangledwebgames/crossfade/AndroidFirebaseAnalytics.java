@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tangledwebgames.crossfade.analytics.CrossFadeAnalytics;
+import com.tangledwebgames.crossfade.data.DataSharingPermissionListener;
 import com.tangledwebgames.crossfade.data.SettingsManager;
 
 class AndroidFirebaseAnalytics implements CrossFadeAnalytics {
@@ -21,7 +22,6 @@ class AndroidFirebaseAnalytics implements CrossFadeAnalytics {
     private static final String HIT_MAX_FREE_LEVEL = "hit_max_free_level";
 
     // Params
-    private static final String METHOD = FirebaseAnalytics.Param.METHOD;
     private static final String LEVEL = FirebaseAnalytics.Param.LEVEL;
     private static final String TIME = "level_time";
     private static final String MOVES = "level_moves";
@@ -32,35 +32,33 @@ class AndroidFirebaseAnalytics implements CrossFadeAnalytics {
 
     AndroidFirebaseAnalytics(FirebaseAnalytics firebaseAnalytics) {
         this.firebaseAnalytics = firebaseAnalytics;
+        SettingsManager.addDataSharingPermissionListener(
+                firebaseAnalytics::setAnalyticsCollectionEnabled
+        );
     }
 
     @Override
     public void appStart() {
-        if (!SettingsManager.isSharingUsageData()) return;
         firebaseAnalytics.logEvent(APP_START, null);
     }
 
     @Override
     public void login() {
-        if (!SettingsManager.isSharingUsageData()) return;
         firebaseAnalytics.logEvent(LOG_IN, null);
     }
 
     @Override
     public void signUp() {
-        if (!SettingsManager.isSharingUsageData()) return;
         firebaseAnalytics.logEvent(SIGN_UP, null);
     }
 
     @Override
     public void logOut() {
-        if (!SettingsManager.isSharingUsageData()) return;
         firebaseAnalytics.logEvent(SIGN_OUT, null);
     }
 
     @Override
     public void levelStart(int level) {
-        if (!SettingsManager.isSharingUsageData()) return;
         Bundle levelStartBundle = new Bundle();
         levelStartBundle.putLong(LEVEL, level);
         firebaseAnalytics.logEvent(LEVEL_START, levelStartBundle);
@@ -68,7 +66,6 @@ class AndroidFirebaseAnalytics implements CrossFadeAnalytics {
 
     @Override
     public void levelComplete(int level, int time, int moves, boolean isRecord, boolean isFirstTime) {
-        if (!SettingsManager.isSharingUsageData()) return;
         Bundle levelCompleteBundle = new Bundle();
         levelCompleteBundle.putLong(LEVEL, level);
         levelCompleteBundle.putLong(TIME, time);
@@ -80,7 +77,6 @@ class AndroidFirebaseAnalytics implements CrossFadeAnalytics {
 
     @Override
     public void levelSkipped(int level, int time, int moves) {
-        if (!SettingsManager.isSharingUsageData()) return;
         Bundle levelSkippedBundle = new Bundle();
         levelSkippedBundle.putLong(LEVEL, level);
         levelSkippedBundle.putLong(TIME, time);
@@ -91,19 +87,16 @@ class AndroidFirebaseAnalytics implements CrossFadeAnalytics {
 
     @Override
     public void purchaseFullVersion() {
-        if (!SettingsManager.isSharingUsageData()) return;
         firebaseAnalytics.logEvent(PURCHASE_FULL_VERSION, null);
     }
 
     @Override
     public void restoreFullVersion() {
-        if (!SettingsManager.isSharingUsageData()) return;
         firebaseAnalytics.logEvent(RESTORE_FULL_VERSION, null);
     }
 
     @Override
     public void hitMaxFreeLevel() {
-        if (!SettingsManager.isSharingUsageData()) return;
         firebaseAnalytics.logEvent(HIT_MAX_FREE_LEVEL, null);
     }
 }

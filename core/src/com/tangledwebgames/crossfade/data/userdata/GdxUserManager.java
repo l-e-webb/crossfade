@@ -34,6 +34,7 @@ public class GdxUserManager extends UserManager {
 
     @Override
     public void refreshUser() {
+        Gdx.app.log(LOG_TAG, "Refreshing user data.");
         String userId = CrossFadeGame.game.authManager.getUserId();
 
         if (!userRecords.userId.equals(userId)) {
@@ -43,27 +44,32 @@ public class GdxUserManager extends UserManager {
 
         UserRecords newRecords = loadRecords(userId);
         if (consolidateRecords(newRecords)) {
+            Gdx.app.log(LOG_TAG, "Updating records after consolidation");
             saveRecords();
         }
     }
 
     private UserRecords loadRecords(String userId) {
         UserRecords records = new UserRecords(userId);
-        String filePath = userId + "_" + USER_RECORD_FILEPATH;
         if (!Gdx.files.isLocalStorageAvailable()) {
+            Gdx.app.log(LOG_TAG, "Creating empty user records due to absence of local storage.");
             return records;
         }
+
+        String filePath = userId + "_" + USER_RECORD_FILEPATH;
         FileHandle recordsFile = Gdx.files.local(filePath);
         if (!recordsFile.exists()) {
+            Gdx.app.log(LOG_TAG, "Creating empty user records since none found in local storage.");
             return records;
         }
 
         try {
             records = new Json().fromJson(UserRecords.class, recordsFile);
+            Gdx.app.log(LOG_TAG, "Successfully loaded user records from local storage.");
         } catch (SerializationException e) {
-            Gdx.app.error(LOG_TAG, "Error deserializing record data JSON.", e);
+            Gdx.app.error(LOG_TAG, "Error deserializing user records JSON.", e);
         } catch (Exception e) {
-            Gdx.app.error(LOG_TAG, "Error loading record data.", e);
+            Gdx.app.error(LOG_TAG, "Error loading user records from local storage.", e);
         }
 
         return records;
@@ -71,6 +77,7 @@ public class GdxUserManager extends UserManager {
 
     private void saveRecords() {
         if (!Gdx.files.isLocalStorageAvailable()) {
+            Gdx.app.log(LOG_TAG, "Skipping saving user records due to absence of local storage.");
             return;
         }
         FileHandle recordsFile = Gdx.files.local(userRecords.userId + "_" + USER_RECORD_FILEPATH);
@@ -80,10 +87,11 @@ public class GdxUserManager extends UserManager {
         recordsToSave.hasFullVersion = false;
         try {
             new Json().toJson(recordsToSave, recordsFile);
+            Gdx.app.log(LOG_TAG, "Successfully saved user records to local storage.");
         } catch (SerializationException e) {
-            Gdx.app.error(LOG_TAG, "Error serializing record data as JSON.", e);
+            Gdx.app.error(LOG_TAG, "Error serializing user records as JSON.", e);
         } catch (RuntimeException e) {
-            Gdx.app.error(LOG_TAG, "Error writing record data to file.", e);
+            Gdx.app.error(LOG_TAG, "Error writing user records to local storage.", e);
         }
     }
 }

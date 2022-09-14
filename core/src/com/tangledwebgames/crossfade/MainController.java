@@ -67,8 +67,7 @@ public class MainController extends ScreenAdapter implements
     void loadSavedGameState() {
         SavedGameManager.loadSavedGameState();
         SavedGameState savedGame = SavedGameManager.getSavedGameState();
-        if (savedGame == null ||
-                !userManager.hasFullVersion() && savedGame.getLevel() > Levels.MAX_FREE_LEVEL) {
+        if (savedGame == null || isLockedLevel(savedGame.getLevel())) {
             goToLevel(1);
         } else if (TimeUtils.timeSinceMillis(savedGame.getTimeStamp()) < RESTORE_GAME_STATE_CUTOFF
                 && savedGame.getMoves() != 0) {
@@ -308,6 +307,7 @@ public class MainController extends ScreenAdapter implements
     @Override
     public void onFullVersionRestored() {
         pauseGame(PauseState.PURCHASE_SUCCESS);
+        analytics.restoreFullVersion();
     }
 
     @Override
@@ -328,6 +328,7 @@ public class MainController extends ScreenAdapter implements
     @Override
     public void onSuccessfulPurchase() {
         pauseGame(PauseState.PURCHASE_SUCCESS);
+        analytics.purchaseFullVersion();
     }
 
     @Override
