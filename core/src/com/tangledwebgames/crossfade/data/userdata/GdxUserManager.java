@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
 import com.tangledwebgames.crossfade.CrossFadeGame;
+import com.tangledwebgames.crossfade.auth.AuthManager;
 
 /**
  * Generic user record manager using libGDX local storage, which has existing implementations each
@@ -46,6 +47,10 @@ public class GdxUserManager extends UserManager {
         if (consolidateRecords(newRecords)) {
             Gdx.app.log(LOG_TAG, "Updating records after consolidation");
             saveRecords();
+        }
+
+        if (userId.equals(AuthManager.DESKTOP_USER_ID) || userId.equals(AuthManager.HTML_USER_ID)) {
+            this.userRecords.hasFullVersion = true;
         }
     }
 

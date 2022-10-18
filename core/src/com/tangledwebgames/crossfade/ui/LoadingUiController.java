@@ -2,12 +2,13 @@ package com.tangledwebgames.crossfade.ui;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.tangledwebgames.crossfade.LoadingScreen;
 import com.tangledwebgames.crossfade.data.AssetLoader;
@@ -15,7 +16,8 @@ import com.tangledwebgames.crossfade.data.AssetLoader;
 public class LoadingUiController extends UiStage {
 
     LoadingScreen loadingScreen;
-    Table loadingTable;
+    Container<Actor> loadingContainer;
+    Container<CrossFadeDialog> dialogContainer;
     CrossFadeDialog loginDialog;
     CrossFadeDialog dataSharingDialog;
 
@@ -34,35 +36,40 @@ public class LoadingUiController extends UiStage {
         );
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Dimensions.PRIMARY_COLOR);
         Label loading = new Label("Loading", labelStyle);
-        loadingTable = new Table();
-        loadingTable.setFillParent(true);
-        loadingTable.add(loading).center();
-        loadingTable.setVisible(false);
-        addActor(loadingTable);
+        loadingContainer = new Container<Actor>();
+        loadingContainer.setFillParent(true);
+        loadingContainer.center();
+        loadingContainer.setActor(loading);
+        loadingContainer.setVisible(false);
+        addActor(loadingContainer);
     }
 
     public void initFull() {
         initStyle();
+        dialogContainer = new Container<CrossFadeDialog>();
+        dialogContainer.setFillParent(true);
+        Value dialogMinHeight = Value.percentHeight(Dimensions.GENERIC_DIALOG_HEIGHT_RATIO, dialogContainer);
+        Value dialogWidth = Value.percentWidth(Dimensions.PAUSE_TABLE_WIDTH_RATIO, dialogContainer);
+        dialogContainer.width(dialogWidth);
+        dialogContainer.minHeight(dialogMinHeight);
+        addActor(dialogContainer);
+        dialogContainer.setVisible(false);
+
         loginDialog = new CrossFadeDialog(skin, tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR));
-        addActor(loginDialog);
         dataSharingDialog = new CrossFadeDialog(
                 skin,
                 tile9Patch.tint(Dimensions.UI_BACKGROUND_COLOR),
                 true
         );
         buildDataSharingDialog();
-        addActor(dataSharingDialog);
-        updatePositions();
-        hideLoginDialog();
-        hideDataSharingDialog();
     }
 
     public void showLoading() {
-        loadingTable.setVisible(true);
+        loadingContainer.setVisible(true);
     }
 
     public void hideLoading() {
-        loadingTable.setVisible(false);
+        loadingContainer.setVisible(false);
     }
 
     public void showLoginPrompt() {
@@ -83,18 +90,15 @@ public class LoadingUiController extends UiStage {
         );
     }
 
-    public void hideLoginDialog() {
-        loginDialog.setVisible(false);
+    public void hideDialog() {
+        dialogContainer.setActor(null);
+        dialogContainer.setVisible(false);
     }
 
     public void showDataSharingDialog() {
         hideLoading();
-        hideLoginDialog();
-        dataSharingDialog.setVisible(true);
-    }
-
-    public void hideDataSharingDialog() {
-        dataSharingDialog.setVisible(false);
+        dialogContainer.setActor(dataSharingDialog);
+        dialogContainer.setVisible(true);
     }
 
     private void buildDataSharingDialog() {
@@ -135,8 +139,6 @@ public class LoadingUiController extends UiStage {
             String headerText, String labelText, String confirmText, String cancelText
     ) {
         hideLoading();
-        hideDataSharingDialog();
-        loginDialog.setVisible(true);
         loginDialog.setText(headerText, labelText, confirmText, cancelText);
         loginDialog.setConfirmButtonListener(new ClickListener() {
             @Override
@@ -152,32 +154,13 @@ public class LoadingUiController extends UiStage {
                 loadingScreen.onNoLoginButtonClicked();
             }
         });
-    }
-
-    public void updatePositions() {
-        float worldWidth = getViewport().getWorldWidth();
-        float worldHeight = getViewport().getWorldHeight();
-        loginDialog.setSize(
-                worldWidth * Dimensions.PAUSE_TABLE_WIDTH_RATIO,
-                getViewport().getWorldHeight() * Dimensions.GENERIC_DIALOG_HEIGHT_RATIO
-        );
-        loginDialog.setPosition(
-                worldWidth / 2,
-                worldHeight / 2,
-                Align.center
-        );
-        dataSharingDialog.setSize(
-                worldWidth * Dimensions.PAUSE_TABLE_WIDTH_RATIO,
-                getViewport().getWorldHeight() * Dimensions.GENERIC_DIALOG_HEIGHT_RATIO
-        );
-        dataSharingDialog.setPosition(
-                worldWidth / 2,
-                worldHeight / 2,
-                Align.center
-        );
+        dialogContainer.setActor(loginDialog);
+        dialogContainer.setVisible(true);
     }
 
     public boolean isDataSharingDialogVisible() {
-        return dataSharingDialog != null && dataSharingDialog.isVisible();
+        return dataSharingDialog != null &&
+                dialogContainer.isVisible() &&
+                dialogContainer.getActor() == dataSharingDialog;
     }
 }

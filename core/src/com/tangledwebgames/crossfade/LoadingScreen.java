@@ -1,5 +1,6 @@
 package com.tangledwebgames.crossfade;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -11,9 +12,14 @@ import com.tangledwebgames.crossfade.game.Levels;
 import com.tangledwebgames.crossfade.ui.LoadingUiController;
 import com.tangledwebgames.crossfade.ui.UiText;
 
+import java.util.Collections;
+import java.util.List;
+
 public class LoadingScreen extends AbstractScreen {
 
     private static final String LOG_TAG = LoadingScreen.class.getSimpleName();
+    private static final List<Application.ApplicationType> DATA_REPORTING_APP_TYPES = Collections
+            .singletonList(Application.ApplicationType.Android);
 
     private boolean loginStarted;
     private boolean loaded;
@@ -102,11 +108,13 @@ public class LoadingScreen extends AbstractScreen {
         return loaded &&
                 getGame().configComplete &&
                 !loginStarted &&
-                SettingsManager.isIsDataSharingDialogShown();
+                (!DATA_REPORTING_APP_TYPES.contains(Gdx.app.getType()) ||
+                        SettingsManager.isIsDataSharingDialogShown());
     }
 
     private boolean shouldShowDataSharingDialog() {
         return loaded &&
+                DATA_REPORTING_APP_TYPES.contains(Gdx.app.getType()) &&
                 getGame().configComplete &&
                 !loginStarted &&
                 !SettingsManager.isIsDataSharingDialogShown() &&
@@ -147,12 +155,12 @@ public class LoadingScreen extends AbstractScreen {
     }
 
     public void onLoginButtonClicked() {
-        uiController.hideLoginDialog();
+        uiController.hideDialog();
         getGame().authManager.signIn(signInListener);
     }
 
     public void onNoLoginButtonClicked() {
-        uiController.hideLoginDialog();
+        uiController.hideDialog();
         getGame().authManager.signInAnonymous();
     }
 
@@ -161,7 +169,7 @@ public class LoadingScreen extends AbstractScreen {
         SettingsManager.setIsSharingUsageData(true);
         SettingsManager.setIsDataSharingDialogShown(true);
         SettingsManager.flush();
-        uiController.hideDataSharingDialog();
+        uiController.hideDialog();
     }
 
     public void onDataShoringDialogDisagree() {
@@ -169,7 +177,7 @@ public class LoadingScreen extends AbstractScreen {
         SettingsManager.setIsSharingUsageData(false);
         SettingsManager.setIsDataSharingDialogShown(true);
         SettingsManager.flush();
-        uiController.hideDataSharingDialog();
+        uiController.hideDialog();
     }
 
     public void onPrivacyPolicyClick() {
