@@ -13,7 +13,7 @@ buildscript {
         classpath 'org.gretty:gretty:3.0.7'
         classpath 'com.android.tools.build:gradle:7.3.0'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.16'
-        classpath 'com.google.gms:google-services:4.3.10'
+        classpath 'com.google.gms:google-services:4.3.14'
     }
 }
 
@@ -60,10 +60,10 @@ project(":android") {
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         api "com.badlogicgames.gdxpay:gdx-pay-android-googlebilling:$gdxPayVersion"
         implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
-        implementation 'com.google.firebase:firebase-analytics:20.0.2'
-        implementation 'com.google.firebase:firebase-auth:21.0.1'
-        implementation 'com.google.firebase:firebase-config:21.0.1'
-        implementation 'com.google.firebase:firebase-database:20.0.3'
+        implementation 'com.google.firebase:firebase-analytics:21.2.0'
+        implementation 'com.google.firebase:firebase-auth:21.1.0'
+        implementation 'com.google.firebase:firebase-config:21.2.0'
+        implementation 'com.google.firebase:firebase-database:20.1.0'
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
